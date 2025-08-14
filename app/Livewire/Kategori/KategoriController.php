@@ -61,10 +61,10 @@ class KategoriController extends Component
                 ->paginate($this->perPage);
         }
 
-        return view('livewire.kategori.index', [
+        return view('livewire.admin.kategori.index', [
             'datas' => $datas,
             'title' => 'Kategori',
-        ]);
+        ])->extends('components.layouts.admin.app');
     }
 
     public function show($id)

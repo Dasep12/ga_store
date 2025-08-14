@@ -5,7 +5,10 @@ use App\Livewire\Kategori\KategoriController as KategoriPage;
 use App\Livewire\Units\UnitsController as UnitsPage;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Home\HomeController as HomePage;
-use App\Livewire\Product\ProductController as ProductPage;
+use App\Livewire\Barang\BarangController as ProductPage;
+use App\Livewire\FrontEnd\MainController as MainPage;
+use App\Livewire\FrontEnd\ShippingController as ShippingPage;
+use App\Livewire\Pengadaan\PengadaanController as PengadaanPage;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,8 +23,7 @@ use App\Livewire\Product\ProductController as ProductPage;
 // Route::get('/', function () {
 //     return view('home');
 // });
-Route::get('/', HomePage::class)->name('homepage');
-Route::get('/product', ProductPage::class)->name('productpage');
+Route::get('/home', HomePage::class)->name('homepage');
 
 
 Route::prefix('departments')->group(function () {
@@ -41,4 +43,27 @@ Route::prefix('units')->group(function () {
     Route::get('/', UnitsPage::class)->name('unit.index');
     Route::get('/{id}', [UnitsPage::class, 'show'])->name('unit.show');
     Route::post('/', [UnitsPage::class, 'crudJson'])->name('unit.crud');
+});
+
+
+Route::prefix('product')->group(function () {
+    Route::get('/', ProductPage::class)->name('barang.index');
+    Route::get('/{id}', [ProductPage::class, 'show'])->name('barang.show');
+    Route::post('/', [ProductPage::class, 'crudJson'])->name('barang.crud');
+    Route::post('/importExcel', [ProductPage::class, 'ImportExcel'])->name('barang.import');
+    Route::get('/import/progress/{id}', [ProductPage::class, 'progress'])->name('barang.import.progress');
+});
+
+Route::prefix('pengadaan')->group(function () {
+    Route::get('/', PengadaanPage::class)->name('pengadaan.index');
+    Route::get('/{id}', [PengadaanPage::class, 'show'])->name('pengadaan.show');
+    Route::post('/', [PengadaanPage::class, 'crudJson'])->name('pengadaan.crud');
+    Route::post('/importExcel', [ProductPage::class, 'ImportExcel'])->name('pengadaan.import');
+});
+
+
+
+Route::prefix('/')->group(function () {
+    Route::get('/home', MainPage::class)->name('main.home');
+    Route::get('/', ShippingPage::class)->name('main.shipping');
 });

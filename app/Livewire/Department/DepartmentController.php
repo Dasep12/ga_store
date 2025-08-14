@@ -62,10 +62,10 @@ class DepartmentController extends Component
                 ->paginate($this->perPage);
         }
 
-        return view('livewire.department.index', [
+        return view('livewire.admin.department.index', [
             'datas' => $datas,
             'title' => 'Department',
-        ]);
+        ])->extends('components.layouts.admin.app');
     }
 
     public function show($id)

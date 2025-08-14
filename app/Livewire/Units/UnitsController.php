@@ -62,10 +62,10 @@ class UnitsController extends Component
                 ->paginate($this->perPage);
         }
 
-        return view('livewire.units.index', [
+        return view('livewire.admin.units.index', [
             'datas' => $datas,
             'title' => 'Units',
-        ]);
+        ])->extends('components.layouts.admin.app');
     }
 
     public function show($id)
