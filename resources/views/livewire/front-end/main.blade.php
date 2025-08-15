@@ -1,4 +1,8 @@
 <div class="row" wire:key="product-table" wire:init="loadData">
+    @pushOnce('styles')
+    <link rel="stylesheet" href="{{ asset('assets/assets/css/user.css') }}">
+    @endPushOnce
+
     @include('components.layouts.frontend.filter')
     @if(!$isReady)
     <div class="text-center p-5 d-flex flex-column align-items-center justify-content-center">
@@ -30,20 +34,21 @@
                         <span class="fa fa-star text-warning"></span>
                         <span class="fa fa-star text-warning"></span>
                         <span class="fa fa-star text-warning"></span>
-                        <span class="text-body-quaternary fw-semibold ms-1">(67 people order)</span>
+                        <span class="text-body-quaternary fw-semibold ms-1">({{ $data->order_count }} people order)</span>
                     </p>
                     <div>
                         <p class="fs-9 text-body-tertiary mb-2">{{ $data->kode_barang }}</p>
                         <div class="d-flex align-items-center mb-1">
                             <p class="me-2 text-body mb-0">stock</p>
-                            <h3 class="text-body-emphasis mb-0">{{ $data->stock_type == 'INDENT' ? $data->stock_type  : '-' }}</h3>
+                            <h3 class="text-body-emphasis mb-0">{{ $data->stock_type == 'INDENT' ? $data->stock_type  : $data->stock }}</h3>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">
-                                size : {{ $data->size ?? '-' }}
+                                kategori : {{ $data->kategori_name ?? '-' }}
                             </p>
                             <button class="btn btn-wish btn-wish-primary z-2 d-toggle-container"
+                                wire:click="addToCart({{ $data->id }})"
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="top"
                                 title="Add to cart">
@@ -78,7 +83,7 @@
         </div>
         {{-- Pagination dengan wire:target --}}
 
-        @if($datas->hasPages())
+        @if($datas->total() > 0 )
         <div class="d-flex justify-content-between align-items-center mt-5">
             <div class="fs-9 text-muted">
                 <label class="fs-9">
@@ -94,9 +99,7 @@
                 Showing {{ $datas->firstItem() }} to {{ $datas->lastItem() }} of {{ $datas->total() }} entries
             </div>
             <div>
-
                 <nav>
-
                     <ul class="pagination mb-0">
                         <li class="page-item {{ $datas->onFirstPage() ? 'disabled' : '' }}">
                             <a style="cursor:pointer" class="page-link"
@@ -106,7 +109,6 @@
                                 <i class="fas fa-angle-double-left"></i>
                             </a>
                         </li>
-
                         @foreach ($datas->getUrlRange(
                         max(1, $datas->currentPage() - 1),
                         min($datas->lastPage(), $datas->currentPage() + 1)
@@ -135,3 +137,11 @@
         @endif
     </div>
     @endif
+
+    @push('scripts')
+    <script>
+        Livewire.on('cart-added', (data) => {
+            alert('Item added to cart successfully!');
+        });
+    </script>
+    @endPush

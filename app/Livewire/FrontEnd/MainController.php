@@ -10,22 +10,23 @@ use Livewire\WithPagination;
 class MainController extends Component
 {
     use WithPagination;
-    public $view = 'home';
     public $search = '';
     public $perPage = 25; // Default items per page
     public $isReady = false; // penanda lazy load
+    public $cart = [];
     protected $paginationTheme = 'bootstrap';
     public $filterType = 'ALL';
     protected $listeners = [
         'globalSearchUpdated',
         'reloadTable' => 'loadData',
         'reload-table' => '$refresh',
-        'changeViewFromNavbar' => 'changeView'
+        'addToCart' => 'addToCart'
     ];
     public $filterStatus = 1;
     public $message;
     public $selectedCategories = [];
     public $selectedType = [];
+    public $selectedJenis = [];
     public function globalSearchUpdated($value)
     {
         $this->search = $value;
@@ -53,6 +54,11 @@ class MainController extends Component
     {
         $this->resetPage();
     }
+
+    public function updatingSelectedJenis()
+    {
+        $this->resetPage();
+    }
     public function updating($name, $value)
     {
         if (in_array($name, ['search', 'perPage', 'filterStatus', 'filterType'])) {
@@ -60,10 +66,43 @@ class MainController extends Component
         }
     }
 
-    public function changeView($view)
+    public function mount()
     {
-        $this->view = null;
-        $this->view = $view;
+        // Ambil cart dari session saat component di-mount
+        $this->cart = session()->get('cart', []);
+    }
+
+    public function addToCart($productId)
+    {
+        $cart = $this->cart;
+        if (isset($cart[$productId])) {
+            $cart[$productId]['qty']++;
+        } else {
+            $product = DB::table('tbl_mst_product')->find($productId);
+            $cart[$productId] = [
+                'nama_barang' => $product->nama_barang,
+                'kode_barang' => $product->kode_barang,
+                'id_barang'    => $product->id,
+                'type_barang' => $product->type_barang,
+                'kategori_id' => $product->kategori_id,
+                'images' => $product->images ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s',
+                'qty' => 1
+            ];
+        }
+        $this->cart = $cart;
+        session()->put('cart', $cart);
+        $this->dispatch('cartUpdated');
+        // Kirim event ke browser
+        $this->dispatch('cart-added', [
+            'message' => $cart[$productId]['nama_barang'] . ' berhasil ditambahkan ke keranjang',
+            'data' => session()->get('cart')
+        ]);
+    }
+
+    public function removeItem($id)
+    {
+        unset($this->cart[$id]);
+        session()->put('cart', $this->cart);
     }
 
     public function render()
@@ -75,11 +114,14 @@ class MainController extends Component
                 ->leftJoin('tbl_mst_kategori', 'tbl_mst_product.kategori_id', '=', 'tbl_mst_kategori.id')
                 ->leftJoin('tbl_mst_satuan', 'tbl_mst_product.satuan', '=', 'tbl_mst_satuan.id')
                 ->leftJoin('tbl_mst_jenis_asset', 'tbl_mst_product.jenis_asset', '=', 'tbl_mst_jenis_asset.kode_asset')
+                ->leftJoin('tbl_trn_stock', 'tbl_mst_product.id', '=', 'tbl_trn_stock.product_id')
                 ->select(
                     'tbl_mst_product.*',
                     'tbl_mst_kategori.name as kategori_name',
                     'tbl_mst_satuan.name as satuan_name',
-                    'tbl_mst_jenis_asset.name as jenis_asset_name'
+                    'tbl_mst_jenis_asset.name as jenis_asset_name',
+                    'tbl_trn_stock.stock',
+                    DB::raw('(SELECT COUNT(*) FROM tbl_trn_order WHERE tbl_trn_order.product_id = tbl_mst_product.id) as order_count')
                 )->where(function ($q) {
                     $q->where('nama_barang', 'like', '%' . $this->search . '%')
                         ->orWhere('kode_barang', 'like', '%' . $this->search . '%')
@@ -91,6 +133,8 @@ class MainController extends Component
                     $q->whereIn('kategori_id', $this->selectedCategories);
                 })->when(count($this->selectedType) > 0, function ($q) {
                     $q->whereIn('type_barang', $this->selectedType);
+                })->when(count($this->selectedJenis) > 0, function ($q) {
+                    $q->whereIn('jenis_asset', $this->selectedJenis);
                 })
                 ->orderBy('created_at', 'desc')
                 ->paginate($this->perPage);

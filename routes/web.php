@@ -8,6 +8,8 @@ use App\Livewire\Home\HomeController as HomePage;
 use App\Livewire\Barang\BarangController as ProductPage;
 use App\Livewire\FrontEnd\MainController as MainPage;
 use App\Livewire\FrontEnd\ShippingController as ShippingPage;
+use App\Livewire\FrontEnd\TrackController as TrackPage;
+use App\Livewire\FrontEnd\CheckoutController as CheckoutPage;
 use App\Livewire\Pengadaan\PengadaanController as PengadaanPage;
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +66,8 @@ Route::prefix('pengadaan')->group(function () {
 
 
 Route::prefix('/')->group(function () {
-    Route::get('/home', MainPage::class)->name('main.home');
-    Route::get('/', ShippingPage::class)->name('main.shipping');
+    Route::get('/', MainPage::class);
+    Route::get('/shipping', ShippingPage::class)->name('main.shipping');
+    Route::get('/track', TrackPage::class)->name('main.track');
+    Route::get('/checkout', CheckoutPage::class)->name('main.checkout');
 });

@@ -2,6 +2,7 @@
      <div class="phoenix-offcanvas-filter bg-body scrollbar phoenix-offcanvas phoenix-offcanvas-fixed" id="productFilterColumn" style="top: 92px">
          <div class="d-flex justify-content-between align-items-center mb-3">
              <h3 class="mb-0">Filters</h3>
+
              <button class="btn d-lg-none p-0" data-phoenix-dismiss="offcanvas"><span class="uil uil-times fs-8"></span></button>
          </div>
          <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseAvailability" role="button" aria-expanded="true" aria-controls="collapseAvailability">
@@ -13,7 +14,8 @@
              <div class="mb-2">
                  @foreach($jenis_assets as $jenis)
                  <div class="form-check mb-0">
-                     <input class="form-check-input mt-0" id="{{ $jenis->kode_asset }}" type="checkbox" name="color">
+                     <input class="form-check-input mt-0"
+                         wire:model.live="selectedJenis" id="{{ $jenis->kode_asset }}" type="checkbox" value="{{ $jenis->kode_asset }}" name="color">
                      <label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0" for="{{ $jenis->kode_asset }}">{{ $jenis->name }}</label>
                  </div>
                  @endforeach

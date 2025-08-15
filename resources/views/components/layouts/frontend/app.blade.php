@@ -39,6 +39,7 @@
     <link href="{{ asset('assets/assets/css/theme.min.css')}}" type="text/css" rel="stylesheet" id="style-default">
     <link href="{{ asset('assets/assets/css/user-rtl.min.css')}}" type="text/css" rel="stylesheet" id="user-style-rtl">
     <link href="{{ asset('assets/assets/css/user.min.css')}}" type="text/css" rel="stylesheet" id="user-style-default">
+    <link href="{{ asset('assets/assets/css/user.css')}}" type="text/css" rel="stylesheet" id="user-style-default">
     <script>
         var phoenixIsRTL = window.config.config.phoenixIsRTL;
         if (phoenixIsRTL) {
@@ -55,14 +56,10 @@
         }
     </script>
 
-    <style>
-        .fixed-size {
-            width: 250px;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-    </style>
+
+
+    @livewireStyles
+    @stack('styles')
 </head>
 
 
@@ -162,11 +159,25 @@
     <script src="{{ asset('assets/vendors/feather-icons/feather.min.js')}}"></script>
     <script src="{{ asset('assets/vendors/dayjs/dayjs.min.js')}}"></script>
     <script src="{{ asset('assets/assets/js/phoenix.js')}}"></script>
+
     @livewireScripts
+    @stack('scripts')
 
     <script>
         window.addEventListener('update-url', event => {
             history.pushState({}, '', event.detail.url);
+        });
+
+        document.addEventListener('livewire:navigate', () => {
+            let userLinkDefault = document.getElementById('user-style-default');
+            let userLinkRTL = document.getElementById('user-style-rtl');
+
+            if (userLinkDefault) {
+                userLinkDefault.removeAttribute('disabled');
+            }
+            if (userLinkRTL) {
+                userLinkRTL.removeAttribute('disabled');
+            }
         });
     </script>
 </body>

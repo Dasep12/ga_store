@@ -77,16 +77,16 @@
         </div>
         <ul class="navbar-nav justify-content-end align-items-center">
             <li class="nav-item" data-nav-item="data-nav-item">
-                <a class="nav-link ps-0" wire:navigate href="{{ route('main.home') }}">Home</a>
+                <a class="nav-link" wire:navigate href="{{ url('/') }}">Home</a>
             </li>
             <li class="nav-item" data-nav-item="data-nav-item">
-                <a class="nav-link" wire:navigate href="{{ route('main.shipping') }}">Shipping Info</a>
+                <a class="nav-link" wire:navigate href="{{ route('main.shipping') }}">Cart</a>
             </li>
             <li class="nav-item" data-nav-item="data-nav-item">
-                <a class="nav-link" wire:click="goTo('track-order')" href="javascript:void(0)">Track order</a>
+                <a class="nav-link" wire:navigate href="{{ route('main.track') }}">Track order</a>
             </li>
             <li class="nav-item" data-nav-item="data-nav-item">
-                <a class="nav-link pe-0" wire:click="goTo('checkout')" href="javascript:void(0)">Checkout</a>
+                <a class="nav-link" wire:navigate href="{{ route('main.checkout') }}">Checkout</a>
             </li>
         </ul>
     </div>
