@@ -1,5 +1,5 @@
 <div>
-    <div class="border-y border-translucent" id="productWishlistTable">
+    <div class="border-y border-translucent bg-white p-3" id="productWishlistTable">
         <div class="table-responsive scrollbar mb-3">
             @if($cart)
             <table class="table fs-9 mb-0">
@@ -58,11 +58,14 @@
     </div>
 </div>
 
-@push('scripts')
+@pushOnce('scripts')
 <script>
-    Livewire.on('checkout-success', (data) => {
-        alert(data[0].message);
-        console.log(data[0].message);
-    });
+    if (!window.CheckoutSuccessListenerRegistered) {
+        Livewire.on('checkout-success', (data) => {
+            alert(data.message ?? data[0]?.message ?? 'Checkout berhasil');
+            console.log(data.message ?? data[0]?.message ?? 'Checkout berhasil');
+        });
+        window.CheckoutSuccessListenerRegistered = true;
+    }
 </script>
-@endPush
+@endPushOnce

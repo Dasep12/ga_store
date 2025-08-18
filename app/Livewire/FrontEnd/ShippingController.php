@@ -18,6 +18,7 @@ class ShippingController extends Component
 
     public function render()
     {
+
         return view('livewire.front-end.shipping-controller', [
             'cart' => session()->get('cart'), // Retrieve cart from session
         ])->extends('components.layouts.frontend.app');
@@ -92,6 +93,9 @@ class ShippingController extends Component
     {
         $cart = session()->get('cart', []);
         if (empty($cart)) {
+            $this->dispatch('checkout-success', [
+                'message' => 'Daftar barang kosong, silakan tambahkan barang ke keranjang.',
+            ]);
             return;
         }
 

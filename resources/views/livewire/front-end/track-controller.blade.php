@@ -1,64 +1,262 @@
-<div>
-    <h4>traack order</h4>
-    <nav class="navbar navbar-landing navbar-home navbar-expand py-4 px-0">
-        <ul class="navbar-nav " id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link fw-bold rounded-3 active" aria-current="page" id="home-tab" data-bs-toggle="tab" href="#tab-home" role="tab" aria-controls="tab-home" aria-selected="true"><span class="me-2 fa-solid fa-hotel"></span> Request</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link fw-bold rounded-3" id="profile-tab" data-bs-toggle="tab" href="#tab-profile" role="tab" aria-controls="tab-profile" aria-selected="false" aria-current="page"> <span class="me-2 fa-solid fa-plane"></span> Progress</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link fw-bold rounded-3" aria-current="page" id="contact-tab" data-bs-toggle="tab" href="#tab-contact" role="tab" aria-controls="tab-contact" aria-selected="false"> <span class="me-2 fa-solid fa-suitcase-rolling"></span> Finish</a>
-            </li>
-        </ul>
-    </nav>
+<div wire:init="loadData">
 
-    <div class="tab-content mt-3" id="myTabContent">
-        <div class="tab-pane fade show active" id="tab-home" role="tabpanel" aria-labelledby="home-tab">
-            <div class="col-12 col-xl-12 col-xxl-12">
-                <div id="orderTable" data-list="{&quot;valueNames&quot;:[&quot;products&quot;,&quot;color&quot;,&quot;size&quot;,&quot;price&quot;,&quot;quantity&quot;,&quot;total&quot;],&quot;page&quot;:10}">
-                    <div class="table-responsive scrollbar">
-                        <table class="table fs-9 mb-0 border-top border-translucent">
-                            <thead>
-                                <tr>
-                                    <th class="sort white-space-nowrap align-middle fs-10" scope="col"></th>
-                                    <th class="sort white-space-nowrap align-middle" scope="col" style="min-width:400px;" data-sort="products">PRODUCTS</th>
-                                    <th class="sort align-middle ps-4" scope="col" data-sort="color" style="width:150px;">COLOR</th>
-                                    <th class="sort align-middle ps-4" scope="col" data-sort="size" style="width:300px;">SIZE</th>
-                                    <th class="sort align-middle text-end ps-4" scope="col" data-sort="price" style="width:150px;">PRICE</th>
-                                    <th class="sort align-middle text-end ps-4" scope="col" data-sort="quantity" style="width:200px;">QUANTITY</th>
-                                    <th class="sort align-middle text-end ps-4" scope="col" data-sort="total" style="width:250px;">TOTAL</th>
-                                </tr>
-                            </thead>
-                            <tbody class="list" id="order-table-body">
-                                <tr class="hover-actions-trigger btn-reveal-trigger position-static">
-                                    <td class="align-middle white-space-nowrap py-2">
-                                        <a class="d-block border border-translucent rounded-2" href="javascript:void(0)"><img src="{{ asset('assets/assets/img//products/1.png')}}" alt="" width="53"></a>
-                                    </td>
-                                    <td class="products align-middle py-0">
-                                        <a class="fw-semibold line-clamp-2 mb-0" href="javascript:void(0)">Fitbit Sense Advanced Smartwatch with Tools for Heart Health, Stress Management &amp; Skin Temperature Trends, Carbon/Graphite, One Size (S &amp; L Bands)</a>
-                                    </td>
-                                    <td class="payment_status align-middle white-space-nowrap text-start fw-bold text-body-tertiary">
-                                        <span class="badge badge-phoenix fs-10 badge-phoenix-warning"><span class="badge-label">Request</span><span class="ms-1" data-feather="target" style="height:12.8px;width:12.8px;"></span></span>
-                                    </td>
-                                    <td class="payment_status align-middle white-space-nowrap text-start fw-bold text-body-tertiary">
-                                        <span class="badge badge-phoenix fs-10 badge-phoenix-primary"><span class="badge-label">Progress</span><span class="ms-1" data-feather="clock" style="height:12.8px;width:12.8px;"></span></span>
-                                    </td>
-                                    <td class="payment_status align-middle white-space-nowrap text-start fw-bold text-body-tertiary">
-                                        <span class="badge badge-phoenix fs-10 badge-phoenix-danger"><span class="badge-label">Rejected</span><span class="ms-1" data-feather="delete" style="height:12.8px;width:12.8px;"></span></span>
-                                    </td>
-                                    <td class="fulfilment_status align-middle white-space-nowrap text-start fw-bold text-body-tertiary">
-                                        <span class="badge badge-phoenix fs-10 badge-phoenix-success"><span class="badge-label">Completed</span><span class="ms-1" data-feather="check" style="height:12.8px;width:12.8px;"></span></span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+    <!-- <ul class="nav nav-underline fs-5 navbar-expand p-2 bg-white" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link fw-bold active" id="home-tab" data-bs-toggle="tab" href="#tab-home" wire:click="setFilterType('request')" role="tab" aria-controls="tab-home" aria-selected="false" tabindex="-1"><span class="fa-solid fa-hotel"></span> Request</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link fw-bold" id="profile-tab" data-bs-toggle="tab" href="#tab-profile" wire:click="setFilterType('progress')" role="tab" aria-controls="tab-profile" aria-selected="false" tabindex="-1"><span class="fa-solid fa-clock"></span> Progress</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link fw-bold" id="contact-tab" data-bs-toggle="tab" href="#tab-contact" wire:click="setFilterType('done')" role="tab" aria-controls="tab-contact" aria-selected="true"><span class="fa-solid fa-check"></span> Finish</a>
+        </li>
+    </ul> -->
+
+    <ul class="nav nav-underline fs-5 navbar-expand p-2 bg-white" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold {{ $filterType == 'request' ? 'active' : '' }}"
+                wire:click="setFilterType('request')" type="button">
+                <span class="fa-solid fa-hotel"></span> Request
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold {{ $filterType == 'progress' ? 'active' : '' }}"
+                wire:click="setFilterType('progress')" type="button">
+                <span class="fa-solid fa-clock"></span> Progress
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold {{ $filterType == 'done' ? 'active' : '' }}"
+                wire:click="setFilterType('done')" type="button">
+                <span class="fa-solid fa-check"></span> Finish
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade  active show" id="tab-home" role="tabpanel" aria-labelledby="home-tab">
+            @if(!$isReady)
+            <div class="text-center p-5 d-flex flex-column align-items-center justify-content-center">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2">Loading...</p>
+            </div>
+            @else
+            <div wire:loading.flex wire:target="setFilterType,loadData" class="justify-content-center align-items-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+                <span class="ms-2">Loading...</span>
+            </div>
+            <div class="table-responsive scrollbar bg-white p-3">
+                <table class="table fs-9 mb-0 border-top border-translucent">
+                    <thead>
+                        @switch($filterType)
+                        @case('request')
+                        <tr>
+                            <th>#</th>
+                            <th>KODE</th>
+                            <th>BARANG</th>
+                            <th>QTY</th>
+                            <th>REQUEST DATE</th>
+                            <th>REQUEST BY</th>
+                            <th>STATUS</th>
+                        </tr>
+                        @break
+                        @case('progress')
+                        <tr>
+                            <th>#</th>
+                            <th>KODE</th>
+                            <th>BARANG</th>
+                            <th>QTY</th>
+                            <th>PROGRESS DATE</th>
+                            <th>PROGRESS BY</th>
+                            <th>STATUS</th>
+                        </tr>
+                        @break
+                        @case('done')
+                        <tr>
+                            <th>#</th>
+                            <th>KODE</th>
+                            <th>BARANG</th>
+                            <th>QTY</th>
+                            <th>FINISH DATE</th>
+                            <th>FINISH BY</th>
+                            <th>STATUS</th>
+                        </tr>
+                        @break
+                        @endswitch
+                        </tr>
+                    </thead>
+                    <tbody class="list" id="order-table-body">
+                        @switch($filterType)
+                        @case('request')
+                        @forelse($datas as $data)
+                        <?php
+                        $imagePath = $data->images ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s';
+                        ?>
+                        <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                            <td class="align-middle white-space-nowrap ps-0 py-0">
+                                <a class="border border-translucent rounded-2 d-inline-block" href="">
+                                    <img src="{{ asset($imagePath)}}" alt="" width="53">
+                                </a>
+                            </td>
+                            <td>
+                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
+                            </td>
+                            <td>
+                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
+                            </td>
+                            <td>
+                                {{ $data->qty }}
+                            </td>
+                            <td>
+                                {{ $data->order_date }}
+                            </td>
+                            <td>
+                                {{ $data->creator }}
+                            </td>
+                            <td>
+                                <span class="badge badge-phoenix fs-9 badge-phoenix-warning"><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="10" align="center">DATA NOT FOUND</td>
+                        </tr>
+                        @endforelse
+                        @break
+                        @case('progress')
+                        @forelse($datas as $data)
+                        <?php
+                        $imagePath = $data->images ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s';
+                        ?>
+                        <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                            <td class="align-middle white-space-nowrap ps-0 py-0">
+                                <a class="border border-translucent rounded-2 d-inline-block" href="">
+                                    <img src="{{ asset($imagePath)}}" alt="" width="53">
+                                </a>
+                            </td>
+                            <td>
+                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
+                            </td>
+                            <td>
+                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
+                            </td>
+                            <td>
+                                {{ $data->qty }}
+                            </td>
+                            <td>
+                                {{ $data->order_date }}
+                            </td>
+                            <td>
+                                {{ $data->creator }}
+                            </td>
+                            <td>
+                                <span class="badge badge-phoenix fs-9 badge-phoenix-primary"><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="10" align="center">DATA NOT FOUND</td>
+                        </tr>
+                        @endforelse
+                        @break
+                        @case('done')
+                        @forelse($datas as $data)
+                        <?php
+                        $imagePath = $data->images ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s';
+                        ?>
+                        <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                            <td class="align-middle white-space-nowrap ps-0 py-0">
+                                <a class="border border-translucent rounded-2 d-inline-block" href="">
+                                    <img src="{{ asset($imagePath)}}" alt="" width="53">
+                                </a>
+                            </td>
+                            <td>
+                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
+                            </td>
+                            <td>
+                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
+                            </td>
+                            <td>
+                                {{ $data->qty }}
+                            </td>
+                            <td>
+                                {{ $data->order_date }}
+                            </td>
+                            <td>
+                                {{ $data->creator }}
+                            </td>
+                            <td>
+                                <span class="badge badge-phoenix fs-9 badge-phoenix-success"><span class="">{{ $data->status }} <i class="fa fa-check"></i></span> </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="10" align="center">DATA NOT FOUND</td>
+                        </tr>
+                        @endforelse
+                        @break
+                        @endswitch
+
+
+                    </tbody>
+                </table>
+                {{-- Pagination dengan wire:target --}}
+
+                @if($datas->total() > 0 )
+                <div class="d-flex justify-content-between align-items-center mt-5">
+                    <div class="fs-9 text-muted">
+                        <label class="fs-9">
+                            Row
+                            <select wire:model.live="perPage" class="form-select-sm form-select d-inline-block w-auto">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select>
+                            per pages
+                        </label><br>
+                        Showing {{ $datas->firstItem() }} to {{ $datas->lastItem() }} of {{ $datas->total() }} entries
+                    </div>
+                    <div>
+                        <nav>
+                            <ul class="pagination mb-0">
+                                <li class="page-item {{ $datas->onFirstPage() ? 'disabled' : '' }}">
+                                    <a style="cursor:pointer" class="page-link"
+                                        wire:click="gotoPage(1)"
+                                        wire:target="gotoPage"
+                                        aria-label="First">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </a>
+                                </li>
+                                @foreach ($datas->getUrlRange(
+                                max(1, $datas->currentPage() - 1),
+                                min($datas->lastPage(), $datas->currentPage() + 1)
+                                ) as $page => $url)
+                                <li class="page-item {{ $datas->currentPage() == $page ? 'active ' : '' }}">
+                                    <a style="cursor:pointer" class="page-link {{ $datas->currentPage() == $page ? 'active ' : '' }}"
+                                        wire:click="gotoPage({{ $page }})"
+                                        wire:target="gotoPage">
+                                        {{ $page }}
+                                    </a>
+                                </li>
+                                @endforeach
+
+                                <li class="page-item {{ !$datas->hasMorePages() ? 'disabled' : '' }}">
+                                    <a style="cursor:pointer" class="page-link "
+                                        wire:click="gotoPage({{ $datas->lastPage() }})"
+                                        wire:target="gotoPage"
+                                        aria-label="Last">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
+                @endif
             </div>
+            @endif
         </div>
-        <div class="tab-pane fade" id="tab-profile" role="tabpanel" aria-labelledby="profile-tab">Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic.</div>
-        <div class="tab-pane fade" id="tab-contact" role="tabpanel" aria-labelledby="contact-tab">Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</div>
     </div>
+
 </div>

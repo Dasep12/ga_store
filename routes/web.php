@@ -66,7 +66,7 @@ Route::prefix('pengadaan')->group(function () {
 
 
 Route::prefix('/')->group(function () {
-    Route::get('/', MainPage::class);
+    Route::get('/', MainPage::class)->name('main.index');
     Route::get('/shipping', ShippingPage::class)->name('main.shipping');
     Route::get('/track', TrackPage::class)->name('main.track');
     Route::get('/checkout', CheckoutPage::class)->name('main.checkout');

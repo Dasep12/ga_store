@@ -16,7 +16,6 @@
     </div>
 
 
-
     <div class="col-lg-10 col-xxl-10">
         <div class="row g-2"> <!-- g-4 = jarak antar kolom & baris -->
             @forelse($datas as $data)
@@ -138,10 +137,15 @@
     </div>
     @endif
 
-    @push('scripts')
+    @pushOnce('scripts')
     <script>
-        Livewire.on('cart-added', (data) => {
-            alert('Item added to cart successfully!');
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!window.cartAddedListenerRegistered) {
+                Livewire.on('cart-added', (data) => {
+                    alert(data[0].message)
+                });
+                window.cartAddedListenerRegistered = true; // tandai sudah didaftarkan
+            }
         });
     </script>
-    @endPush
+    @endPushOnce

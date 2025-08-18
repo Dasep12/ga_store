@@ -76,17 +76,17 @@
             </div> -->
         </div>
         <ul class="navbar-nav justify-content-end align-items-center">
-            <li class="nav-item" data-nav-item="data-nav-item">
-                <a class="nav-link" wire:navigate href="{{ url('/') }}">Home</a>
+            <li class="nav-item active" data-nav-item="data-nav-item">
+                <a class="nav-link {{ request()->routeIs('main.index') ? 'active' : '' }}" wire:navigate href="{{ url('/') }}">Home</a>
             </li>
             <li class="nav-item" data-nav-item="data-nav-item">
-                <a class="nav-link" wire:navigate href="{{ route('main.shipping') }}">Cart</a>
+                <a class="nav-link {{ request()->routeIs('main.shipping') ? 'active' : '' }}" wire:navigate href="{{ route('main.shipping') }}">Cart</a>
             </li>
             <li class="nav-item" data-nav-item="data-nav-item">
-                <a class="nav-link" wire:navigate href="{{ route('main.track') }}">Track order</a>
+                <a class="nav-link {{ request()->routeIs('main.track') ? 'active' : '' }}" wire:navigate href="{{ route('main.track') }}">Track order</a>
             </li>
             <li class="nav-item" data-nav-item="data-nav-item">
-                <a class="nav-link" wire:navigate href="{{ route('main.checkout') }}">Checkout</a>
+                <a class="nav-link {{ request()->routeIs('main.checkout') ? 'active' : '' }}" wire:navigate href="{{ route('main.checkout') }}">Checkout</a>
             </li>
         </ul>
     </div>

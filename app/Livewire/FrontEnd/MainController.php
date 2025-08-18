@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+
 class MainController extends Component
 {
     use WithPagination;
