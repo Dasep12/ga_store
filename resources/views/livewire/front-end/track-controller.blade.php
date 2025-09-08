@@ -27,6 +27,12 @@
             </button>
         </li>
         <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold {{ $filterType == 'rejected' ? 'active' : '' }}"
+                wire:click="setFilterType('rejected')" type="button">
+                <span class="fa-solid fa-remove"></span> Reject
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
             <button class="nav-link fw-bold {{ $filterType == 'done' ? 'active' : '' }}"
                 wire:click="setFilterType('done')" type="button">
                 <span class="fa-solid fa-check"></span> Finish
@@ -46,7 +52,7 @@
                 <span class="ms-2">Loading...</span>
             </div>
             <div class="table-responsive scrollbar bg-white p-3">
-                <table class="table fs-9 mb-0 border-top border-translucent">
+                <table class="table fs-9 mb-0 border-top border-translucent" wire:loading.remove wire:target="gotoPage, perPage,filterData, search, filterType">
                     <thead>
                         @switch($filterType)
                         @case('request')
@@ -68,6 +74,17 @@
                             <th>QTY</th>
                             <th>PROGRESS DATE</th>
                             <th>PROGRESS BY</th>
+                            <th>STATUS</th>
+                        </tr>
+                        @break
+                        @case('reject')
+                        <tr>
+                            <th>#</th>
+                            <th>KODE</th>
+                            <th>BARANG</th>
+                            <th>QTY</th>
+                            <th>REJECT DATE</th>
+                            <th>REJECT BY</th>
                             <th>STATUS</th>
                         </tr>
                         @break
@@ -151,6 +168,42 @@
                             </td>
                             <td>
                                 <span class="badge badge-phoenix fs-9 badge-phoenix-primary"><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="10" align="center">DATA NOT FOUND</td>
+                        </tr>
+                        @endforelse
+                        @break
+                        @case('rejected')
+                        @forelse($datas as $data)
+                        <?php
+                        $imagePath = $data->images ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s';
+                        ?>
+                        <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                            <td class="align-middle white-space-nowrap ps-0 py-0">
+                                <a class="border border-translucent rounded-2 d-inline-block" href="">
+                                    <img src="{{ asset($imagePath)}}" alt="" width="53">
+                                </a>
+                            </td>
+                            <td>
+                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
+                            </td>
+                            <td>
+                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
+                            </td>
+                            <td>
+                                {{ $data->qty }}
+                            </td>
+                            <td>
+                                {{ $data->finish_date }}
+                            </td>
+                            <td>
+                                {{ $data->finish_by }}
+                            </td>
+                            <td>
+                                <span class="badge badge-phoenix fs-9 badge-phoenix-success"><span class="">{{ $data->status }} <i class="fa fa-check"></i></span> </span>
                             </td>
                         </tr>
                         @empty

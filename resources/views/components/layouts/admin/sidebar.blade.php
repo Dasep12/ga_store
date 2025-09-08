@@ -1,4 +1,4 @@
- <nav class="navbar navbar-vertical navbar-expand-lg bg-custom-navbar">
+ <nav class="navbar navbar-vertical navbar-expand-lg ">
      <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
          <!-- scrollbar removed-->
          <div class="navbar-vertical-content">
@@ -13,7 +13,7 @@
                  </li>
                  <li class="nav-item">
                      <!-- label-->
-                     <p class="navbar-vertical-label text-white">Apps
+                     <p class="navbar-vertical-label">Apps
                      </p>
                      <hr class="navbar-vertical-line" />
                      <!-- parent pages-->
@@ -23,8 +23,8 @@
                              </div>
                          </a>
                          <div class="parent-wrapper label-1">
-                             <ul class="nav collapse parent bg-custom-navbar" data-bs-parent="#navbarVerticalCollapse" id="nv-e-masterdata">
-                                 <li class="collapsed-nav-item-title text-white d-none">Database
+                             <ul class="nav collapse parent " data-bs-parent="#navbarVerticalCollapse" id="nv-e-masterdata">
+                                 <li class="collapsed-nav-item-title d-none">Database
                                  </li>
                                  <li class="nav-item"><a class="nav-link dropdown-indicator" href="#nv-admin" data-bs-toggle="collapse" aria-expanded="true" aria-controls="nv-admin">
                                          <div class="d-flex align-items-center">
@@ -86,8 +86,8 @@
                              </div>
                          </a>
                          <div class="parent-wrapper label-1">
-                             <ul class="nav collapse parent bg-custom-navbar" data-bs-parent="#navbarVerticalCollapse" id="nv-e-transaction">
-                                 <li class="collapsed-nav-item-title text-white d-none">Transaction
+                             <ul class="nav collapse parent " data-bs-parent="#navbarVerticalCollapse" id="nv-e-transaction">
+                                 <li class="collapsed-nav-item-title  d-none">Transaction
                                  </li>
                                  <li class="nav-item"><a class="nav-link dropdown-indicator" href="#nv-admin" data-bs-toggle="collapse" aria-expanded="true" aria-controls="nv-admin">
                                          <div class="d-flex align-items-center">
@@ -116,13 +116,13 @@
                                      <!-- more inner pages-->
                                      <div class="parent-wrapper">
                                          <ul class="nav collapse parent show" data-bs-parent="#e-commerce" id="nv-customer">
-                                             <li class="nav-item"><a class="nav-link" href="{{ url('product') }}">
+                                             <li class="nav-item"><a class="nav-link" href="{{ url('inputstock') }}">
                                                      <div class="d-flex align-items-center"><span class="nav-link-text">Input Stock</span>
                                                      </div>
                                                  </a>
                                                  <!-- more inner pages-->
                                              </li>
-                                             <li class="nav-item"><a class="nav-link" href="{{ url('product') }}">
+                                             <li class="nav-item"><a class="nav-link" href="{{ url('stock') }}">
                                                      <div class="d-flex align-items-center"><span class="nav-link-text">Stock Barang</span>
                                                      </div>
                                                  </a>
@@ -141,8 +141,8 @@
                              </div>
                          </a>
                          <div class="parent-wrapper label-1">
-                             <ul class="nav collapse parent bg-custom-navbar" data-bs-parent="#navbarVerticalCollapse" id="nv-settings">
-                                 <li class="collapsed-nav-item-title text-white  d-none">Settings
+                             <ul class="nav collapse parent " data-bs-parent="#navbarVerticalCollapse" id="nv-settings">
+                                 <li class="collapsed-nav-item-title d-none">Settings
                                  </li>
                                  <li class="nav-item"><a class="nav-link" href="{{ url('product') }}">
                                          <div class="d-flex align-items-center"><span class="nav-link-text">Menu Apps</span>
@@ -169,7 +169,7 @@
              </ul>
          </div>
      </div>
-     <div class="navbar-vertical-footer bg-custom-navbar">
-         <button class="text-white btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center"><span class="uil uil-left-arrow-to-left fs-8"></span><span class="uil uil-arrow-from-right fs-8"></span><span class="navbar-vertical-footer-text ms-2">Collapsed View</span></button>
+     <div class="navbar-vertical-footer ">
+         <button class="btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center"><span class="uil uil-left-arrow-to-left fs-8"></span><span class="uil uil-arrow-from-right fs-8"></span><span class="navbar-vertical-footer-text ms-2">Collapsed View</span></button>
      </div>
  </nav>

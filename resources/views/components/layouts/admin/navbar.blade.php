@@ -1,4 +1,4 @@
-  <nav class="navbar navbar-top fixed-top navbar-expand bg-custom-navbar" id="navbarDefault">
+  <nav class="navbar navbar-top fixed-top navbar-expand " id="navbarDefault">
       <div class="collapse navbar-collapse justify-content-between">
           <div class="navbar-logo">
 
@@ -30,8 +30,8 @@
                       <label class="mb-0 theme-control-toggle-label theme-control-toggle-dark" for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Switch theme" style="height:32px;width:32px;"><span class="icon" data-feather="sun"></span></label>
                   </div> -->
               </li>
-              <li class="nav-item dropdown text-white">
-                  <a class="nav-link text-white" href="#" style="min-width: 2.25rem" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-auto-close="outside"><span class="d-block" style="height:20px;width:20px;"><span data-feather="bell" style="height:20px;width:20px;"></span></span></a>
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="#" style="min-width: 2.25rem" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-bs-auto-close="outside"><span class="d-block" style="height:20px;width:20px;"><span data-feather="bell" style="height:20px;width:20px;"></span></span></a>
 
                   <div class="dropdown-menu dropdown-menu-end notification-dropdown-menu py-0 shadow border navbar-dropdown-caret" id="navbarDropdownNotfication" aria-labelledby="navbarDropdownNotfication">
                       <div class="card position-relative border-0">

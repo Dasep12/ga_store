@@ -136,7 +136,7 @@
     <script src="{{ asset('assets/vendors/feather-icons/feather.min.js')}}"></script>
     <script src="{{ asset('assets/vendors/dayjs/dayjs.min.js')}}"></script>
     <script src="{{ asset('assets/assets/js/phoenix.js')}}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @livewireScripts
     @stack('scripts')
 

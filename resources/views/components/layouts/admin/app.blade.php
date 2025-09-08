@@ -42,6 +42,10 @@
     <link href="/assets/assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
     <link href="/assets/assets/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
     <link href="/assets/assets/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="/assets/vendors/flatpickr/flatpickr.min.css" rel="stylesheet">
+
+
     <script>
         var phoenixIsRTL = window.config.config.phoenixIsRTL;
         if (phoenixIsRTL) {
@@ -58,8 +62,9 @@
         }
     </script>
 
+
     <style>
-        .navbar-vertical .navbar-vertical-content .navbar-nav .nav-link {
+        /* .navbar-vertical .navbar-vertical-content .navbar-nav .nav-link {
             word-break: break-word;
             line-height: 1.188rem;
             padding-left: 1.5rem;
@@ -69,14 +74,13 @@
 
         @media (min-width: 992px) {
             .navbar-vertical.navbar-expand-lg .navbar-vertical-content .navbar-nav .nav-link:hover {
-                /* background-color: #fff; */
                 color: #3691e1 !important;
             }
         }
 
         .navbar-vertical .dropdown-indicator .dropdown-indicator-icon-wrapper {
             color: #fff !important;
-        }
+        } */
 
         .bg-custom-navbar {
             background: #0D9488 !important;
@@ -103,11 +107,26 @@
         .navbar-vertical .navbar-vertical-content .navbar-nav {
             font-size: .9rem !important;
         }
+
+        .select2-container--default .select2-selection--single {
+            height: calc(1.8125rem + 2px) !important;
+            /* sama dengan form-control-sm */
+            padding: 0rem 0.5rem !important;
+            font-size: 0.8rem !important;
+            font-weight: 600 !important;
+            /* small */
+            line-height: 1.5 !important;
+            border: 1px solid #ced4da !important;
+            border-radius: 0.3rem !important;
+        }
     </style>
 
 
     @livewireStyles
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 </head>
 
 
@@ -269,7 +288,7 @@
                 </div>
             </div>
         </div>
-        <div class="support-chat-container">
+        <div class="support-chat-container d-none">
             <div class="container-fluid support-chat">
                 <div class="card bg-body-emphasis">
                     <div class="card-header d-flex flex-between-center px-4 py-3 border-bottom border-translucent">
@@ -427,7 +446,7 @@
                 </div>
             </div><a class="bun btn-primary d-grid mb-3 text-white mt-5 btn btn-primary" href="https://themes.getbootstrap.com/product/phoenix-admin-dashboard-webapp-template/" target="_blank">Purchase template</a>
         </div>
-    </div><a class="card setting-toggle" href="#settings-offcanvas" data-bs-toggle="offcanvas">
+    </div><a class="card setting-toggle d-none" href="#settings-offcanvas" data-bs-toggle="offcanvas">
         <div class="card-body d-flex align-items-center px-2 py-1">
             <div class="position-relative rounded-start" style="height:34px;width:28px">
                 <div class="settings-popover"><span class="ripple"><span class="fa-spin position-absolute all-0 d-flex flex-center"><span class="icon-spin position-absolute all-0 d-flex flex-center">
@@ -459,6 +478,9 @@
     <script src="/assets/assets/js/phoenix.js"></script>
     <script src="/assets/assets/js/projectmanagement-dashboard.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/assets/vendors/dayjs/dayjs.min.js"></script>
+    <script src="/assets/vendors/flatpickr/flatpickr.min.js"></script>
+
     @livewireScripts
     @stack('scripts')
 </body>

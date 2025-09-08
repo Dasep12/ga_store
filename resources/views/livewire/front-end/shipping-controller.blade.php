@@ -62,8 +62,7 @@
 <script>
     if (!window.CheckoutSuccessListenerRegistered) {
         Livewire.on('checkout-success', (data) => {
-            alert(data.message ?? data[0]?.message ?? 'Checkout berhasil');
-            console.log(data.message ?? data[0]?.message ?? 'Checkout berhasil');
+            Swal.fire('Berhasil', data.message ?? data[0]?.message ?? 'Checkout berhasil', 'success');
         });
         window.CheckoutSuccessListenerRegistered = true;
     }

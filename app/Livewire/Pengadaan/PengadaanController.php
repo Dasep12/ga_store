@@ -24,9 +24,9 @@ class PengadaanController extends Component
     public $perPage = 10; // Default items per page
     public $isReady = false; // penanda lazy load
     protected $paginationTheme = 'bootstrap';
-    public $filterType = 'ALL';
+    public $filterType = 'ALL'; // default filter
+    public $filterStatus = 'request'; // default filter status
     protected $listeners = ['globalSearchUpdated', 'reloadTable' => 'loadData', 'reload-table' => '$refresh'];
-    public $filterStatus = 1;
     public $message;
     public function globalSearchUpdated($value)
     {
@@ -39,6 +39,13 @@ class PengadaanController extends Component
         $this->resetPage();
     }
 
+
+    public function setFilterStatus($type)
+    {
+        $this->filterStatus = $type;
+        $this->resetPage();
+        $this->loadData(); // jika pakai lazy load
+    }
 
 
     public function loadData()
@@ -59,23 +66,18 @@ class PengadaanController extends Component
         $datas = collect(); // default kosong
 
         if ($this->isReady) {
-            $datas = DB::table('tbl_mst_product')
-                ->leftJoin('tbl_mst_kategori', 'tbl_mst_product.kategori_id', '=', 'tbl_mst_kategori.id')
-                ->leftJoin('tbl_mst_satuan', 'tbl_mst_product.satuan', '=', 'tbl_mst_satuan.id')
-                ->leftJoin('tbl_mst_jenis_asset', 'tbl_mst_product.jenis_asset', '=', 'tbl_mst_jenis_asset.kode_asset')
+            $datas = DB::table('vw_trn_order')
                 ->select(
-                    'tbl_mst_product.*',
-                    'tbl_mst_kategori.name as kategori_name',
-                    'tbl_mst_satuan.name as satuan_name',
-                    'tbl_mst_jenis_asset.name as jenis_asset_name'
+                    'vw_trn_order.*',
+                    DB::raw('(SELECT COUNT(*) FROM tbl_trn_order WHERE tbl_trn_order.product_id = vw_trn_order.barang_id) as order_count')
                 )->where(function ($q) {
                     $q->where('nama_barang', 'like', '%' . $this->search . '%')
                         ->orWhere('kode_barang', 'like', '%' . $this->search . '%')
                         ->orWhere('type_barang', 'like', '%' . $this->search . '%')
                         ->orWhere('merek', 'like', '%' . $this->search . '%')
-                        ->orWhere('warna', 'like', '%' . $this->search . '%')
-                        ->orWhere('tbl_mst_product.is_actived', 'like', '%' . $this->search . '%');
-                })
+                        ->orWhere('department', 'like', '%' . $this->search . '%')
+                    ;
+                })->where('status', $this->filterStatus)
                 ->when($this->filterType !== 'ALL', function ($q) {
                     $q->where('type_barang', $this->filterType);
                 })
@@ -83,117 +85,56 @@ class PengadaanController extends Component
                 ->paginate($this->perPage);
         }
 
-        return view('livewire.frontend.index', [
+        return view('livewire.admin.pengadaan.index', [
             'datas' => $datas,
-            'categories' => DB::table('tbl_mst_kategori')->get(),
-            'units' => DB::table('tbl_mst_satuan')->get(),
-            'jenis_assets' => DB::table('tbl_mst_jenis_asset')->get(),
             'title' => 'Pengadaan',
-        ])->extends('components.layouts.frontend.app');
-
-        // return view('livewire.frontend.index')->layout('components.layouts.frontend.app', [
-        //     'title' => 'Home',
-        //     'categories' => DB::table('tbl_mst_kategori')->get(),
-        // ]);
+        ])->extends('components.layouts.admin.app');
     }
 
     public function show($id)
     {
-        $Kategori = DB::table('tbl_mst_product')->find($id);
-        return response()->json($Kategori);
+        $data = DB::table('vw_trn_order')->where('order_id', $id)->get();
+        return response()->json($data);
     }
 
     public function crudJson(Request $request)
     {
         switch ($request->crudAction) {
             case 'create':
-                $validator = Validator::make($request->all(), [
-                    'nama_barang' => 'required|string|max:255',
-                    'kode_barang' => 'required|string|max:255|unique:tbl_mst_product,kode_barang',
-                    'type_barang' => 'required|string|max:255',
-                    'kategori_id' => 'required|string|max:255',
-                    'satuan' => 'required|string|max:255',
-                    'jenis_asset' => 'required|string|max:255',
-                    'is_actived' => 'boolean',
-                    'images'        => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
-                ]);
-
-                if ($validator->fails()) {
-                    return response()->json(['errors' => $validator->errors()], 422);
-                }
-
-                // Handle upload file jika ada
-                $imagePath = null;
-                if ($request->hasFile('images')) {
-                    $file = $request->file('images');
-                    $filename = time() . '_' . $file->getClientOriginalName();
-                    $file->move(public_path('assets/images'), $filename);
-                    $imagePath = 'assets/images/' . $filename; // simpan relative path
-                }
-                DB::table('tbl_mst_product')->insert([
-                    'nama_barang' => $request->nama_barang,
-                    'kode_barang' => $request->kode_barang,
-                    'type_barang' => $request->type_barang,
-                    'jenis_asset' => $request->jenis_asset,
-                    'kategori_id' => $request->kategori_id,
-                    'merek' => $request->merek,
-                    'warna' => $request->warna,
-                    'satuan' => $request->satuan,
-                    'ukuran' => $request->ukuran,
-                    'model' => $request->model,
-                    'harga' => $request->harga,
-                    'deskripsi' => $request->deskripsi,
-                    'images'        => $imagePath,
-                    'is_actived' => (int)$request->is_actived ?? 0,
-                    'created_by' => 'system',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
                 return response()->json(['success' => true, 'message' => 'Data ditambahkan']);
                 break;
             case 'edit':
-                $validator = Validator::make($request->all(), [
-                    'images'        => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
-                ]);
-
-                if ($validator->fails()) {
-                    return response()->json(['errors' => $validator->errors()], 422);
-                }
-
-                $updateData = [
-                    'nama_barang' => $request->nama_barang,
-                    'kode_barang' => $request->kode_barang,
-                    'type_barang' => $request->type_barang,
-                    'jenis_asset' => $request->jenis_asset,
-                    'kategori_id' => $request->kategori_id,
-                    'merek' => $request->merek,
-                    'warna' => $request->warna,
-                    'satuan' => $request->satuan,
-                    'ukuran' => $request->ukuran,
-                    'model' => $request->model,
-                    'harga' => $request->harga,
-                    'deskripsi' => $request->deskripsi,
-                    'is_actived'    => (int) ($request->is_actived ?? 0),
-                    'updated_at'    => now(),
-                    'updated_by'    => 'system',
-                ];
-
-                // Upload file jika ada
-                if ($request->hasFile('images')) {
-                    $file = $request->file('images');
-                    $filename = time() . '_' . $file->getClientOriginalName();
-                    $file->move(public_path('assets/images'), $filename);
-                    $updateData['images'] = 'assets/images/' . $filename;
-                }
-
-                DB::table('tbl_mst_product')
-                    ->where('id', $request->id)
-                    ->update($updateData);
                 return response()->json(['success' => true, 'message' => 'Data diperbarui']);
                 break;
             case 'delete':
                 DB::table('tbl_mst_product')->where('id', $request->id)->delete();
+                return response()->json(['success' => true, 'message' => 'Data dihapus']);
+                break;
+            case 'process':
+                // Proses pengadaan, misalnya update status atau lainnya
+                DB::table('tbl_trn_order')->where('id', $request->id)->update([
+                    'status' => 'progress',
+                    'progress_by' => 'dasep',
+                    'progress_date' => now(),
+                ]);
+                return response()->json(['success' => true, 'message' => 'Request Barang terproses']);
+                break;
+            case 'done':
+                // Proses pengadaan, misalnya update status atau lainnya
+                DB::table('tbl_trn_order')->where('id', $request->id)->update([
+                    'status' => 'done',
+                    'finish_by' => 'dasep',
+                    'finish_date' => now(),
+                ]);
+                return response()->json(['success' => true, 'message' => 'Data dihapus']);
+                break;
+            case 'reject':
+                // Proses pengadaan, misalnya update status atau lainnya
+                DB::table('tbl_trn_order')->where('id', $request->id)->update([
+                    'status' => 'rejected',
+                    'finish_by' => 'dasep',
+                    'finish_date' => now(),
+                ]);
                 return response()->json(['success' => true, 'message' => 'Data dihapus']);
                 break;
         }

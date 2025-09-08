@@ -142,7 +142,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             if (!window.cartAddedListenerRegistered) {
                 Livewire.on('cart-added', (data) => {
-                    alert(data[0].message)
+                    Swal.fire('Berhasil', data[0].message, 'success');
                 });
                 window.cartAddedListenerRegistered = true; // tandai sudah didaftarkan
             }

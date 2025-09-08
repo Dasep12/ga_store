@@ -10,7 +10,9 @@ use App\Livewire\FrontEnd\MainController as MainPage;
 use App\Livewire\FrontEnd\ShippingController as ShippingPage;
 use App\Livewire\FrontEnd\TrackController as TrackPage;
 use App\Livewire\FrontEnd\CheckoutController as CheckoutPage;
+use App\Livewire\InputStock\InputStockController as InputStockPage;
 use App\Livewire\Pengadaan\PengadaanController as PengadaanPage;
+use App\Livewire\Stock\StockController as StockPage;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -62,6 +64,20 @@ Route::prefix('pengadaan')->group(function () {
     Route::post('/', [PengadaanPage::class, 'crudJson'])->name('pengadaan.crud');
     Route::post('/importExcel', [ProductPage::class, 'ImportExcel'])->name('pengadaan.import');
 });
+
+Route::prefix('inputstock')->group(function () {
+    Route::get('/', InputStockPage::class)->name('inputstock.index');
+    Route::get('/{id}', [InputStockPage::class, 'show'])->name('inputstock.show');
+    Route::post('/crudJson', [InputStockPage::class, 'crudJson'])->name('inputstock.crud');
+    Route::post('/importExcel', [InputStockPage::class, 'ImportExcel'])->name('inputstock.import');
+    Route::get('/import/progress/{id}', [InputStockPage::class, 'progress'])->name('inputstock.import.progress');
+});
+
+Route::prefix('stock')->group(function () {
+    Route::get('/', StockPage::class)->name('stock.index');
+    Route::get('/{id}', [StockPage::class, 'show'])->name('stock.show');
+});
+
 
 
 
