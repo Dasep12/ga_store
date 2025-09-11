@@ -63,19 +63,19 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="ukuran" class="form-label">Ukuran</label>
-                            <input type="text" class="form-control form-control-sm" id="ukuran" name="ukuran" placeholder="ukuran">
+                            <input type="text" class="form-control form-control-sm" id="ukuran" name="ukuran" placeholder="Ukuran">
                             <span class="text-danger fs-9 error-text" id="error-ukuran"></span>
                         </div>
 
                         <div class="col-md-3 mb-3">
-                            <label for="satuan" class="form-label">Satuan</label>
-                            <select class="form-select form-select-sm" id="satuan" name="satuan">
+                            <label for="satuan_id" class="form-label">Satuan</label>
+                            <select class="form-select form-select-sm" id="satuan_id" name="satuan_id">
                                 <option value="">Pilih Unit</option>
                                 @foreach($units as $unit)
                                 <option value="{{ $unit->id }}">{{ $unit->code . ' : ' .  $unit->name  }}</option>
                                 @endforeach
                             </select>
-                            <span class="text-danger fs-9 error-text" id="error-satuan"></span>
+                            <span class="text-danger fs-9 error-text" id="error-satuan_id"></span>
                         </div>
 
                         <div class="col-md-3 mb-3">
@@ -84,22 +84,41 @@
                             <span class="text-danger fs-9 error-text" id="error-model"></span>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label for="deskripsi" class="form-label">Deskripsi</label>
-                            <textarea type="text" class="form-control form-control-sm" id="deskripsi" name="deskripsi" placeholder="Deskripsi"></textarea>
-                            <span class="text-danger fs-9 error-text" id="error-deskripsi"></span>
+                            <label for="stock_type" class="form-label">Stock Type</label>
+                            <select class="form-select form-select-sm" id="stock_type" name="stock_type">
+                                <option value="">Pilih Unit</option>
+                                <option value="INDENT">INDENT</option>
+                                <option value="READY">READY</option>
+                            </select>
+                            <span class="text-danger fs-9 error-text" id="error-stock_type"></span>
                         </div>
+
 
                         <div class="col-md-3 mb-3">
                             <label for="images" class="form-label">Images</label>
                             <input type="file" class="form-control form-control-sm" id="images" name="images" placeholder="images">
                             <span class="text-danger fs-9 error-text" id="error-images"></span>
                         </div>
+
                         <div class="col-md-3 mb-3">
-                            <div class="form-check form-switch mb-3">
+                            <label for="deskripsi" class="form-label">Deskripsi</label>
+                            <textarea type="text" class="form-control form-control-sm" id="deskripsi" name="deskripsi" placeholder="Deskripsi"></textarea>
+                            <span class="text-danger fs-9 error-text" id="error-deskripsi"></span>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <div class="form-check form-switch mt-3">
                                 <input class="form-check-input" type="checkbox" id="is_actived" name="is_actived" value="1">
                                 <label class="form-check-label">Active</label>
                             </div>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="special_order" name="special_order" value="1">
+                                <label class="form-check-label">Special Order</label>
+                            </div>
                         </div>
+
+                        <div class="row error-info"></div>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -10,6 +10,8 @@
                 @csrf
                 <div class="modal-body">
                     <input type="text" id="id" hidden name="id">
+                    <input type="text" id="barang_id" hidden name="barang_id">
+                    <input type="text" id="stock_type" hidden name="stock_type">
                     <input type="text" hidden id="crudAction" name="crudAction">
                     <div class="row">
                         <div class="col-md-3 mb-3">
@@ -43,7 +45,7 @@
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="ukuran" class="form-label">Ukuran</label>
-                            <input type="text" class="form-control form-control-sm" id="ukuran" name="ukuran" placeholder="ukuran">
+                            <input type="text" class="form-control form-control-sm" id="ukuran" name="ukuran" placeholder="Ukuran">
                             <span class="text-danger fs-9 error-text" id="error-ukuran"></span>
                         </div>
 
@@ -74,8 +76,18 @@
 
                         <div class="col-md-3 mb-3">
                             <label for="qty" class="form-label">Qty</label>
-                            <input type="text" class="form-control form-control-sm" id="qty" name="qty" placeholder="Qty">
+                            <input type="number" class="form-control form-control-sm" id="qty" name="qty" placeholder="Qty">
                             <span class="text-danger fs-9 error-text" id="error-qty"></span>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label for="qty_actual" class="form-label">Qty Actual</label>
+                            <input type="number" class="form-control form-control-sm" id="qty_actual" name="qty_actual" placeholder="Qty">
+                            <span class="text-danger fs-9 error-text" id="error-qty_actual"></span>
+                        </div>
+
+                        <div class="col-md-3 mb-3 remark_reject_div">
+
                         </div>
                     </div>
                 </div>

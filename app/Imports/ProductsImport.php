@@ -34,16 +34,22 @@ class ProductsImport implements ToCollection, WithChunkReading, WithHeadingRow, 
                 ->where('code', $row['satuan'] ?? '')
                 ->value('id');
 
+            $kategori = DB::table('tbl_mst_kategori')
+                ->where('code', $row['kategori_id'] ?? '')
+                ->value('id');
+
             DB::table('tbl_mst_product')->updateOrInsert(
                 ['kode_barang' => $row['kode_barang']], // cek berdasarkan kode_barang
                 [
                     'nama_barang'   => $row['nama_barang'] ?? '',
                     'type_barang'   => $row['type_barang'] ?? null,
                     'jenis_asset'   => $row['jenis_asset'] ?? null,
-                    'kategori_id'   => $row['kategori_id'] ?? null,
+                    'stock_type'    => $row['stock_type'] ?? null,
+                    'special_order' => $row['special_order'] ?? null,
+                    'kategori_id'   => $kategori,
                     'merek'         => $row['merek'] ?? null,
                     'warna'         => $row['warna'] ?? null,
-                    'satuan'        => $satuan ?? null,
+                    'satuan_id'        => $satuan ?? null,
                     'ukuran'        => $row['ukuran'] ?? null,
                     'model'         => $row['model'] ?? null,
                     'harga'         => $row['harga'] ?? null,
@@ -56,6 +62,20 @@ class ProductsImport implements ToCollection, WithChunkReading, WithHeadingRow, 
                     'created_at'    => now(),
                 ]
             );
+            $lastInsertId = DB::getPdo()->lastInsertId();
+            $cekStock = DB::table('tbl_trn_stock')
+                ->where('kode_barang', $row['kode_barang'])
+                ->first();
+            if (!$cekStock) {
+                DB::table('tbl_trn_stock')
+                    ->insert([
+                        'product_id' => $lastInsertId,
+                        'kode_barang' => $row['kode_barang'],
+                        'stock' =>  0,
+                        'updated_at' => now(),
+                        'updated_by' => 'import-excel',
+                    ]);
+            }
 
             $processedNow++;
         }

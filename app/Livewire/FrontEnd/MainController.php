@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\FrontEnd;
+namespace App\Livewire\Frontend;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +76,17 @@ class MainController extends Component
     public function addToCart($productId)
     {
         $cart = $this->cart;
+
+        $cekStock = DB::table('tbl_trn_stock')->where('product_id', $productId)->first();
+        if ($cekStock && $cekStock->stock < 1) {
+            // Kirim event ke browser
+            $this->dispatch('cart-added', [
+                'status' => false,
+                'message' => 'Stok barang habis, tidak dapat menambahkan ke keranjang',
+            ]);
+            return;
+        }
+
         if (isset($cart[$productId])) {
             $cart[$productId]['qty']++;
         } else {
@@ -96,6 +107,7 @@ class MainController extends Component
         // Kirim event ke browser
         $this->dispatch('cart-added', [
             'message' => $cart[$productId]['nama_barang'] . ' berhasil ditambahkan ke keranjang',
+            'status' => true,
             'data' => session()->get('cart')
         ]);
     }
@@ -113,7 +125,7 @@ class MainController extends Component
         if ($this->isReady) {
             $datas = DB::table('tbl_mst_product')
                 ->leftJoin('tbl_mst_kategori', 'tbl_mst_product.kategori_id', '=', 'tbl_mst_kategori.id')
-                ->leftJoin('tbl_mst_satuan', 'tbl_mst_product.satuan', '=', 'tbl_mst_satuan.id')
+                ->leftJoin('tbl_mst_satuan', 'tbl_mst_product.satuan_id', '=', 'tbl_mst_satuan.id')
                 ->leftJoin('tbl_mst_jenis_asset', 'tbl_mst_product.jenis_asset', '=', 'tbl_mst_jenis_asset.kode_asset')
                 ->leftJoin('tbl_trn_stock', 'tbl_mst_product.id', '=', 'tbl_trn_stock.product_id')
                 ->select(
@@ -125,7 +137,7 @@ class MainController extends Component
                     DB::raw('(SELECT COUNT(*) FROM tbl_trn_order WHERE tbl_trn_order.product_id = tbl_mst_product.id) as order_count')
                 )->where(function ($q) {
                     $q->where('nama_barang', 'like', '%' . $this->search . '%')
-                        ->orWhere('kode_barang', 'like', '%' . $this->search . '%')
+                        ->orWhere('tbl_mst_product.kode_barang', 'like', '%' . $this->search . '%')
                         ->orWhere('type_barang', 'like', '%' . $this->search . '%')
                         ->orWhere('merek', 'like', '%' . $this->search . '%')
                         ->orWhere('warna', 'like', '%' . $this->search . '%')

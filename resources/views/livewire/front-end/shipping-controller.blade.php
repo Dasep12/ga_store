@@ -1,5 +1,5 @@
 <div>
-    <div class="border-y border-translucent bg-white p-3" id="productWishlistTable">
+    <div class="border-y border-translucent bg-white p-3 rounded-3" id="productWishlistTable">
         <div class="table-responsive scrollbar mb-3">
             @if($cart)
             <table class="table fs-9 mb-0">
@@ -9,7 +9,6 @@
                         <th class="sort white-space-nowrap align-middle">KODE</th>
                         <th class="sort white-space-nowrap align-middle" style="width: 20%;">BARANG</th>
                         <th class="sort white-space-nowrap align-middle">TYPE</th>
-                        <th class="sort white-space-nowrap align-middle">KATEGORI</th>
                         <th class="sort white-space-nowrap align-middle" style="width: 10%;">QTY</th>
                         <th style=" width: 20%;" class=""> </th>
                     </tr>
@@ -30,8 +29,8 @@
                         <td class="products align-middle">
                             <a class="fw-semibold mb-0" href="">{{ $item['nama_barang'] }}</a>
                         </td>
-                        <td class="color align-middle white-space-nowrap fs-9 text-body">REGULER</td>
-                        <td class="color align-middle white-space-nowrap fs-9 text-body">KATEGORI</td>
+                        <td class="color align-middle white-space-nowrap fs-9 text-body">{{ $item['type_barang'] }}</td>
+
 
                         <td class="quantity align-middle">
                             <div class="input-group input-group-sm flex-nowrap" data-quantity="data-quantity"><button wire:click="decreamentQuantity({{ $id }})" class="btn btn-sm px-2" data-type="minus">-</button>
@@ -49,12 +48,25 @@
                 </tbody>
             </table>
             @else
-            <p>Keranjang kosong</p>
+            <div class="justify-content-center align-item-center">
+                <h2 class="text-center"><i class="fas fa-shopping-cart text-primary"></i></h2>
+                <p class="text-center text-primary">Keranjang kosong</p>
+            </div>
             @endif
         </div>
+
+        @if($cart)
+        {{-- tombol checkout --}}
         <div class="d-flex justify-content-end mt-5 mb-5">
-            <button wire:click="checkOut" class="btn btn-primary fs-10"><span class="fas fa-shopping-cart me-1 fs-10"></span> Request Barang</button>
+            <button wire:click="checkOut"
+                class="btn btn-primary fs-10"
+                wire:loading.attr="disabled">
+                <span class="fas fa-shopping-cart me-1 fs-10"></span> Request Barang
+            </button>
         </div>
+        @endif
+
+
     </div>
 </div>
 
@@ -62,7 +74,11 @@
 <script>
     if (!window.CheckoutSuccessListenerRegistered) {
         Livewire.on('checkout-success', (data) => {
-            Swal.fire('Berhasil', data.message ?? data[0]?.message ?? 'Checkout berhasil', 'success');
+            if (data[0].success === false) {
+                Swal.fire('Gagal', data[0].message, 'error');
+                return;
+            }
+            Swal.fire('Berhasil', data[0].message, 'success');
         });
         window.CheckoutSuccessListenerRegistered = true;
     }

@@ -20,7 +20,7 @@
         <div class="row g-2"> <!-- g-4 = jarak antar kolom & baris -->
             @forelse($datas as $data)
             <div class="col-12 col-sm-6 col-lg-3"> <!-- 4 kolom di layar besar -->
-                <div class="bg-white p-3 rounded-2 h-100">
+                <div class="bg-white p-3 rounded-3 h-100">
 
                     <?php
                     $imagePath = $data->images ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s';
@@ -142,10 +142,36 @@
         document.addEventListener("DOMContentLoaded", () => {
             if (!window.cartAddedListenerRegistered) {
                 Livewire.on('cart-added', (data) => {
+                    if (!data[0].status) {
+                        Swal.fire('Gagal', data[0].message, 'error');
+                        return;
+                    }
                     Swal.fire('Berhasil', data[0].message, 'success');
                 });
                 window.cartAddedListenerRegistered = true; // tandai sudah didaftarkan
             }
+        });
+
+        function initAllCollapses() {
+            document.querySelectorAll('.collapse').forEach(el => {
+                if (!bootstrap.Collapse.getInstance(el)) {
+                    new bootstrap.Collapse(el, {
+                        toggle: false
+                    });
+                }
+            });
+        }
+
+        document.addEventListener('livewire:load', () => {
+            initAllCollapses();
+
+            Livewire.hook('message.processed', () => {
+                initAllCollapses();
+            });
+        });
+
+        document.addEventListener('livewire:navigated', () => {
+            initAllCollapses();
         });
     </script>
     @endPushOnce

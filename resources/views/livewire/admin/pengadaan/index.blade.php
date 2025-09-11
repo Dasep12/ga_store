@@ -1,5 +1,5 @@
 <div wire:key="product-table" wire:init="loadData">
-    @section('title', 'Barang')
+    @section('title', 'Pengadaan')
     <?php
 
     ?>
@@ -33,9 +33,9 @@
 
                     <ul class="nav nav-underline fs-5 navbar-expand p-2 bg-white" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link fw-bold {{ $filterStatus == 'request' ? 'active' : '' }}"
-                                wire:click="setFilterStatus('request')" type="button">
-                                <span class="fa-solid fa-hotel"></span> Request
+                            <button class="nav-link fw-bold {{ $filterStatus == 'approved' ? 'active' : '' }}"
+                                wire:click="setFilterStatus('approved')" type="button">
+                                <span class="fa-solid fas fa-file-signature"></span> Approved
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -76,53 +76,53 @@
                         <table class="table table-sm table-hover table-bordered fs-8 table-responsive scrollbar" wire:loading.remove wire:target="gotoPage, perPage,filterData, search, filterType">
                             <thead class="bg-custom-navbar">
                                 @switch($filterStatus)
-                                @case('request')
+                                @case('approved')
                                 <tr>
                                     <th class="text-white">#</th>
-                                    <th class="text-white">KODE</th>
-                                    <th class="text-white">BARANG</th>
-                                    <th class="text-white">QTY</th>
-                                    <th class="text-white">REQUEST DATE</th>
-                                    <th class="text-white">REQUEST BY</th>
-                                    <th class="text-white">STATUS</th>
-                                    <th class="text-white">ACT</th>
+                                    <th class="text-white">Kode</th>
+                                    <th class="text-white">Barang</th>
+                                    <th class="text-white">Qty</th>
+                                    <th class="text-white">Approved Date</th>
+                                    <th class="text-white">Approved By</th>
+                                    <th class="text-white">Status</th>
+                                    <th class="text-white">Action</th>
                                 </tr>
                                 @break
                                 @case('progress')
                                 <tr>
                                     <th class="text-white">#</th>
-                                    <th class="text-white">KODE</th>
-                                    <th class="text-white">BARANG</th>
-                                    <th class="text-white">QTY</th>
-                                    <th class="text-white">PROGRESS DATE</th>
-                                    <th class="text-white">PROGRESS BY</th>
-                                    <th class="text-white">REQUEST BY</th>
-                                    <th class="text-white">STATUS</th>
-                                    <th class="text-white">ACT</th>
+                                    <th class="text-white">Kode</th>
+                                    <th class="text-white">Barang</th>
+                                    <th class="text-white">Qty</th>
+                                    <th class="text-white">Progress Date</th>
+                                    <th class="text-white">Progress By</th>
+                                    <th class="text-white">Reqeust By</th>
+                                    <th class="text-white">Status</th>
+                                    <th class="text-white">Action</th>
                                 </tr>
                                 @break
                                 @case('rejected')
                                 <tr>
                                     <th class="text-white">#</th>
-                                    <th class="text-white">KODE</th>
-                                    <th class="text-white">BARANG</th>
-                                    <th class="text-white">QTY</th>
-                                    <th class="text-white">FINISH DATE</th>
-                                    <th class="text-white">FINISH BY</th>
-                                    <th class="text-white">REQUEST BY</th>
-                                    <th class="text-white">STATUS</th>
+                                    <th class="text-white">Kode</th>
+                                    <th class="text-white">Barang</th>
+                                    <th class="text-white">Qty</th>
+                                    <th class="text-white">Reject Date</th>
+                                    <th class="text-white">Reject By</th>
+                                    <th class="text-white">Request By</th>
+                                    <th class="text-white">Status</th>
                                 </tr>
                                 @break
                                 @case('done')
                                 <tr>
                                     <th class="text-white">#</th>
-                                    <th class="text-white">KODE</th>
-                                    <th class="text-white">BARANG</th>
-                                    <th class="text-white">QTY</th>
-                                    <th class="text-white">FINISH DATE</th>
-                                    <th class="text-white">FINISH BY</th>
-                                    <th class="text-white">REQUEST BY</th>
-                                    <th class="text-white">STATUS</th>
+                                    <th class="text-white">Kode</th>
+                                    <th class="text-white">Barang</th>
+                                    <th class="text-white">Qty</th>
+                                    <th class="text-white">Finish Date</th>
+                                    <th class="text-white">Finish By</th>
+                                    <th class="text-white">Request By</th>
+                                    <th class="text-white">Status</th>
                                 </tr>
                                 @break
                                 @endswitch
@@ -130,7 +130,7 @@
                             </thead>
                             <tbody class="list" id="order-table-body">
                                 @switch($filterStatus)
-                                @case('request')
+                                @case('approved')
                                 @forelse($datas as $data)
                                 <?php
                                 $imagePath = $data->images ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s';
@@ -245,10 +245,10 @@
                                         {{ $data->qty }}
                                     </td>
                                     <td>
-                                        {{ $data->finish_date }}
+                                        {{ $data->rejected_date }}
                                     </td>
                                     <td>
-                                        {{ $data->finish_by }}
+                                        {{ $data->rejected_by }}
                                     </td>
                                     <td>
                                         {{ $data->creator . ' - ' . $data->department }}
@@ -380,6 +380,7 @@
         $('.error-text').html('');
         $('#crudAction').val(action);
         $('form.form-loading :input').removeAttr('readonly');
+        $(".remark_reject_div").html('');
         if (action === 'create') {
             $('#modalCrud').modal('show');
             $('#modalTitle').text('Add {{ $title }}');
@@ -395,8 +396,10 @@
                     $('#modalTitle').text('Process {{ $title }}');
                     $.each(data, function(i, value) {
                         $('#id').val(value.order_id);
+                        $('#barang_id').val(value.barang_id);
                         $('#nama_barang').val(value.nama_barang);
                         $('#kode_barang').val(value.kode_barang);
+                        $('#stock_type').val(value.stock_type);
                         $('#type_barang').val(value.type_barang);
                         $('#jenis_asset').val(value.jenis_asset);
                         $('#creator').val(value.creator);
@@ -407,6 +410,7 @@
                         $('#satuan').val(value.satuan);
                         $('#model').val(value.model);
                         $('#qty').val(value.qty);
+                        $('#qty_actual').val(value.qty_actual);
                         $('#deskripsi').val(value.deskripsi);
                         $('#is_actived').prop('checked', value.is_actived);
                     });
@@ -421,6 +425,9 @@
                 }
             });
         } else if (action === 'reject') {
+            $(".remark_reject_div").html(`<label for="remark_reject" class="form-label">Remark</label>
+                            <textarea required class="form-control form-control-sm" id="remark_reject" name="remark_reject" placeholder="Reason Reject"></textarea>
+                            <span class="text-danger fs-9 error-text" id="error-remark_reject"></span>`);
             $.ajax({
                 url: `/pengadaan/${id}`,
                 method: 'GET',
@@ -429,6 +436,8 @@
                     $.each(data, function(i, value) {
                         $('#id').val(value.order_id);
                         $('#nama_barang').val(value.nama_barang);
+                        $('#barang_id').val(value.barang_id);
+                        $('#stock_type').val(value.stock_type);
                         $('#kode_barang').val(value.kode_barang);
                         $('#type_barang').val(value.type_barang);
                         $('#jenis_asset').val(value.jenis_asset);
@@ -440,15 +449,18 @@
                         $('#satuan').val(value.satuan);
                         $('#model').val(value.model);
                         $('#qty').val(value.qty);
+                        $('#qty_actual').val(value.qty_actual);
                         $('#deskripsi').val(value.deskripsi);
                         $('#is_actived').prop('checked', value.is_actived);
                     });
+
                     $(".btnProcess").attr("disabled", true);
                     $('.btnReject').attr('onclick', 'document.getElementById("crudAction").value="reject"');
                     $('.btnReject').html('<i class="fa fa-trash"></i> Reject');
                     $(".btnReject").removeClass("bg-custom-navbar").addClass("btn-danger");
                     $('#modalCrud').modal('show');
                     $('form.form-loading :input').attr('readonly', 'readonly');
+                    $("#remark_reject").removeAttr('readonly');
                 },
                 error: function(xhr) {
                     console.error(xhr.responseText);
@@ -486,6 +498,8 @@
                     $('#formSubmit')[0].reset(); // <-- ini sudah benar
 
                     Livewire.dispatch('reload-table');
+                } else {
+                    Swal.fire('Gagal', res.message, 'error');
                 }
             },
             error: function(xhr) {

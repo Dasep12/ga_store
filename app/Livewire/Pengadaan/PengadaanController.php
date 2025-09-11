@@ -25,7 +25,7 @@ class PengadaanController extends Component
     public $isReady = false; // penanda lazy load
     protected $paginationTheme = 'bootstrap';
     public $filterType = 'ALL'; // default filter
-    public $filterStatus = 'request'; // default filter status
+    public $filterStatus = 'approved'; // default filter status
     protected $listeners = ['globalSearchUpdated', 'reloadTable' => 'loadData', 'reload-table' => '$refresh'];
     public $message;
     public function globalSearchUpdated($value)
@@ -99,44 +99,83 @@ class PengadaanController extends Component
 
     public function crudJson(Request $request)
     {
-        switch ($request->crudAction) {
-            case 'create':
-                return response()->json(['success' => true, 'message' => 'Data ditambahkan']);
-                break;
-            case 'edit':
-                return response()->json(['success' => true, 'message' => 'Data diperbarui']);
-                break;
-            case 'delete':
-                DB::table('tbl_mst_product')->where('id', $request->id)->delete();
-                return response()->json(['success' => true, 'message' => 'Data dihapus']);
-                break;
-            case 'process':
-                // Proses pengadaan, misalnya update status atau lainnya
-                DB::table('tbl_trn_order')->where('id', $request->id)->update([
-                    'status' => 'progress',
-                    'progress_by' => 'dasep',
-                    'progress_date' => now(),
-                ]);
-                return response()->json(['success' => true, 'message' => 'Request Barang terproses']);
-                break;
-            case 'done':
-                // Proses pengadaan, misalnya update status atau lainnya
-                DB::table('tbl_trn_order')->where('id', $request->id)->update([
-                    'status' => 'done',
-                    'finish_by' => 'dasep',
-                    'finish_date' => now(),
-                ]);
-                return response()->json(['success' => true, 'message' => 'Data dihapus']);
-                break;
-            case 'reject':
-                // Proses pengadaan, misalnya update status atau lainnya
-                DB::table('tbl_trn_order')->where('id', $request->id)->update([
-                    'status' => 'rejected',
-                    'finish_by' => 'dasep',
-                    'finish_date' => now(),
-                ]);
-                return response()->json(['success' => true, 'message' => 'Data dihapus']);
-                break;
+        try {
+            $message = "";
+            DB::beginTransaction();
+            switch ($request->crudAction) {
+                case 'create':
+                    $message = 'Data ditambahkan';
+                    break;
+                case 'edit':
+                    $message = 'Data diperbarui';
+                    break;
+                case 'delete':
+                    $message = 'Data dihapus';
+                    break;
+                case 'process':
+                    // Proses pengadaan, misalnya update status atau lainnya
+                    DB::table('tbl_trn_order')->where('id', $request->id)->update([
+                        'status' => 'progress',
+                        'progress_by' => 'dasep',
+                        'progress_date' => now(),
+                    ]);
+                    $message = 'Request Barang terproses';
+                    break;
+                case 'done':
+
+                    if (strtolower($request->stock_type) === 'ready') {
+                        // Ambil stok produk
+                        $stokSekarang = DB::table('tbl_trn_stock')
+                            ->where('product_id', $request->barang_id)
+                            ->where('product_id', $request->barang_id)
+                            ->value('stock');
+                        // Validasi stok kosong
+                        if (is_null($stokSekarang) || $stokSekarang <= 0) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Stok kosong. Tidak bisa memproses order.',
+                            ]);
+                        }
+
+                        if ($stokSekarang < $request->qty_actual) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => "Stok tidak mencukupi. Stok tersedia: {$stokSekarang}, Qty diminta: {$request->qty_actual}",
+                            ]);
+                        }
+
+                        // Proses pengadaan, misalnya update status atau lainnya
+                        DB::table('tbl_trn_stock')
+                            ->where('product_id', $request->barang_id)
+                            ->decrement('stock', $request->qty);
+                    }
+
+
+                    DB::table('tbl_trn_order')->where('id', $request->id)->update([
+                        'status' => 'done',
+                        'finish_by' => 'dasep',
+                        'finish_date' => now(),
+                    ]);
+                    $message = 'Request Barang selesai diproses';
+
+                    break;
+                case 'reject':
+                    // Proses pengadaan, misalnya update status atau lainnya
+                    DB::table('tbl_trn_order')->where('id', $request->id)->update([
+                        'status' => 'rejected',
+                        'rejected_by' => 'dasep',
+                        'remark_reject' => $request->remark_reject,
+                        'rejected_date' => now(),
+                    ]);
+                    $message = 'Request Barang ditolak';
+                    break;
+            }
+
+            DB::commit();
+            return response()->json(['success' => true, 'message' => $message]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
         }
     }
 

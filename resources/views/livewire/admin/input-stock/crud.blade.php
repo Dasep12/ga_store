@@ -16,6 +16,7 @@
                             <label for="product_id" class="form-label">Nama Barang *</label>
                             <select class="form-control form-control-sm"
                                 id="product_id" name="product_id">
+                                <option value="">Pilih</option>
                                 @foreach($produk as $pr)
                                 <option data-kode_barang="{{ $pr->kode_barang }}" value="{{ $pr->id }}">{{ $pr->nama_barang }}</option>
                                 @endforeach

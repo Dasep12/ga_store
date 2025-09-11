@@ -1,5 +1,6 @@
  <div class="col-lg-2 col-xxl-2 ps-2 ps-xxl-2">
-     <div class="phoenix-offcanvas-filter bg-body scrollbar phoenix-offcanvas phoenix-offcanvas-fixed" id="productFilterColumn" style="top: 92px">
+     <!-- <div class="phoenix-offcanvas-filter bg-body scrollbar phoenix-offcanvas phoenix-offcanvas-fixed" id="productFilterColumn" style="top: 92px"> -->
+     <div class="" id="productFilterColumn" style="top: 92px">
          <div class="d-flex justify-content-between align-items-center mb-3">
              <h3 class="mb-0">Filters</h3>
 
@@ -10,13 +11,18 @@
                  <div class="fs-8 text-body-highlight">Jenis</div><span class="fa-solid fa-angle-down toggle-icon text-body-quaternary"></span>
              </div>
          </a>
-         <div class="collapse show" id="collapseAvailability">
+         <div class="collapse show" id="collapseAvailability" wire:ignore.self>
              <div class="mb-2">
                  @foreach($jenis_assets as $jenis)
                  <div class="form-check mb-0">
                      <input class="form-check-input mt-0"
-                         wire:model.live="selectedJenis" id="{{ $jenis->kode_asset }}" type="checkbox" value="{{ $jenis->kode_asset }}" name="color">
-                     <label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0" for="{{ $jenis->kode_asset }}">{{ $jenis->name }}</label>
+                         wire:model.live="selectedJenis"
+                         id="{{ $jenis->kode_asset }}"
+                         type="checkbox"
+                         value="{{ $jenis->kode_asset }}"
+                         name="color">
+                     <label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
+                         for="{{ $jenis->kode_asset }}">{{ $jenis->name }}</label>
                  </div>
                  @endforeach
              </div>
@@ -65,3 +71,29 @@
      </div>
      <div class="phoenix-offcanvas-backdrop d-lg-none" data-phoenix-backdrop style="top: 92px"></div>
  </div>
+
+ @pushOnce('scripts')
+ <script>
+     function initAllCollapses() {
+         document.querySelectorAll('.collapse').forEach(el => {
+             if (!bootstrap.Collapse.getInstance(el)) {
+                 new bootstrap.Collapse(el, {
+                     toggle: false
+                 });
+             }
+         });
+     }
+
+     document.addEventListener('livewire:load', () => {
+         initAllCollapses();
+
+         Livewire.hook('message.processed', () => {
+             initAllCollapses();
+         });
+     });
+
+     document.addEventListener('livewire:navigated', () => {
+         initAllCollapses();
+     });
+ </script>
+ @endPushOnce

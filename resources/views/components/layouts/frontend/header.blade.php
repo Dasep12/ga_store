@@ -1,14 +1,14 @@
 <!-- ============================================-->
 <!-- <section> begin ============================-->
-<section class="py-0">
+<section class="py-0" style="background: #940808de !important;">
 
     <div class="container-small">
         <div class="ecommerce-topbar">
             <nav class="navbar navbar-expand-lg navbar-light px-0">
                 <div class="row gx-0 gy-2 w-100 flex-between-center">
                     <div class="col-auto"><a class="text-decoration-none" href=".">
-                            <div class="d-flex align-items-center"><img src="{{ asset('assets/assets/img/icons/logo.png')}}" alt="phoenix" width="27" />
-                                <p class="logo-text ms-2">phoenix</p>
+                            <div class="d-flex align-items-center"><img src="{{ asset('assets/assets/img/LOGO BIT.png')}}" alt="phoenix" width="100" />
+                                <p class="logo-text ms-2"></p>
                             </div>
                         </a></div>
                     <div class="col-auto order-md-1">
@@ -20,12 +20,12 @@
                                     <label class="mb-0 theme-control-toggle-label theme-control-toggle-dark" for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Switch theme" style="height:32px;width:32px;"><span class="icon" data-feather="sun"></span></label>
                                 </div>
                             </li> -->
-                            <li class="nav-item"><a class="nav-link px-2 icon-indicator icon-indicator-primary" wire:navigate href="{{ route('main.shipping') }}" role="button"><span class="text-body-tertiary" data-feather="shopping-cart" style="height:20px;width:20px;"></span>
+                            <li class="nav-item text-white"><a class="nav-link px-2 icon-indicator icon-indicator-primary" href="{{ route('main.shipping') }}" role="button"><span class="text-body-tertiary" data-feather="shopping-cart" style="height:20px;width:20px;color:aliceblue!important"></span>
                                     @livewire('frontend.cart-badge')
                                 </a>
                             </li>
 
-                            <li class="nav-item dropdown"><a class="nav-link px-2" id="navbarDropdownUser" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="text-body-tertiary" data-feather="user" style="height:20px;width:20px;"></span></a>
+                            <li class="nav-item dropdown"><a class="nav-link px-2 " id="navbarDropdownUser" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="text-body-tertiary" data-feather="user" style="height:20px;width:20px;color:aliceblue!important"></span></a>
                                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border mt-2" aria-labelledby="navbarDropdownUser">
                                     <div class="card position-relative border-0">
                                         <div class="card-body p-0">

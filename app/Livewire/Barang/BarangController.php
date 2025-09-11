@@ -61,7 +61,7 @@ class BarangController extends Component
         if ($this->isReady) {
             $datas = DB::table('tbl_mst_product')
                 ->leftJoin('tbl_mst_kategori', 'tbl_mst_product.kategori_id', '=', 'tbl_mst_kategori.id')
-                ->leftJoin('tbl_mst_satuan', 'tbl_mst_product.satuan', '=', 'tbl_mst_satuan.id')
+                ->leftJoin('tbl_mst_satuan', 'tbl_mst_product.satuan_id', '=', 'tbl_mst_satuan.id')
                 ->leftJoin('tbl_mst_jenis_asset', 'tbl_mst_product.jenis_asset', '=', 'tbl_mst_jenis_asset.kode_asset')
                 ->select(
                     'tbl_mst_product.*',
@@ -88,7 +88,7 @@ class BarangController extends Component
             'categories' => DB::table('tbl_mst_kategori')->get(),
             'units' => DB::table('tbl_mst_satuan')->get(),
             'jenis_assets' => DB::table('tbl_mst_jenis_asset')->get(),
-            'title' => 'Barang',
+            'title' => 'Master Barang',
         ])->extends('components.layouts.admin.app');
     }
 
@@ -107,9 +107,11 @@ class BarangController extends Component
                     'kode_barang' => 'required|string|max:255|unique:tbl_mst_product,kode_barang',
                     'type_barang' => 'required|string|max:255',
                     'kategori_id' => 'required|string|max:255',
-                    'satuan' => 'required|string|max:255',
+                    'satuan_id' => 'required|string|max:255',
+                    'stock_type' => 'required|string|max:255',
                     'jenis_asset' => 'required|string|max:255',
                     'is_actived' => 'boolean',
+                    'special_order' => 'boolean',
                     'images'        => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
                 ]);
 
@@ -131,9 +133,11 @@ class BarangController extends Component
                     'type_barang' => $request->type_barang,
                     'jenis_asset' => $request->jenis_asset,
                     'kategori_id' => $request->kategori_id,
+                    'stock_type' => $request->stock_type,
+                    'special_order' => (int)$request->is_actived ?? 0,
                     'merek' => $request->merek,
                     'warna' => $request->warna,
-                    'satuan' => $request->satuan,
+                    'satuan_id' => $request->satuan_id,
                     'ukuran' => $request->ukuran,
                     'model' => $request->model,
                     'harga' => $request->harga,
@@ -162,9 +166,11 @@ class BarangController extends Component
                     'type_barang' => $request->type_barang,
                     'jenis_asset' => $request->jenis_asset,
                     'kategori_id' => $request->kategori_id,
+                    'special_order' => (int)$request->is_actived ?? 0,
+                    'stock_type' => $request->stock_type,
                     'merek' => $request->merek,
                     'warna' => $request->warna,
-                    'satuan' => $request->satuan,
+                    'satuan_id' => $request->satuan_id,
                     'ukuran' => $request->ukuran,
                     'model' => $request->model,
                     'harga' => $request->harga,
@@ -246,6 +252,7 @@ class BarangController extends Component
         $worksheetInfo = $reader->listWorksheetInfo($fullPath);
         // ambil sheet pertama info
         $totalRows = $worksheetInfo[0]['totalRows'] ?? 0;
+
 
         // Buat ID import unik
         $importId = (string) Str::uuid();

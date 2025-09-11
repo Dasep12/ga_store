@@ -23,8 +23,11 @@
                         </div>
                         <div id="importStatus"></div>
                     </div>
+
+                    <div class="row error-info"></div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer d-flex justify-content-between">
+                <a href="{{ asset('template/FORMAT IMPORT PRODUK.xlsx') }}" class="small"><i class="fa fa-download"></i> unduh template</a>
                 <button id="btnUpload" type="submit" class="btn btn-primary btn-sm bg-custom-navbar" id="btnUpload"><i class="fa fa-file-upload"></i> Upload</button>
             </div>
             </form>

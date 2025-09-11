@@ -6,13 +6,15 @@ use App\Livewire\Units\UnitsController as UnitsPage;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Home\HomeController as HomePage;
 use App\Livewire\Barang\BarangController as ProductPage;
-use App\Livewire\FrontEnd\MainController as MainPage;
-use App\Livewire\FrontEnd\ShippingController as ShippingPage;
-use App\Livewire\FrontEnd\TrackController as TrackPage;
-use App\Livewire\FrontEnd\CheckoutController as CheckoutPage;
+use App\Livewire\Frontend\MainController as MainPage;
+use App\Livewire\Frontend\ShippingController as ShippingPage;
+use App\Livewire\Frontend\TrackController as TrackPage;
+use App\Livewire\Frontend\CheckoutController as CheckoutPage;
 use App\Livewire\InputStock\InputStockController as InputStockPage;
 use App\Livewire\Pengadaan\PengadaanController as PengadaanPage;
 use App\Livewire\Stock\StockController as StockPage;
+use App\Livewire\Users\UserController as UserPage;
+use App\Livewire\JenisAsset\JenisAssetsController as JenisAssetPage;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,7 +30,8 @@ use App\Livewire\Stock\StockController as StockPage;
 //     return view('home');
 // });
 Route::get('/home', HomePage::class)->name('homepage');
-
+Route::get('/approval', [ShippingPage::class, 'approveOrder'])->name('approval.approve');
+Route::get('/rejected', [ShippingPage::class, 'rejectOrder'])->name('approval.reject');
 
 Route::prefix('departments')->group(function () {
     Route::get('/', DepartmentPage::class)->name('departments.index');
@@ -47,6 +50,11 @@ Route::prefix('units')->group(function () {
     Route::get('/', UnitsPage::class)->name('unit.index');
     Route::get('/{id}', [UnitsPage::class, 'show'])->name('unit.show');
     Route::post('/', [UnitsPage::class, 'crudJson'])->name('unit.crud');
+});
+Route::prefix('jenis-asset')->group(function () {
+    Route::get('/', JenisAssetPage::class)->name('jenis-assets.index');
+    Route::get('/{id}', [JenisAssetPage::class, 'show'])->name('jenis_assets.show');
+    Route::post('/', [JenisAssetPage::class, 'crudJson'])->name('jenis_assets.crud');
 });
 
 
@@ -72,6 +80,16 @@ Route::prefix('inputstock')->group(function () {
     Route::post('/importExcel', [InputStockPage::class, 'ImportExcel'])->name('inputstock.import');
     Route::get('/import/progress/{id}', [InputStockPage::class, 'progress'])->name('inputstock.import.progress');
 });
+
+
+
+
+Route::prefix('users')->group(function () {
+    Route::get('/', UserPage::class)->name('users.index');
+    Route::get('/{id}', [UserPage::class, 'show'])->name('users.show');
+    Route::post('/crudJson', [UserPage::class, 'crudJson'])->name('users.crud');
+});
+
 
 Route::prefix('stock')->group(function () {
     Route::get('/', StockPage::class)->name('stock.index');

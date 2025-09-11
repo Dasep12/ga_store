@@ -54,6 +54,8 @@
                             <th class="text-white" scope="col">Kode</th>
                             <th class="text-white" scope="col">Type</th>
                             <th class="text-white" scope="col">Ukuran</th>
+                            <th class="text-white" scope="col">Special Order</th>
+                            <th class="text-white" scope="col">Stock Type</th>
                             <th class="text-white text-center" scope="col">Status</th>
                             <th class="text-white" scope="col">Created</th>
                             <th class="text-white text-center" style="width: 80px;" scope="col">Action</th>
@@ -76,6 +78,8 @@
                             <td>{{ $data->kode_barang }}</td>
                             <td>{{ $data->type_barang }}</td>
                             <td>{{ $data->ukuran }}</td>
+                            <td align="center"><span class="badge badge-phoenix badge-phoenix-{{ $data->special_order == true ? 'success' : 'danger'}}">{{ $data->special_order == true ? 'Y' : 'N' }}</span></td>
+                            <td>{{ $data->stock_type }}</td>
                             <td align="center"><span class="badge badge-phoenix badge-phoenix-{{ $data->is_actived == true ? 'success' : 'danger'}}">{{ $data->is_actived == true ? 'Active' : 'Inactive' }}</span></td>
                             <td>{{ $data->created_at }}</td>
                             <td align="center">
@@ -176,6 +180,7 @@
             $('#modalTitle').text('Add {{ $title }}');
             $('#id').val('');
             $('#is_actived').prop('checked', true);
+            $('#special_order').prop('checked', true);
             $('#btnSave').html('<i class="fa fa-save"></i> Simpan');
             $("#btnSave").removeClass("btn-danger").addClass("bg-custom-navbar");
         } else if (action === 'edit') {
@@ -190,13 +195,15 @@
                     $('#type_barang').val(data.type_barang);
                     $('#jenis_asset').val(data.jenis_asset);
                     $('#kategori_id').val(data.kategori_id);
+                    $('#stock_type').val(data.stock_type);
                     $('#merek').val(data.merek);
                     $('#warna').val(data.warna);
                     $('#ukuran').val(data.ukuran);
-                    $('#satuan').val(data.satuan);
+                    $('#satuan_id').val(data.satuan_id);
                     $('#model').val(data.model);
                     $('#deskripsi').val(data.deskripsi);
                     $('#is_actived').prop('checked', data.is_actived);
+                    $('#special_order').prop('checked', data.special_order);
                     $('#btnSave').html('<i class="fa fa-save"></i> Simpan');
                     $("#btnSave").removeClass("btn-danger").addClass("bg-custom-navbar");
                     $('#modalCrud').modal('show');
@@ -210,6 +217,7 @@
                 url: `/product/${id}`,
                 method: 'GET',
                 success: function(data) {
+
                     $('#modalTitle').text('Delete Department');
                     $('#id').val(data.id);
                     $('#nama_barang').val(data.nama_barang);
@@ -217,13 +225,15 @@
                     $('#type_barang').val(data.type_barang);
                     $('#jenis_asset').val(data.jenis_asset);
                     $('#kategori_id').val(data.kategori_id);
+                    $('#stock_type').val(data.stock_type);
                     $('#merek').val(data.merek);
                     $('#warna').val(data.warna);
                     $('#ukuran').val(data.ukuran);
-                    $('#satuan').val(data.satuan);
+                    $('#satuan_id').val(data.satuan_id);
                     $('#model').val(data.model);
                     $('#deskripsi').val(data.deskripsi);
                     $('#is_actived').prop('checked', data.is_actived);
+                    $('#special_order').prop('checked', data.special_order);
                     $('#btnSave').html('<i class="fa fa-trash"></i> Delete');
                     $("#btnSave").removeClass("bg-custom-navbar").addClass("btn-danger");
                     $('#modalCrud').modal('show');
@@ -264,7 +274,6 @@
                     $('#modalCrud').modal('hide');
                     Swal.fire('Berhasil', res.message, 'success');
                     $('#formSubmit')[0].reset(); // <-- ini sudah benar
-
                     Livewire.dispatch('reload-table');
                 }
             },
@@ -278,6 +287,25 @@
                     $.each(errors, function(key, messages) {
                         $('#error-' + key).text(messages[0]);
                     });
+                } else {
+                    let message = "Terjadi kesalahan saat upload.";
+
+                    // Coba parsing JSON jika server mengirim error response JSON
+                    try {
+                        let response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            message = response.message;
+                        } else if (response.error) {
+                            message = response.error;
+                        }
+                    } catch (e) {
+                        // Kalau bukan JSON, ambil sebagian dari responseText
+                        if (xhr.responseText) {
+                            message = $(xhr.responseText).text().trim().substring(0, 200);
+                        }
+                    }
+
+                    $(".error-info").html(`<div class="alert alert-danger alert-dismissible fade show" role="alert"> <strong>Error!</strong> ${message}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
                 }
 
             }
@@ -327,10 +355,32 @@
                 var importId = res.import_id;
                 $('#importProgress').show();
                 pollProgress(importId);
+                $('#modalImport').modal('hide');
+                Livewire.dispatch('reload-table');
             },
             error: function(xhr) {
                 $('#btnUpload').prop('disabled', false);
-                alert('Upload error');
+                $('#uploadProgress').hide();
+                $('#importProgress').hide();
+
+                let message = "Terjadi kesalahan saat upload.";
+
+                // Coba parsing JSON jika server mengirim error response JSON
+                try {
+                    let response = JSON.parse(xhr.responseText);
+                    if (response.message) {
+                        message = response.message;
+                    } else if (response.error) {
+                        message = response.error;
+                    }
+                } catch (e) {
+                    // Kalau bukan JSON, ambil sebagian dari responseText
+                    if (xhr.responseText) {
+                        message = $(xhr.responseText).text().trim().substring(0, 200);
+                    }
+                }
+
+                $(".error-info").html(`<div class="alert alert-danger alert-dismissible fade show" role="alert"> <strong>Error!</strong> ${message}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
             }
         });
     });

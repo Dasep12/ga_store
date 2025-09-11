@@ -1,9 +1,13 @@
 <?php
 
-namespace App\Livewire\FrontEnd;
+namespace App\Livewire\Frontend;
 
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use App\Services\EmailService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
 
 class ShippingController extends Component
 {
@@ -102,51 +106,185 @@ class ShippingController extends Component
         DB::beginTransaction();
 
         try {
+            $emailService = app(EmailService::class);
             // Cek dan kunci stok semua item dulu
-            foreach ($cart as $item) {
-                $stock = DB::table('tbl_trn_stock')
-                    ->where('product_id', $item['id_barang'])
-                    ->lockForUpdate()
-                    ->value('stock');
+            // foreach ($cart as $item) {
+            //     $stock = DB::table('tbl_trn_stock')
+            //         ->where('product_id', $item['id_barang'])
+            //         ->lockForUpdate()
+            //         ->value('stock');
 
-                if ($stock === null || $stock < $item['qty']) {
-                    DB::rollBack();
-                    $this->dispatch('checkout-success', [
-                        'message' => 'Stok barang ' . $item['nama_barang'] . ' tidak mencukupi!',
-                    ]);
-                    return;
-                }
-            }
+            //     if ($stock === null || $stock < $item['qty']) {
+            //         DB::rollBack();
+            //         $this->dispatch('checkout-success', [
+            //             'message' => 'Stok barang ' . $item['nama_barang'] . ' tidak mencukupi!',
+            //         ]);
+            //         return;
+            //     }
+            // }
 
             // Generate order_id sekali untuk semua item
             $order_id = $this->generateOrderId();
-
+            $items = [];
             foreach ($cart as $item) {
                 $data = [
                     'order_id' => $order_id,
                     'product_id' => $item['id_barang'],
                     'department_id' => 1,
                     'qty' => $item['qty'],
+                    'qty_actual' => $item['qty'],
                     'user_id' => 1, // Ganti dengan ID user yang sesuai
-                    'status' => 'request'
+                    'status' => 'request',
+                    'created_at' => now(),
+                    'created_by' => 1, // Ganti dengan ID user yang sesuai
+                    'updated_at' => now(),
+                    'updated_by' => 1, // Ganti dengan ID user yang sesuai
                 ];
                 DB::table('tbl_trn_order')->insert($data);
-
-                // Potong stok
-                DB::table('tbl_trn_stock')
-                    ->where('product_id', $item['id_barang'])
-                    ->decrement('stock', $item['qty']);
+                array_push($items, [
+                    'nama' => $item['nama_barang'],
+                    'qty' => $item['qty'],
+                ]);
+                // // Potong stok
+                // DB::table('tbl_trn_stock')
+                //     ->where('product_id', $item['id_barang'])
+                //     ->decrement('stock', $item['qty']);
             }
 
-            DB::commit();
+
+            $pengaju = [
+                'nama' => 'Dasep Depiyawan',
+                'departemen' => 'IT',
+                'tanggal' => now()->format('d/m/Y'),
+            ];
+            $token = Hash::make($order_id . 'BTI');
+            DB::table('tbl_mst_token')->insert([
+                'order_id' => $order_id,
+                'token' => $token,
+                'status' => 'pending',
+                'created_at' => now(),
+            ]);
+            $approveUrl = route('approval.approve', ['order_id' => $order_id, 'token' => $token]);
+            $rejectUrl  = route('approval.reject',  ['order_id' => $order_id, 'token' => $token]);
+            $emailService->sendApproval(
+                $items,
+                'dasepdepiyawan@outlook.com',
+                $approveUrl,
+                $rejectUrl,
+                $pengaju
+            );
+
+            session()->forget('cart');
+            $this->cart = [];
             $this->dispatch('checkout-success', [
                 'message' => 'Checkout berhasil',
+                'success' => true,
             ]);
+            DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('checkout-success', [
                 'message' => 'Terjadi kesalahan saat checkout: ' . $e->getMessage(),
+                'success' => false,
             ]);
         }
+    }
+
+    public function approveOrder(Request $req)
+    {
+        $record = DB::table('tbl_mst_token')
+            ->where('order_id', $req->order_id)
+            ->where('token', $req->token)
+            ->where('status', 'pending')
+            ->first();
+        $message  = '';
+        $error = true;
+
+        try {
+
+            if (!$record) {
+                $error = true;
+                $message = 'Token atau Order ID tidak valid atau sudah digunakan';
+            } else {
+                //update status token
+                DB::table('tbl_mst_token')
+                    ->where('order_id', $req->order_id)
+                    ->where('token', $req->token)
+                    ->update([
+                        'status' => 'approved',
+                        'updated_at' => now(),
+                    ]);
+                //update status order
+                DB::table('tbl_trn_order')
+                    ->where('order_id', $req->order_id)
+                    ->update([
+                        'status' => 'approved',
+                        'updated_at' => now(),
+                        'approved_date' => now(),
+                        'approved_by' => 1, // Ganti dengan ID user yang sesuai
+                        'updated_by' => 1, // Ganti dengan ID user yang sesuai
+                    ]);
+                $message = 'Request dengan ID ' . $req->order_id . ' telah disetujui.';
+                $error = false;
+            }
+        } catch (\Exception $e) {
+            $error = true;
+            $message = 'Terjadi kesalahan: ' . $e->getMessage();
+        }
+
+        return view('livewire.front-end.approve-notification', [
+            'message' => $message,
+            'error' => $error,
+        ])
+            ->extends('components.layouts.frontend.app');
+        //validasi token dan order_id
+
+
+    }
+
+    public function rejectOrder(Request $req)
+    {
+        //validasi token dan order_id
+        $record = DB::table('tbl_mst_token')
+            ->where('order_id', $req->order_id)
+            ->where('token', $req->token)
+            ->where('status', 'pending')
+            ->first();
+        $message  = '';
+        $error = true;
+        try {
+            if (!$record) {
+                $error = true;
+                $message = 'Token atau Order ID tidak valid atau sudah digunakan';
+            } else {
+                //update status token
+                DB::table('tbl_mst_token')
+                    ->where('order_id', $req->order_id)
+                    ->where('token', $req->token)
+                    ->update([
+                        'status' => 'rejected',
+                        'updated_at' => now(),
+                    ]);
+                //update status order
+                DB::table('tbl_trn_order')
+                    ->where('order_id', $req->order_id)
+                    ->update([
+                        'status' => 'rejected',
+                        'updated_at' => now(),
+                        'rejected_date' => now(),
+                        'rejected_by' => 1, // Ganti dengan ID user yang sesuai
+                        'updated_by' => 1, // Ganti dengan ID user yang sesuai
+                    ]);
+                $error = false;
+                $message = 'Request dengan ID ' . $req->order_id . ' di tolak.';
+            }
+        } catch (\Exception $e) {
+            $error = true;
+            $message = 'Terjadi kesalahan: ' . $e->getMessage();
+        }
+        return view('livewire.front-end.reject-notification', [
+            'message' => $message,
+            'error' => $error,
+        ])->extends('components.layouts.frontend.app');
     }
 }

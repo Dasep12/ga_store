@@ -1,7 +1,9 @@
 <nav class="ecommerce-navbar navbar-expand navbar-light bg-body-emphasis justify-content-between">
     <div class="container-small d-flex flex-between-center" data-navbar="data-navbar">
         <div class="dropdown">
-            <button class="btn text-body ps-0 pe-5 text-nowrap dropdown-toggle dropdown-caret-none" data-category-btn="data-category-btn" data-bs-toggle="dropdown"><span class="fas fa-bars me-2"></span>Category</button>
+            <button class="btn text-body ps-0 pe-5 text-nowrap dropdown-toggle dropdown-caret-none" data-category-btn="data-category-btn" data-bs-toggle="dropdown">
+                <span class="fas fa-bars me-2"></span>
+            </button>
             <!-- <div class="dropdown-menu border border-translucent py-0 category-dropdown-menu">
                 <div class="card border-0 scrollbar" style="max-height: 657px;">
                     <div class="card-body p-6 pb-3">
@@ -77,17 +79,17 @@
         </div>
         <ul class="navbar-nav justify-content-end align-items-center">
             <li class="nav-item active" data-nav-item="data-nav-item">
-                <a class="nav-link {{ request()->routeIs('main.index') ? 'active' : '' }}" wire:navigate href="{{ url('/') }}">Home</a>
+                <a class="nav-link {{ request()->routeIs('main.index') ? 'active' : '' }}" href="{{ url('/') }}">Home</a>
             </li>
             <li class="nav-item" data-nav-item="data-nav-item">
-                <a class="nav-link {{ request()->routeIs('main.shipping') ? 'active' : '' }}" wire:navigate href="{{ route('main.shipping') }}">Cart</a>
+                <a class="nav-link {{ request()->routeIs('main.shipping') ? 'active' : '' }}" href="{{ route('main.shipping') }}">Cart</a>
             </li>
             <li class="nav-item" data-nav-item="data-nav-item">
-                <a class="nav-link {{ request()->routeIs('main.track') ? 'active' : '' }}" wire:navigate href="{{ route('main.track') }}">Track order</a>
+                <a class="nav-link {{ request()->routeIs('main.track') ? 'active' : '' }}" href="{{ route('main.track') }}">Track order</a>
             </li>
-            <li class="nav-item" data-nav-item="data-nav-item">
-                <a class="nav-link {{ request()->routeIs('main.checkout') ? 'active' : '' }}" wire:navigate href="{{ route('main.checkout') }}">Checkout</a>
-            </li>
+            <!-- <li class="nav-item" data-nav-item="data-nav-item">
+                <a class="nav-link {{ request()->routeIs('main.checkout') ? 'active' : '' }}" href="{{ route('main.checkout') }}">Special Request</a>
+            </li> -->
         </ul>
     </div>
 </nav>

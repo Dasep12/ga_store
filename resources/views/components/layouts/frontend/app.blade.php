@@ -10,7 +10,7 @@
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
-    <title>Phoenix</title>
+    <title>GA STORE</title>
 
 
     <!-- ===============================================-->
@@ -73,48 +73,32 @@
 </head>
 
 
-<body>
-
-    <!-- ===============================================-->
-    <!--    Main Content-->
-    <!-- ===============================================-->
-    <main class="main" id="top">
-
+<body class="d-flex flex-column min-vh-100">
+    <main class="main flex-grow-1" id="top" style="background: #f2eded !important;">
         @include('components.layouts.frontend.header')
         @include('components.layouts.frontend.navbar')
 
-
-        <!-- ============================================-->
-        <!-- <section> begin ============================-->
-        <section class="pt-5 pb-9">
-
+        <section class="pt-5 pb-9 flex-grow-1" style="background: #f2eded;">
             <div class="product-filter-container">
-                <button class="btn btn-sm btn-phoenix-secondary text-body-tertiary mb-5 d-lg-none" data-phoenix-toggle="offcanvas" data-phoenix-target="#productFilterColumn"><span class="fa-solid fa-filter me-2"></span>Filter</button>
                 <div class="row">
-                    <!-- content here -->
                     @yield('content')
                 </div>
             </div>
-            <!-- end of .container-->
-
         </section>
-        <!-- <section> close ============================-->
-        <!-- ============================================-->
-
-
-
-
-        <footer class="footer position-relative">
-            <div class="row g-0 justify-content-between align-items-center h-100">
-                <div class="col-12 col-sm-auto text-center">
-                    <p class="mb-0 mt-2 mt-sm-0 text-body">GA STORE<span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span><br class="d-sm-none" />2024 &copy;<a class="mx-1" href="https://themewagon.com">PT BONECOM INTI TECHNOLOGY</a></p>
-                </div>
-                <div class="col-12 col-sm-auto text-center">
-                    <p class="mb-0 text-body-tertiary text-opacity-85">v1.17.0</p>
-                </div>
-            </div>
-        </footer>
     </main>
+
+    <footer class="footer mt-auto" style="background: #940808de !important;">
+        <div class="row g-0 justify-content-between align-items-center h-100">
+            <div class="col-12 col-sm-auto text-center">
+                <p class="mb-0 mt-2 mt-sm-0 text-body" style="color: white !important;">GA STORE | 2024 &copy;<a class="mx-1" href="javascript:void(0)" style="color: white !important;">PT BONECOM INTI TECHNOLOGY</a></p>
+            </div>
+            <div class="col-12 col-sm-auto text-center">
+                <p class="mb-0 text-body-tertiary text-opacity-85" style="color: white !important;">v1.17.0</p>
+            </div>
+        </div>
+    </footer>
+
+
     <!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->

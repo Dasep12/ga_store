@@ -71,18 +71,21 @@ class StockController extends Component
         if ($this->isReady) {
             $datas = DB::table('tbl_trn_stock')
                 ->leftJoin('tbl_mst_product as b', 'b.id', '=', 'tbl_trn_stock.product_id')
+                ->leftJoin('tbl_mst_satuan as c', 'c.id', '=', 'b.satuan_id')
                 ->select(
                     'tbl_trn_stock.*',
                     'b.nama_barang',
                     'b.kode_barang',
+                    'c.code as satuan',
                     'b.images',
                 )->where(function ($q) {
                     $q->where('nama_barang', 'like', '%' . $this->search . '%')
-                        ->orWhere('kode_barang', 'like', '%' . $this->search . '%')
+                        ->orWhere('b.kode_barang', 'like', '%' . $this->search . '%')
                         ->orWhere('type_barang', 'like', '%' . $this->search . '%')
                         ->orWhere('merek', 'like', '%' . $this->search . '%')
                     ;
                 })
+                ->where('b.stock_type', 'READY')
                 ->when($this->filterType !== 'ALL', function ($q) {
                     $q->where('type_barang', $this->filterType);
                 })
@@ -95,7 +98,7 @@ class StockController extends Component
             'units' => DB::table('tbl_mst_satuan')->get(),
             'jenis_assets' => DB::table('tbl_mst_jenis_asset')->get(),
             'produk'        => DB::table('tbl_mst_product')->get(),
-            'title' => 'Input Stock',
+            'title' => 'Stock',
         ])->extends('components.layouts.admin.app');
     }
 

@@ -1,5 +1,5 @@
 <div wire:key="product-table" wire:init="loadData">
-    @section('title', 'Barang')
+    @section('title', 'Stock')
     @if(!$isReady)
     <div class="text-center p-5 d-flex flex-column align-items-center justify-content-center">
         <div class="spinner-border text-primary" role="status"></div>
@@ -46,6 +46,7 @@
                             <th class="text-white" scope="col">Nama Barang</th>
                             <th class="text-white" scope="col">Kode</th>
                             <th class="text-white" scope="col">Jumlah Stock</th>
+                            <th class="text-white" scope="col">Satuan</th>
                             <th class="text-white" scope="col">Last Update</th>
                         </tr>
                     </thead>
@@ -63,6 +64,7 @@
                             <td>{{ $data->nama_barang }}</td>
                             <td>{{ $data->kode_barang }}</td>
                             <td>{{ $data->stock }}</td>
+                            <td>{{ $data->satuan }}</td>
                             <td>{{ $data->updated_at }}</td>
                         </tr>
                         @empty

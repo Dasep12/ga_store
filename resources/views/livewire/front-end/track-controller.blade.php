@@ -13,11 +13,17 @@
         </li>
     </ul> -->
 
-    <ul class="nav nav-underline fs-5 navbar-expand p-2 bg-white" id="myTab" role="tablist">
+    <ul class="nav nav-underline fs-5 navbar-expand p-2 bg-white" style="border-top-left-radius: 10px !important;border-top-right-radius: 10px !important;" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link fw-bold {{ $filterType == 'request' ? 'active' : '' }}"
                 wire:click="setFilterType('request')" type="button">
                 <span class="fa-solid fa-hotel"></span> Request
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold {{ $filterType == 'approved' ? 'active' : '' }}"
+                wire:click="setFilterType('approved')" type="button">
+                <span class="fa-solid fa-edit"></span> Approved
             </button>
         </li>
         <li class="nav-item" role="presentation">
@@ -47,11 +53,11 @@
                 <p class="mt-2">Loading...</p>
             </div>
             @else
-            <div wire:loading.flex wire:target="setFilterType,loadData" class="justify-content-center align-items-center py-5">
+            <div wire:loading.flex wire:target="setFilterType,loadData" class="justify-content-center align-items-center py-5 position-absolute top-50 start-50 translate-middle">
                 <div class="spinner-border text-primary" role="status"></div>
                 <span class="ms-2">Loading...</span>
             </div>
-            <div class="table-responsive scrollbar bg-white p-3">
+            <div class="table-responsive scrollbar bg-white p-3" style="border-bottom-left-radius: 10px !important;border-bottom-right-radius: 10px !important;">
                 <table class="table fs-9 mb-0 border-top border-translucent" wire:loading.remove wire:target="gotoPage, perPage,filterData, search, filterType">
                     <thead>
                         @switch($filterType)
@@ -66,6 +72,17 @@
                             <th>STATUS</th>
                         </tr>
                         @break
+                        @case('approved')
+                        <tr>
+                            <th>#</th>
+                            <th>KODE</th>
+                            <th>BARANG</th>
+                            <th>QTY</th>
+                            <th>APPROVE DATE</th>
+                            <th>APPROVE BY</th>
+                            <th>STATUS</th>
+                        </tr>
+                        @break
                         @case('progress')
                         <tr>
                             <th>#</th>
@@ -77,7 +94,7 @@
                             <th>STATUS</th>
                         </tr>
                         @break
-                        @case('reject')
+                        @case('rejected')
                         <tr>
                             <th>#</th>
                             <th>KODE</th>
@@ -85,6 +102,7 @@
                             <th>QTY</th>
                             <th>REJECT DATE</th>
                             <th>REJECT BY</th>
+                            <th>REMARK</th>
                             <th>STATUS</th>
                         </tr>
                         @break
@@ -94,6 +112,8 @@
                             <th>KODE</th>
                             <th>BARANG</th>
                             <th>QTY</th>
+                            <th>QTY ACTUAL</th>
+                            <th>UNIT</th>
                             <th>FINISH DATE</th>
                             <th>FINISH BY</th>
                             <th>STATUS</th>
@@ -132,6 +152,42 @@
                             </td>
                             <td>
                                 <span class="badge badge-phoenix fs-9 badge-phoenix-warning"><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="10" align="center">DATA NOT FOUND</td>
+                        </tr>
+                        @endforelse
+                        @break
+                        @case('approved')
+                        @forelse($datas as $data)
+                        <?php
+                        $imagePath = $data->images ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s';
+                        ?>
+                        <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                            <td class="align-middle white-space-nowrap ps-0 py-0">
+                                <a class="border border-translucent rounded-2 d-inline-block" href="">
+                                    <img src="{{ asset($imagePath)}}" alt="" width="53">
+                                </a>
+                            </td>
+                            <td>
+                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
+                            </td>
+                            <td>
+                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
+                            </td>
+                            <td>
+                                {{ $data->qty }}
+                            </td>
+                            <td>
+                                {{ $data->approved_date }}
+                            </td>
+                            <td>
+                                {{ $data->approved_by }}
+                            </td>
+                            <td>
+                                <span class="badge badge-phoenix fs-9 badge-phoenix-warning"><span class="">{{ $data->status }} <i class="fa fa-edit"></i></span> </span>
                             </td>
                         </tr>
                         @empty
@@ -197,13 +253,16 @@
                                 {{ $data->qty }}
                             </td>
                             <td>
-                                {{ $data->finish_date }}
+                                {{ $data->rejected_date }}
                             </td>
                             <td>
-                                {{ $data->finish_by }}
+                                {{ $data->rejected_by }}
                             </td>
                             <td>
-                                <span class="badge badge-phoenix fs-9 badge-phoenix-success"><span class="">{{ $data->status }} <i class="fa fa-check"></i></span> </span>
+                                {{ $data->remark_reject }}
+                            </td>
+                            <td>
+                                <span class="badge badge-phoenix fs-9 badge-phoenix-danger"><span class="">{{ $data->status }} <i class="fa fa-close"></i></span> </span>
                             </td>
                         </tr>
                         @empty
@@ -229,14 +288,21 @@
                             <td>
                                 <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
                             </td>
+
                             <td>
                                 {{ $data->qty }}
                             </td>
                             <td>
-                                {{ $data->order_date }}
+                                {{ $data->qty_actual }}
                             </td>
                             <td>
-                                {{ $data->creator }}
+                                {{ $data->satuan_name }}
+                            </td>
+                            <td>
+                                {{ $data->finish_date }}
+                            </td>
+                            <td>
+                                {{ $data->finish_by }}
                             </td>
                             <td>
                                 <span class="badge badge-phoenix fs-9 badge-phoenix-success"><span class="">{{ $data->status }} <i class="fa fa-check"></i></span> </span>
