@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class StocksImport implements ToCollection, WithChunkReading, WithHeadingRow, ShouldQueue
 {
@@ -45,7 +46,7 @@ class StocksImport implements ToCollection, WithChunkReading, WithHeadingRow, Sh
                 'supplier' => $row['supplier'],
                 'harga_total' => $row['harga_total'],
                 'remark' => $row['remark'],
-                'created_by' => 'system',
+                'created_by' => Auth::user()->user_id ?? 'system',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -64,7 +65,7 @@ class StocksImport implements ToCollection, WithChunkReading, WithHeadingRow, Sh
                 DB::table('tbl_trn_stock')->insert([
                     'product_id' => $row['product_id'],
                     'stock' => $row['qty'],
-                    'created_by' => 'system',
+                    'created_by' => Auth::user()->user_id ?? 'system',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);

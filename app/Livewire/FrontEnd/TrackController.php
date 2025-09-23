@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Frontend;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -53,6 +54,7 @@ class TrackController extends Component
     }
     public function render()
     {
+        $user_id = Auth::user()->id;
         $datas = collect(); // default kosong
         if ($this->isReady) {
             $datas = DB::table('vw_trn_order')

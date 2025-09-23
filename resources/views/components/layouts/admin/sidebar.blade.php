@@ -4,7 +4,7 @@ use App\Models\Menu;
 
 $menus = Menu::where('parent_menu', '*')
     ->where('is_actived', 1)
-    ->where('is_deleted', 0)
+    ->where('role_id', 'dev')
     ->orderBy('sort', 'asc')
     ->with(['children.children.children']) // preload sampai level 4
     ->get();
@@ -49,6 +49,7 @@ function isActive($url)
                                 @if($menu->icon)
                                 <span class="nav-link-icon"><span data-feather="{{ $menu->icon }}"></span></span>
                                 @endif
+
                                 <span class="nav-link-text">{{ $menu->menu }}</span>
                             </div>
                         </a>

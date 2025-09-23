@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Contracts\Queue\ShouldQueue;
-
+use Illuminate\Support\Facades\Auth;
 
 class ProductsImport implements ToCollection, WithChunkReading, WithHeadingRow, ShouldQueue
 {
@@ -19,6 +19,8 @@ class ProductsImport implements ToCollection, WithChunkReading, WithHeadingRow, 
     {
         $this->importId = $importId;
     }
+
+
 
     public function collection(Collection $rows)
     {
@@ -56,8 +58,8 @@ class ProductsImport implements ToCollection, WithChunkReading, WithHeadingRow, 
                     'deskripsi'     => $row['deskripsi'] ?? null,
                     'images'        => $row['images'] ?? null, // isi nama file/path jika ada
                     'is_actived'    => isset($row['is_actived']) ? (int)$row['is_actived'] : 1,
-                    'created_by'    => 'import-excel',
-                    'updated_by'    => 'import-excel',
+                    'created_by'    => Auth::user()->user_id ?? 'system',
+                    'updated_by'    => Auth::user()->user_id ?? 'system',
                     'updated_at'    => now(),
                     'created_at'    => now(),
                 ]

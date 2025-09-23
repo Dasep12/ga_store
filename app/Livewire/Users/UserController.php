@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\StocksImport;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Component
 {
@@ -98,8 +99,31 @@ class UserController extends Component
 
     public function show($id)
     {
-        $data = DB::table('tbl_sys_users')->where('id', $id)->get();
+        $data = DB::table('tbl_sys_users')->where('user_id', $id)->get();
         return response()->json($data);
+    }
+
+    public function showMenu($id)
+    {
+        $data = DB::table('tbl_sys_role_access')
+            ->leftJoin('tbl_sys_menu', 'tbl_sys_menu.menu_id', '=', 'tbl_sys_role_access.menu_id')
+            ->where('role_id', $id)
+            ->where('tbl_sys_role_access.is_actived', 1)
+            ->select('tbl_sys_menu.menu_id', 'tbl_sys_menu.menu', 'tbl_sys_menu.level', 'tbl_sys_menu.icon', 'tbl_sys_role_access.*')
+            ->get();
+        return response()->json($data);
+    }
+
+    public function checked(Request $req)
+    {
+        $data = DB::table('tbl_sys_user_role_access')
+            ->where('role_id', $req->role_id)
+            ->where('menu_id', $req->menu_id);
+
+        if ($req->user_id) {
+            $data = $data->where('user_id', $req->user_id);
+        }
+        return response()->json($data->first());
     }
 
 
@@ -127,7 +151,7 @@ class UserController extends Component
                     'email' => $request->email,
                     'nama' => $request->nama,
                     'level_id' => $request->level_id,
-                    'password' => $request->password,
+                    'password' =>  Hash::make($request->password),
                     'department_id' => $request->department_id,
                     'role_id' => $request->role_id,
                     'created_by' => 'system',
@@ -137,8 +161,8 @@ class UserController extends Component
                 break;
             case 'edit':
                 $validator = Validator::make($request->all(), [
-                    'noreg' => 'required|string|max:255|unique:tbl_sys_users,noreg,' . $request->id . ',id',
-                    'email' => 'required|string|max:255|unique:tbl_sys_users,email,' . $request->id . ',id',
+                    'noreg' => 'required|string|max:255|unique:tbl_sys_users,noreg,' . $request->id . ',user_id',
+                    'email' => 'required|string|max:255|unique:tbl_sys_users,email,' . $request->id . ',user_id',
                     'nama' => 'required|string|max:255',
                     'department_id' => 'required|string|max:255',
                     'role_id' => 'required|string|max:255',
@@ -149,12 +173,13 @@ class UserController extends Component
                     return response()->json(['errors' => $validator->errors()], 422);
                 }
                 $message = "Data berhasil diupdate";
-                DB::table('tbl_sys_users')->where('id', $request->id)->update([
+                DB::table('tbl_sys_users')->where('user_id', $request->id)->update([
                     'noreg' => $request->noreg,
                     'email' => $request->email,
                     'nama' => $request->nama,
                     'level_id' => $request->level_id,
                     'department_id' => $request->department_id,
+                    'password' =>  Hash::make($request->password),
                     'role_id' => $request->role_id,
                     'updated_at' => now(),
                     'updated_by' => 'system'
@@ -162,7 +187,7 @@ class UserController extends Component
                 break;
             case 'delete':
                 $message = "Data berhasil dihapus";
-                DB::table('tbl_sys_users')->where('id', $request->id)->delete();
+                DB::table('tbl_sys_users')->where('user_id', $request->id)->delete();
                 break;
         }
 

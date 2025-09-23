@@ -4,6 +4,7 @@ namespace App\Livewire\Units;
 
 use App\Services\ExportService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -92,7 +93,7 @@ class UnitsController extends Component
                     'name' => $request->name,
                     'code' => $request->code,
                     'is_actived' => (int)$request->is_actived ?? 0,
-                    'created_by' => 'system',
+                    'created_by' => Auth::user()->user_id ?? 'system',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -116,7 +117,7 @@ class UnitsController extends Component
                         'code' => $request->code,
                         'is_actived' => (int)$request->is_actived ?? 0,
                         'updated_at' => now(),
-                        'updated_by' => 'system',
+                        'updated_by' =>  Auth::user()->user_id ?? 'system',
                     ]);
 
                 return response()->json(['success' => true, 'message' => 'Data diperbarui']);

@@ -12,7 +12,7 @@ class MainController extends Component
 {
     use WithPagination;
     public $search = '';
-    public $perPage = 25; // Default items per page
+    public $perPage = 10; // Default items per page
     public $isReady = false; // penanda lazy load
     public $cart = [];
     protected $paginationTheme = 'bootstrap';

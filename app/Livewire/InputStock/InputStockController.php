@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\StocksImport;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class InputStockController extends Component
 {
@@ -139,7 +140,7 @@ class InputStockController extends Component
                     'harga_total' => $request->harga_total,
                     'status' => 'done',
                     'remark' => $request->remark,
-                    'created_by' => 'system',
+                    'created_by' => Auth::user()->user_id ?? 'system',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -158,7 +159,7 @@ class InputStockController extends Component
                     DB::table('tbl_trn_stock')->insert([
                         'product_id' => $request->product_id,
                         'stock' => $request->qty,
-                        'created_by' => 'system',
+                        'created_by' => Auth::user()->user_id ?? 'system',
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
@@ -171,7 +172,7 @@ class InputStockController extends Component
                     ['product_id' => $request->product_id], // kondisi
                     [
                         'stock' => DB::raw("stock - {$request->qty}"), // update stock nambah
-                        'created_by' => 'system',
+                        'created_by' => Auth::user()->user_id ?? 'system',
                         'updated_at' => now(),
                     ]
                 );

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model
 {
-    protected $table = 'tbl_sys_menu'; // nama tabel Anda
+    protected $table = 'vw_usr_menu_access'; // nama tabel Anda
     protected $primaryKey = 'menu_id';
     public $incrementing = false; // karena pakai kode manual MN-xxxx
     protected $keyType = 'string';

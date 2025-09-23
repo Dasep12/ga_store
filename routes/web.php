@@ -15,6 +15,8 @@ use App\Livewire\Pengadaan\PengadaanController as PengadaanPage;
 use App\Livewire\Stock\StockController as StockPage;
 use App\Livewire\Users\UserController as UserPage;
 use App\Livewire\JenisAsset\JenisAssetsController as JenisAssetPage;
+use App\Livewire\Login\LoginController as LoginPage;
+use App\Livewire\Roles\RolesController as RolesPage;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -86,16 +88,29 @@ Route::prefix('inputstock')->group(function () {
 
 Route::prefix('users')->group(function () {
     Route::get('/', UserPage::class)->name('users.index');
+    Route::get('/checked', UserPage::class)->name('users.index');
     Route::get('/{id}', [UserPage::class, 'show'])->name('users.show');
+    Route::get('/menu/{id}', [UserPage::class, 'showMenu'])->name('menu-users.show');
     Route::post('/crudJson', [UserPage::class, 'crudJson'])->name('users.crud');
 });
 
+
+Route::prefix('roles')->group(function () {
+    Route::get('/', RolesPage::class)->name('roles.index');
+    Route::get('/{id}', [RolesPage::class, 'show'])->name('roles.show');
+    Route::post('/crudJson', [RolesPage::class, 'crudJson'])->name('roles.crud');
+});
 
 Route::prefix('stock')->group(function () {
     Route::get('/', StockPage::class)->name('stock.index');
     Route::get('/{id}', [StockPage::class, 'show'])->name('stock.show');
 });
 
+
+Route::get('/home', HomePage::class)->name('homepage');
+Route::get('/login', LoginPage::class)->name('loginpage');
+Route::post('/validatelogin', [LoginPage::class, 'login'])->name('validatelogin');
+Route::get('/logout', [LoginPage::class, 'logout'])->name('logout');
 
 
 

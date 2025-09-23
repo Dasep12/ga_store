@@ -4,6 +4,7 @@ namespace App\Livewire\Kategori;
 
 use App\Services\ExportService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -89,7 +90,7 @@ class KategoriController extends Component
                 DB::table('tbl_mst_kategori')->insert([
                     'name' => $request->name,
                     'is_actived' => (int)$request->is_actived ?? 0,
-                    'created_by' => 'system',
+                    'created_by' => Auth::user()->user_id ?? 'system',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -112,7 +113,7 @@ class KategoriController extends Component
                         'name' => $request->name,
                         'is_actived' => (int)$request->is_actived ?? 0,
                         'updated_at' => now(),
-                        'updated_by' => 'system',
+                        'updated_by' => Auth::user()->user_id ?? 'system',
                     ]);
 
                 return response()->json(['success' => true, 'message' => 'Data diperbarui']);

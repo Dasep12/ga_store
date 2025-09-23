@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Services\EmailService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -133,12 +134,12 @@ class ShippingController extends Component
                     'department_id' => 1,
                     'qty' => $item['qty'],
                     'qty_actual' => $item['qty'],
-                    'user_id' => 1, // Ganti dengan ID user yang sesuai
+                    'user_id' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
                     'status' => 'request',
                     'created_at' => now(),
-                    'created_by' => 1, // Ganti dengan ID user yang sesuai
+                    'created_by' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
                     'updated_at' => now(),
-                    'updated_by' => 1, // Ganti dengan ID user yang sesuai
+                    'updated_by' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
                 ];
                 DB::table('tbl_trn_order')->insert($data);
                 array_push($items, [
@@ -221,8 +222,8 @@ class ShippingController extends Component
                         'status' => 'approved',
                         'updated_at' => now(),
                         'approved_date' => now(),
-                        'approved_by' => 1, // Ganti dengan ID user yang sesuai
-                        'updated_by' => 1, // Ganti dengan ID user yang sesuai
+                        'approved_by' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
+                        'updated_by' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
                     ]);
                 $message = 'Request dengan ID ' . $req->order_id . ' telah disetujui.';
                 $error = false;
@@ -272,8 +273,8 @@ class ShippingController extends Component
                         'status' => 'rejected',
                         'updated_at' => now(),
                         'rejected_date' => now(),
-                        'rejected_by' => 1, // Ganti dengan ID user yang sesuai
-                        'updated_by' => 1, // Ganti dengan ID user yang sesuai
+                        'rejected_by' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
+                        'updated_by' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
                     ]);
                 $error = false;
                 $message = 'Request dengan ID ' . $req->order_id . ' di tolak.';

@@ -2,13 +2,13 @@
     <div class="border-y border-translucent bg-white p-3 rounded-3" id="productWishlistTable">
         <div class="table-responsive scrollbar mb-3">
             @if($cart)
-            <table class="table fs-9 mb-0">
+            <table class="fs-9 mb-0 table ps-table--shopping-cart">
                 <thead>
                     <tr>
                         <th class="sort white-space-nowrap align-middle fs-10" scope="col" style="width:7%;"></th>
                         <th class="sort white-space-nowrap align-middle">KODE</th>
                         <th class="sort white-space-nowrap align-middle" style="width: 20%;">BARANG</th>
-                        <th class="sort white-space-nowrap align-middle">TYPE</th>
+                        <th class="sort white-space-nowrap">TYPE</th>
                         <th class="sort white-space-nowrap align-middle" style="width: 10%;">QTY</th>
                         <th style=" width: 20%;" class=""> </th>
                     </tr>
@@ -19,20 +19,24 @@
                     $imagePath = $item['images'] ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s';
                     ?>
                     <tr class="hover-actions-trigger btn-reveal-trigger position-static">
-                        <td class="align-middle white-space-nowrap ps-0 py-0">
+                        <td class=" white-space-nowrap ps-0 py-0">
                             <a class="border border-translucent rounded-2 d-inline-block" href="">
-                                <img src="{{ asset($imagePath)}}" alt="" width="53">
+
+                                <div class="ps-product__thumbnail"><a href="https://martfury.botble.com/products/macbook-pro-2015-digital">
+                                        <img class="rounded-2 entered loaded" src="{{ $imagePath }}" alt="Product Image">
+                                    </a>
+                                </div>
                             </a>
                         </td>
-                        <td class="color align-middle white-space-nowrap fs-9 text-body">{{ $item['kode_barang'] }}</td>
+                        <td class="color white-space-nowrap fs-9 text-body">{{ $item['kode_barang'] }}</td>
 
-                        <td class="products align-middle">
+                        <td class="products">
                             <a class="fw-semibold mb-0" href="">{{ $item['nama_barang'] }}</a>
                         </td>
-                        <td class="color align-middle white-space-nowrap fs-9 text-body">{{ $item['type_barang'] }}</td>
+                        <td class="color white-space-nowrap fs-9 text-body">{{ $item['type_barang'] }}</td>
 
 
-                        <td class="quantity align-middle">
+                        <td class="quantity ">
                             <div class="input-group input-group-sm flex-nowrap" data-quantity="data-quantity"><button wire:click="decreamentQuantity({{ $id }})" class="btn btn-sm px-2" data-type="minus">-</button>
                                 <input
                                     wire:model.lazy="cart.{{ $id }}.qty"
@@ -48,9 +52,13 @@
                 </tbody>
             </table>
             @else
-            <div class="justify-content-center align-item-center">
-                <h2 class="text-center"><i class="fas fa-shopping-cart text-primary"></i></h2>
-                <p class="text-center text-primary">Keranjang kosong</p>
+            <div class="justify-content-center align-item-center ps-section--shopping pt-40">
+                <h1 class="text-center">
+                    Cart
+                </h1>
+                <div class="ps-section__content mt-5">
+                    <p class="text-center">No product in cart!</p>
+                </div>
             </div>
             @endif
         </div>
@@ -59,7 +67,7 @@
         {{-- tombol checkout --}}
         <div class="d-flex justify-content-end mt-5 mb-5">
             <button wire:click="checkOut"
-                class="btn btn-primary fs-10"
+                class="ps-btn fs-10"
                 wire:loading.attr="disabled">
                 <span class="fas fa-shopping-cart me-1 fs-10"></span> Request Barang
             </button>

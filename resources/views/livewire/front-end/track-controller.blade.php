@@ -13,33 +13,33 @@
         </li>
     </ul> -->
 
-    <ul class="nav nav-underline fs-5 navbar-expand p-2 bg-white" style="border-top-left-radius: 10px !important;border-top-right-radius: 10px !important;" id="myTab" role="tablist">
+    <ul class="nav nav-underline  navbar-expand p-2 ps-breadcrumb " style="border-top-left-radius: 10px !important;border-top-right-radius: 10px !important;" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link fw-bold {{ $filterType == 'request' ? 'active' : '' }}"
+            <button class="nav-link {{ $filterType == 'request' ? 'active' : '' }}"
                 wire:click="setFilterType('request')" type="button">
                 <span class="fa-solid fa-hotel"></span> Request
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link fw-bold {{ $filterType == 'approved' ? 'active' : '' }}"
+            <button class="nav-link {{ $filterType == 'approved' ? 'active' : '' }}"
                 wire:click="setFilterType('approved')" type="button">
                 <span class="fa-solid fa-edit"></span> Approved
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link fw-bold {{ $filterType == 'progress' ? 'active' : '' }}"
+            <button class="nav-link {{ $filterType == 'progress' ? 'active' : '' }}"
                 wire:click="setFilterType('progress')" type="button">
                 <span class="fa-solid fa-clock"></span> Progress
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link fw-bold {{ $filterType == 'rejected' ? 'active' : '' }}"
+            <button class="nav-link {{ $filterType == 'rejected' ? 'active' : '' }}"
                 wire:click="setFilterType('rejected')" type="button">
                 <span class="fa-solid fa-remove"></span> Reject
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link fw-bold {{ $filterType == 'done' ? 'active' : '' }}"
+            <button class="nav-link {{ $filterType == 'done' ? 'active' : '' }}"
                 wire:click="setFilterType('done')" type="button">
                 <span class="fa-solid fa-check"></span> Finish
             </button>
@@ -58,65 +58,65 @@
                 <span class="ms-2">Loading...</span>
             </div>
             <div class="table-responsive scrollbar bg-white p-3" style="border-bottom-left-radius: 10px !important;border-bottom-right-radius: 10px !important;">
-                <table class="table fs-9 mb-0 border-top border-translucent" wire:loading.remove wire:target="gotoPage, perPage,filterData, search, filterType">
+                <table class="table ps-table--shopping-cart" wire:loading.remove wire:target="gotoPage, perPage,filterData, search, filterType">
                     <thead>
                         @switch($filterType)
                         @case('request')
                         <tr>
                             <th>#</th>
-                            <th>KODE</th>
-                            <th>BARANG</th>
-                            <th>QTY</th>
-                            <th>REQUEST DATE</th>
-                            <th>REQUEST BY</th>
-                            <th>STATUS</th>
+                            <th>Kode</th>
+                            <th>Barang</th>
+                            <th>Qty</th>
+                            <th>Request Date</th>
+                            <th>Request By</th>
+                            <th>Status</th>
                         </tr>
                         @break
                         @case('approved')
                         <tr>
                             <th>#</th>
-                            <th>KODE</th>
-                            <th>BARANG</th>
-                            <th>QTY</th>
-                            <th>APPROVE DATE</th>
-                            <th>APPROVE BY</th>
-                            <th>STATUS</th>
+                            <th>Kode</th>
+                            <th>Barang</th>
+                            <th>Qty</th>
+                            <th>Approve Date</th>
+                            <th>Approve By</th>
+                            <th>Status</th>
                         </tr>
                         @break
                         @case('progress')
                         <tr>
                             <th>#</th>
-                            <th>KODE</th>
-                            <th>BARANG</th>
-                            <th>QTY</th>
-                            <th>PROGRESS DATE</th>
-                            <th>PROGRESS BY</th>
-                            <th>STATUS</th>
+                            <th>Kode</th>
+                            <th>Barang</th>
+                            <th>Qty</th>
+                            <th>Progress Date</th>
+                            <th>Progress By</th>
+                            <th>Status</th>
                         </tr>
                         @break
                         @case('rejected')
                         <tr>
                             <th>#</th>
-                            <th>KODE</th>
-                            <th>BARANG</th>
-                            <th>QTY</th>
-                            <th>REJECT DATE</th>
-                            <th>REJECT BY</th>
-                            <th>REMARK</th>
-                            <th>STATUS</th>
+                            <th>Kode</th>
+                            <th>Barang</th>
+                            <th>Qty</th>
+                            <th>Reject Date</th>
+                            <th>Reject By</th>
+                            <th>Remark</th>
+                            <th>Status</th>
                         </tr>
                         @break
                         @case('done')
                         <tr>
                             <th>#</th>
-                            <th>KODE</th>
-                            <th>BARANG</th>
-                            <th>QTY</th>
-                            <th>QTY ACTUAL</th>
-                            <th>UNIT</th>
-                            <th>FINISH DATE</th>
-                            <th>FINISH BY</th>
-                            <th>STATUS</th>
+                            <th>Kode</th>
+                            <th>Barang</th>
+                            <th>Qty Request</th>
+                            <th>QTY Actual</th>
+                            <th>Unit</th>
+                            <th>Finish Date</th>
+                            <th>Finish By</th>
+                            <th>Status</th>
                         </tr>
                         @break
                         @endswitch
@@ -151,7 +151,7 @@
                                 {{ $data->creator }}
                             </td>
                             <td>
-                                <span class="badge badge-phoenix fs-9 badge-phoenix-warning"><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
+                                <span class=""><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
                             </td>
                         </tr>
                         @empty
@@ -187,7 +187,7 @@
                                 {{ $data->approved_by }}
                             </td>
                             <td>
-                                <span class="badge badge-phoenix fs-9 badge-phoenix-warning"><span class="">{{ $data->status }} <i class="fa fa-edit"></i></span> </span>
+                                <span class=""><span class="">{{ $data->status }} <i class="fa fa-edit"></i></span> </span>
                             </td>
                         </tr>
                         @empty
@@ -223,7 +223,7 @@
                                 {{ $data->creator }}
                             </td>
                             <td>
-                                <span class="badge badge-phoenix fs-9 badge-phoenix-primary"><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
+                                <span class=""><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
                             </td>
                         </tr>
                         @empty
@@ -262,7 +262,7 @@
                                 {{ $data->remark_reject }}
                             </td>
                             <td>
-                                <span class="badge badge-phoenix fs-9 badge-phoenix-danger"><span class="">{{ $data->status }} <i class="fa fa-close"></i></span> </span>
+                                <span class=""><span class="">{{ $data->status }} <i class="fa fa-close"></i></span> </span>
                             </td>
                         </tr>
                         @empty
@@ -305,7 +305,7 @@
                                 {{ $data->finish_by }}
                             </td>
                             <td>
-                                <span class="badge badge-phoenix fs-9 badge-phoenix-success"><span class="">{{ $data->status }} <i class="fa fa-check"></i></span> </span>
+                                <span class=""><span class="">{{ $data->status }} <i class="fa fa-check"></i></span> </span>
                             </td>
                         </tr>
                         @empty
@@ -344,8 +344,8 @@
                                         wire:click="gotoPage(1)"
                                         wire:target="gotoPage"
                                         aria-label="First">
-                                        <i class="fas fa-angle-double-left"></i>
-                                    </a>
+                                        <
+                                            </a>
                                 </li>
                                 @foreach ($datas->getUrlRange(
                                 max(1, $datas->currentPage() - 1),
@@ -365,7 +365,7 @@
                                         wire:click="gotoPage({{ $datas->lastPage() }})"
                                         wire:target="gotoPage"
                                         aria-label="Last">
-                                        <i class="fas fa-angle-double-right"></i>
+                                        >
                                     </a>
                                 </li>
                             </ul>

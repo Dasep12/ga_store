@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\ProductsImport;
+use Illuminate\Support\Facades\Auth;
 
 class PengadaanController extends Component
 {
@@ -116,7 +117,7 @@ class PengadaanController extends Component
                     // Proses pengadaan, misalnya update status atau lainnya
                     DB::table('tbl_trn_order')->where('id', $request->id)->update([
                         'status' => 'progress',
-                        'progress_by' => 'dasep',
+                        'progress_by' => Auth::user()->nama ?? 'system',
                         'progress_date' => now(),
                     ]);
                     $message = 'Request Barang terproses';
@@ -153,7 +154,7 @@ class PengadaanController extends Component
 
                     DB::table('tbl_trn_order')->where('id', $request->id)->update([
                         'status' => 'done',
-                        'finish_by' => 'dasep',
+                        'finish_by' => Auth::user()->nama ?? 'system',
                         'finish_date' => now(),
                     ]);
                     $message = 'Request Barang selesai diproses';
@@ -163,7 +164,7 @@ class PengadaanController extends Component
                     // Proses pengadaan, misalnya update status atau lainnya
                     DB::table('tbl_trn_order')->where('id', $request->id)->update([
                         'status' => 'rejected',
-                        'rejected_by' => 'dasep',
+                        'rejected_by' => Auth::user()->nama ?? 'system',
                         'remark_reject' => $request->remark_reject,
                         'rejected_date' => now(),
                     ]);

@@ -12,68 +12,89 @@
                     <input type="text" hidden id="id" name="id">
                     <input type="text" hidden id="crudAction" name="crudAction">
                     <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row">
 
-                        <div class="col-md-3 mb-3">
-                            <label for="noreg" class="form-label">NOREG *</label>
-                            <input type="text" class="form-control form-control-sm" id="noreg" name="noreg" placeholder="Noreg">
-                            <span class="text-danger fs-9 error-text" id="error-noreg"></span>
+                                <div class="col-md-6 mb-3">
+                                    <label for="noreg" class="form-label">NOREG *</label>
+                                    <input type="text" class="form-control form-control-sm" id="noreg" name="noreg" placeholder="Noreg">
+                                    <span class="text-danger fs-9 error-text" id="error-noreg"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="nama" class="form-label">NAMA</label>
+                                    <input type="text" class="form-control form-control-sm" id="nama" name="nama" placeholder="Nama">
+                                    <span class="text-danger fs-9 error-text" id="error-nama"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label">PASSWORD *</label>
+                                    <input type="password" class="form-control form-control-sm" id="password" name="password" placeholder="Password">
+                                    <span class="text-danger fs-9 error-text" id="error-password"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email *</label>
+                                    <input type="text" class="form-control form-control-sm" id="email" name="email" placeholder="Email">
+                                    <span class="text-danger fs-9 error-text" id="error-email"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="department_id" class="form-label">Department</label>
+                                    <select name="department_id" class="form-select form-select-sm" id="department_id">
+                                        <option value="">Select Department</option>
+                                        @foreach($departments as $department)
+                                        <option value="{{ $department->id }}">{{ $department->code  .' : '. $department->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger fs-9 error-text" id="error-department_id"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="role_id" class="form-label">Role</label>
+                                    <select name="role_id" class="form-select form-select-sm" id="role_id">
+                                        <option value="">Select Roles</option>
+                                        @foreach($roles as $role)
+                                        <option value="{{ $role->role_id }}">{{ $role->name_role }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger fs-9 error-text" id="error-role_id"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="level_id" class="form-label">Level</label>
+                                    <select name="level_id" class="form-select form-select-sm" id="level_id">
+                                        <option value="">Select Level</option>
+                                        @foreach($levels as $level)
+                                        <option value="{{ $level->level_id }}">{{ $level->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger fs-9 error-text" id="error-level_id"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="photo" class="form-label">Photo</label>
+                                    <input type="file" class="form-control form-control-sm" id="photo" name="photo" placeholder="photo">
+                                    <span class="text-danger fs-9 error-text" id="error-photo"></span>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="col-md-3 mb-3">
-                            <label for="nama" class="form-label">NAMA</label>
-                            <input type="text" class="form-control form-control-sm" id="nama" name="nama" placeholder="Nama">
-                            <span class="text-danger fs-9 error-text" id="error-nama"></span>
-                        </div>
-
-                        <div class="col-md-3 mb-3">
-                            <label for="password" class="form-label">PASSWORD *</label>
-                            <input type="password" class="form-control form-control-sm" id="password" name="password" placeholder="Password">
-                            <span class="text-danger fs-9 error-text" id="error-password"></span>
-                        </div>
-
-                        <div class="col-md-3 mb-3">
-                            <label for="email" class="form-label">Email *</label>
-                            <input type="text" class="form-control form-control-sm" id="email" name="email" placeholder="Email">
-                            <span class="text-danger fs-9 error-text" id="error-email"></span>
-                        </div>
-
-                        <div class="col-md-3 mb-3">
-                            <label for="department_id" class="form-label">Department</label>
-                            <select name="department_id" class="form-select form-select-sm" id="department_id">
-                                <option value="">Select Department</option>
-                                @foreach($departments as $department)
-                                <option value="{{ $department->id }}">{{ $department->code  .' : '. $department->name }}</option>
-                                @endforeach
-                            </select>
-                            <span class="text-danger fs-9 error-text" id="error-department_id"></span>
-                        </div>
-
-                        <div class="col-md-3 mb-3">
-                            <label for="role_id" class="form-label">Role</label>
-                            <select name="role_id" class="form-select form-select-sm" id="role_id">
-                                <option value="">Select Roles</option>
-                                @foreach($roles as $role)
-                                <option value="{{ $role->role_id }}">{{ $role->name_role }}</option>
-                                @endforeach
-                            </select>
-                            <span class="text-danger fs-9 error-text" id="error-role_id"></span>
-                        </div>
-
-                        <div class="col-md-3 mb-3">
-                            <label for="level_id" class="form-label">Level</label>
-                            <select name="level_id" class="form-select form-select-sm" id="level_id">
-                                <option value="">Select Level</option>
-                                @foreach($levels as $level)
-                                <option value="{{ $level->level_id }}">{{ $level->name }}</option>
-                                @endforeach
-                            </select>
-                            <span class="text-danger fs-9 error-text" id="error-level_id"></span>
-                        </div>
-
-                        <div class="col-md-3 mb-3">
-                            <label for="photo" class="form-label">Photo</label>
-                            <input type="file" class="form-control form-control-sm" id="photo" name="photo" placeholder="photo">
-                            <span class="text-danger fs-9 error-text" id="error-photo"></span>
+                        <div class="col-lg-6">
+                            <div style="max-height:350px;overflow-y:auto;">
+                                <table class="table table-bordered small table-sm" style="margin-bottom:0;">
+                                    <thead class="bg-custom-navbar text-white" style="position:sticky;top:0;z-index:2;">
+                                        <tr>
+                                            <th class="text-white">No</th>
+                                            <th class="text-white">Menu</th>
+                                            <th class="text-white">Create</th>
+                                            <th class="text-white">Read</th>
+                                            <th class="text-white">Update</th>
+                                            <th class="text-white">Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="menu_list"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

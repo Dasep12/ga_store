@@ -78,9 +78,9 @@
                             <td align="center">
                                 <div class="position-static"><a class=" dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-cog fs-10"></span></a>
                                     <div class="dropdown-menu dropdown-menu-end py-2">
-                                        <a onclick="crudJson('edit','{{ $data->id }}')" class="dropdown-item text-primary btnEdit"><i class="fa fa-eye"></i> View</a>
+                                        <a onclick="crudJson('edit','{{ $data->user_id }}')" class="dropdown-item text-primary btnEdit"><i class="fa fa-eye"></i> View</a>
                                         <div class="dropdown-divider"></div>
-                                        <a onclick="crudJson('delete','{{ $data->id }}')" class="dropdown-item text-danger btnDelete" href="#!"><i class="fa fa-trash"></i> Remove</a>
+                                        <a onclick="crudJson('delete','{{ $data->user_id }}')" class="dropdown-item text-danger btnDelete" href="#!"><i class="fa fa-trash"></i> Remove</a>
                                     </div>
                                 </div>
                             </td>
@@ -173,6 +173,7 @@
         $('.error-text').html('');
         $('#crudAction').val(action);
         $('#id').val('');
+
         if (action === 'create') {
             $("#kode_barang").attr("readonly", true);
             $('#modalCrud').modal('show');
@@ -186,13 +187,14 @@
                 success: function(data) {
                     $('#modalTitle').text('Update');
                     $.each(data, result => {
-                        $("#id").val(data[result].id);
+                        $("#id").val(data[result].user_id);
                         $('#department_id').val(data[result].department_id).trigger("change");
                         $('#role_id').val(data[result].role_id).trigger("change");
                         $('#level_id').val(data[result].level_id).trigger("change");
                         $('#noreg').val(data[result].noreg);
                         $('#nama').val(data[result].nama);
                         $('#email').val(data[result].email);
+                        loadMenuAccess(data[result].role_id)
                     })
 
                     $('#btnSave').html('<i class="fa fa-edit"></i> Update');
@@ -254,6 +256,7 @@
                 dropdownParent: $('#modalCrud'),
                 width: '100%'
             });
+            feather.replace();
         });
 
     });
@@ -302,5 +305,66 @@
     $(document).on("click", "#btnSave", function() {
         $('#formSubmit').submit();
     });
+
+
+
+    $(document).on('change', '#role_id', function() {
+        let roleId = $(this).val();
+        loadMenuAccess(roleId);
+    });
+
+
+    function loadMenuAccess(roleId) {
+        $.ajax({
+            url: `/users/menu/${roleId}/`,
+            method: 'GET',
+            success: function(data) {
+                $(".table .menu_list").empty();
+                let no = 1;
+                data.forEach(item => {
+                    checked($("#user_id").val(), $("#role_id").val(), item.menu_id);
+                    if (item.level == "menu" || item.level == 'root') {
+                        item.menu = item.menu;
+                    } else if (item.level == "submenu") {
+                        item.menu = '<li style="margin-left: 40px !important;">' + item.menu + '</li>';
+                    } else if (item.level == "subsubmenu") {
+                        item.menu = '<li style="margin-left: 55px !important;">' + item.menu + '</li>';
+                    }
+
+                    if (item.icon != null && item.icon != '') {
+                        item.menu = ` <span class="nav-link-icon"><span style="height:15px !important" data-feather="${item.icon}"></span></span>` + item.menu;
+                        feather.replace();
+                    }
+                    let row = `<tr>
+                        <td>${no++}</td>
+                        <td>${item.menu}</td>
+                        <td class="text-center"><input type="checkbox" class="form-check-input menu-checkbox" id="${item.menu_id}"></td>
+                        <td class="text-center"><input type="checkbox" class="form-check-input menu-checkbox" id="${item.menu_id}"></td>
+                        <td class="text-center"><input type="checkbox" class="form-check-input menu-checkbox" id="${item.menu_id}"></td>
+                        <td class="text-center"><input type="checkbox" class="form-check-input menu-checkbox" id="${item.menu_id}"></td>
+                    </tr>`;
+                    $(".table .menu_list").append(row);
+                });
+            },
+            error: function(xhr) {
+                console.error(xhr.responseText);
+            }
+        });
+    }
+
+    function checked(user, role, menu) {
+        // $.ajax({
+        //     url: `/users/menu/`,
+        //     method: 'GET',
+        //     data: {
+        //         user_id: user,
+        //         role_id: role,
+        //         menu_id: menu,
+        //     },
+        //     success: function(data) {
+        //         console.log(data);
+        //     }
+        // })
+    }
 </script>
 @endpush

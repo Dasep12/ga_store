@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\ProductsImport;
+use Illuminate\Support\Facades\Auth;
+
 
 class BarangController extends Component
 {
@@ -144,7 +146,7 @@ class BarangController extends Component
                     'deskripsi' => $request->deskripsi,
                     'images'        => $imagePath,
                     'is_actived' => (int)$request->is_actived ?? 0,
-                    'created_by' => 'system',
+                    'created_by' => Auth::user()->user_id ?? 'system',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -177,7 +179,7 @@ class BarangController extends Component
                     'deskripsi' => $request->deskripsi,
                     'is_actived'    => (int) ($request->is_actived ?? 0),
                     'updated_at'    => now(),
-                    'updated_by'    => 'system',
+                    'updated_by'    => Auth::user()->user_id ?? 'system',
                 ];
 
                 // Upload file jika ada

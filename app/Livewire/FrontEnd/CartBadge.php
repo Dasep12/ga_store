@@ -26,6 +26,17 @@ class CartBadge extends Component
         $this->total = $this->total =  count($cart);
     }
 
+    public function removeItem($id)
+    {
+        $cart = session()->get('cart', []);
+        unset($cart[$id]);
+        session()->put('cart', $cart);
+        $this->dispatch('cartUpdated');
+        $this->cart = $cart;
+    }
+
+
+
     public function render()
     {
         $this->total = $this->total = count(session()->get('cart', []));
