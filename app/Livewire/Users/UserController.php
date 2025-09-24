@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\StocksImport;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Component
@@ -103,13 +104,28 @@ class UserController extends Component
         return response()->json($data);
     }
 
-    public function showMenu($id)
+    public function showMenu(Request $req)
     {
         $data = DB::table('tbl_sys_role_access')
             ->leftJoin('tbl_sys_menu', 'tbl_sys_menu.menu_id', '=', 'tbl_sys_role_access.menu_id')
-            ->where('role_id', $id)
+            ->leftJoin('vw_usr_menu_access', function ($join) use ($req) {
+                $join->on('vw_usr_menu_access.menu_id', '=', 'tbl_sys_role_access.menu_id')
+                    ->where('vw_usr_menu_access.role_id', '=', $req->role_id)
+                    ->where('vw_usr_menu_access.user_id', '=', $req->user_id);
+            })
+            ->where('tbl_sys_role_access.role_id', $req->id)
             ->where('tbl_sys_role_access.is_actived', 1)
-            ->select('tbl_sys_menu.menu_id', 'tbl_sys_menu.menu', 'tbl_sys_menu.level', 'tbl_sys_menu.icon', 'tbl_sys_role_access.*')
+            ->select(
+                'tbl_sys_menu.menu_id',
+                'tbl_sys_menu.menu',
+                'tbl_sys_menu.level',
+                'tbl_sys_menu.icon',
+                'tbl_sys_role_access.*',
+                'vw_usr_menu_access.is_create',
+                'vw_usr_menu_access.is_read',
+                'vw_usr_menu_access.is_update',
+                'vw_usr_menu_access.is_delete',
+            )
             ->get();
         return response()->json($data);
     }
@@ -130,6 +146,9 @@ class UserController extends Component
     public function crudJson(Request $request)
     {
         DB::beginTransaction();
+        $menuAccess = $request->menuAccess;
+        $menuAccessArr = json_decode($menuAccess, true);
+
         switch ($request->crudAction) {
             case 'create':
                 $validator = Validator::make($request->all(), [
@@ -154,7 +173,7 @@ class UserController extends Component
                     'password' =>  Hash::make($request->password),
                     'department_id' => $request->department_id,
                     'role_id' => $request->role_id,
-                    'created_by' => 'system',
+                    'created_by' => Auth::user()->user_id,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -182,8 +201,16 @@ class UserController extends Component
                     'password' =>  Hash::make($request->password),
                     'role_id' => $request->role_id,
                     'updated_at' => now(),
-                    'updated_by' => 'system'
+                    'updated_by' => Auth::user()->user_id,
                 ]);
+
+                DB::table('tbl_sys_user_role_access')->where([
+                    'role_id' => $request->role_id,
+                    'user_id' => $request->id
+                ])->delete();
+
+                DB::table('tbl_sys_user_role_access')->insert($menuAccessArr);
+
                 break;
             case 'delete':
                 $message = "Data berhasil dihapus";

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\ProductsImport;
+use App\Services\MenuAccessService;
 use Illuminate\Support\Facades\Auth;
 
 class PengadaanController extends Component
@@ -86,9 +87,26 @@ class PengadaanController extends Component
                 ->paginate($this->perPage);
         }
 
+        $menuAccess = MenuAccessService::getAccess('MN-0003AA');
+        $canCreate = $menuAccess->is_create;
+        $canRead = $menuAccess->is_read;
+        $canDelete = $menuAccess->is_delete;
+        $canUpdate = $menuAccess->is_update;
+        if ($canRead != 1) {
+            return view('livewire.404', [
+                'title' => 'Pengadaan',
+            ])->extends('components.layouts.admin.app');
+        }
+
+
+
         return view('livewire.admin.pengadaan.index', [
             'datas' => $datas,
             'title' => 'Pengadaan',
+            'canCreate' => $canCreate,
+            'canRead' => $canRead,
+            'canDelete' => $canDelete,
+            'canUpdate' => $canUpdate,
         ])->extends('components.layouts.admin.app');
     }
 

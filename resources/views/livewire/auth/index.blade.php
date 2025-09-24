@@ -83,6 +83,14 @@
                                                     <path d="M15 8l4 4"></path>
                                                 </svg></button></div>
 
+                                        <div class="row">
+                                            @if ($errors->has('login'))
+                                            <div class="alert alert-danger">
+                                                {{ $errors->first('login') }}
+                                            </div>
+                                            @endif
+                                        </div>
+
                                     </form>
                                 </div>
                             </div>

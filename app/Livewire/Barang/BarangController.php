@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\ProductsImport;
+use App\Services\MenuAccessService;
+use Dom\Attr;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -85,11 +87,26 @@ class BarangController extends Component
                 ->paginate($this->perPage);
         }
 
+        $menuAccess = MenuAccessService::getAccess('MN-0002BA');
+
+        $canCreate = $menuAccess->is_create;
+        $canRead = $menuAccess->is_read;
+        $canDelete = $menuAccess->is_delete;
+        $canUpdate = $menuAccess->is_update;
+        if ($canRead != 1) {
+            return view('livewire.404', [
+                'title' => 'Department',
+            ])->extends('components.layouts.admin.app');
+        }
         return view('livewire.admin.barang.index', [
             'datas' => $datas,
             'categories' => DB::table('tbl_mst_kategori')->get(),
             'units' => DB::table('tbl_mst_satuan')->get(),
             'jenis_assets' => DB::table('tbl_mst_jenis_asset')->get(),
+            'canCreate' => $canCreate,
+            'canRead' => $canRead,
+            'canDelete' => $canDelete,
+            'canUpdate' => $canUpdate,
             'title' => 'Master Barang',
         ])->extends('components.layouts.admin.app');
     }

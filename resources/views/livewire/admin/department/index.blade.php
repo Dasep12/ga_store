@@ -27,6 +27,8 @@
                     <button wire:click="exportExcel" class="btn btn-link text-body me-4 px-0"><span class="fa-solid fa-file-export fs-9 me-2"></span> Export</button>
                     <button onclick="crudJson('create','*')" class="btn btn-sm bg-custom-navbar text-white"><i class="fa fa-plus-square"></i> Tambah Data</button>
 
+
+
                 </div>
                 <div>
                     <label class="fs-9">
@@ -67,7 +69,10 @@
                                     <div class="dropdown-menu dropdown-menu-end py-2">
                                         <a onclick="crudJson('edit','{{ $data->id }}')" class="dropdown-item text-primary btnEdit"><i class="fa fa-eye"></i> View</a>
                                         <div class="dropdown-divider"></div>
+
                                         <a onclick="crudJson('delete','{{ $data->id }}')" class="dropdown-item text-danger btnDelete" href="#!"><i class="fa fa-trash"></i> Remove</a>
+
+
                                     </div>
                                 </div>
                             </td>
@@ -185,10 +190,18 @@
     @push('scripts')
     <script>
         function crudJson(action, id = null) {
+            var canUpdate = "{{ $canUpdate }}";
+            var canDelete = "{{ $canDelete }}";
+            var canCreate = "{{ $canCreate }}";
+
             $('#formSubmit')[0].reset();
             $('.error-text').html('');
             $('#crudAction').val(action);
             if (action === 'create') {
+                if (canCreate != 1) {
+                    Swal.fire('Notification', 'Tidak Hak Akses Tambah', 'info');
+                    return false;
+                }
                 $('#deptModal').modal('show');
                 $('#modalTitle').text('Add Department');
                 $('#dept_id').val('');
@@ -196,6 +209,11 @@
                 $('#error-code').text('');
                 $('#is_actived').prop('checked', true);
             } else if (action === 'edit') {
+
+                if (canUpdate != 1) {
+                    Swal.fire('Notification', 'Tidak Hak Akses Edit', 'info');
+                    return false;
+                }
                 $.ajax({
                     url: `/departments/${id}`,
                     method: 'GET',
@@ -212,6 +230,10 @@
                     }
                 });
             } else if (action === 'delete') {
+                if (canDelete != 1) {
+                    Swal.fire('Notification', 'Tidak Hak Akses Delete', 'info');
+                    return false;
+                }
                 $.ajax({
                     url: `/departments/${id}`,
                     method: 'GET',

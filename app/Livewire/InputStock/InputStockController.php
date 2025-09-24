@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\StocksImport;
+use App\Services\MenuAccessService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -86,6 +87,18 @@ class InputStockController extends Component
                 ->orderBy('created_at', 'desc')
                 ->paginate($this->perPage);
         }
+
+        $menuAccess = MenuAccessService::getAccess('MN-0003BA');
+        $canCreate = $menuAccess->is_create;
+        $canRead = $menuAccess->is_read;
+        $canDelete = $menuAccess->is_delete;
+        $canUpdate = $menuAccess->is_update;
+        if ($canRead != 1) {
+            return view('livewire.404', [
+                'title' => 'Department',
+            ])->extends('components.layouts.admin.app');
+        }
+
         return view('livewire.admin.input-stock.index', [
             'datas' => $datas,
             'categories' => DB::table('tbl_mst_kategori')->get(),
@@ -93,6 +106,10 @@ class InputStockController extends Component
             'jenis_assets' => DB::table('tbl_mst_jenis_asset')->get(),
             'produk'        => DB::table('tbl_mst_product')->get(),
             'title' => 'Input Stock',
+            'canCreate' => $canCreate,
+            'canRead' => $canRead,
+            'canDelete' => $canDelete,
+            'canUpdate' => $canUpdate,
         ])->extends('components.layouts.admin.app');
     }
 

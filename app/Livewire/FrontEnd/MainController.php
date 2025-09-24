@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
-
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 
 class MainController extends Component
 {
@@ -67,10 +67,16 @@ class MainController extends Component
         }
     }
 
-    public function mount()
+    public function mount(Request $request)
     {
         // Ambil cart dari session saat component di-mount
         $this->cart = session()->get('cart', []);
+
+        // Ambil parameter q dari URL jika ada (untuk global search)
+        if ($request->has('q')) {
+            $this->search = $request->get('q');
+            $this->isReady = true; // agar langsung load data
+        }
     }
 
     public function addToCart($productId)
@@ -110,6 +116,26 @@ class MainController extends Component
             'status' => true,
             'data' => session()->get('cart')
         ]);
+    }
+
+    public function detail(Request $req)
+    {
+        $data =  DB::table('tbl_mst_product')
+            ->leftJoin('tbl_mst_kategori', 'tbl_mst_product.kategori_id', '=', 'tbl_mst_kategori.id')
+            ->leftJoin('tbl_mst_satuan', 'tbl_mst_product.satuan_id', '=', 'tbl_mst_satuan.id')
+            ->leftJoin('tbl_mst_jenis_asset', 'tbl_mst_product.jenis_asset', '=', 'tbl_mst_jenis_asset.kode_asset')
+            ->leftJoin('tbl_trn_stock', 'tbl_mst_product.id', '=', 'tbl_trn_stock.product_id')
+            ->select(
+                'tbl_mst_product.*',
+                'tbl_mst_kategori.name as kategori_name',
+                'tbl_mst_satuan.name as satuan_name',
+                'tbl_mst_jenis_asset.name as jenis_asset_name',
+                'tbl_trn_stock.stock',
+                DB::raw('(SELECT COUNT(*) FROM tbl_trn_order WHERE tbl_trn_order.product_id = tbl_mst_product.id) as order_count')
+            )
+            ->where('tbl_mst_product.id', $req->id)
+            ->get();
+        return response()->json($data);
     }
 
     public function removeItem($id)

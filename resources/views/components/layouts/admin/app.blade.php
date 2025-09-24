@@ -480,7 +480,21 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/assets/vendors/dayjs/dayjs.min.js"></script>
     <script src="/assets/vendors/flatpickr/flatpickr.min.js"></script>
+    <script>
+        // Untuk AJAX global (jQuery)
+        $(document).ajaxError(function(event, jqxhr) {
+            if (jqxhr.status === 401) {
+                window.location.href = '/loginpage';
+            }
+        });
 
+        // Untuk Livewire
+        document.addEventListener("livewire:exception", function(e) {
+            if (e.detail.status === 401) {
+                window.location.href = '/loginpage';
+            }
+        });
+    </script>
     @livewireScripts
     @stack('scripts')
 </body>

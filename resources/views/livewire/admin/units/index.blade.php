@@ -186,11 +186,18 @@
     @push('scripts')
     <script>
         function crudJson(action, id = null) {
+            var canUpdate = "{{ $canUpdate }}";
+            var canDelete = "{{ $canDelete }}";
+            var canCreate = "{{ $canCreate }}";
             $('#formSubmit')[0].reset();
             $('.error-text').html('');
             $('#crudAction').val(action);
             $('form.form-loading :input').removeAttr('readonly');
             if (action === 'create') {
+                if (canCreate != 1) {
+                    Swal.fire('Notification', 'Tidak Hak Akses Tambah', 'info');
+                    return false;
+                }
                 $('#modalCrud').modal('show');
                 $('#modalTitle').text('Add {{ $title }}');
                 $('#dept_id').val('');
@@ -200,6 +207,10 @@
                 $('#btnSave').html('<i class="fa fa-save"></i> Simpan');
                 $("#btnSave").removeClass("btn-danger").addClass("bg-custom-navbar");
             } else if (action === 'edit') {
+                if (canUpdate != 1) {
+                    Swal.fire('Notification', 'Tidak Hak Akses Edit', 'info');
+                    return false;
+                }
                 $.ajax({
                     url: `/units/${id}`,
                     method: 'GET',
@@ -218,6 +229,10 @@
                     }
                 });
             } else if (action === 'delete') {
+                if (canDelete != 1) {
+                    Swal.fire('Notification', 'Tidak Hak Akses Delete', 'info');
+                    return false;
+                }
                 $.ajax({
                     url: `/units/${id}`,
                     method: 'GET',

@@ -84,12 +84,24 @@
                                 <table class="table table-bordered small table-sm" style="margin-bottom:0;">
                                     <thead class="bg-custom-navbar text-white" style="position:sticky;top:0;z-index:2;">
                                         <tr>
-                                            <th class="text-white">No</th>
-                                            <th class="text-white">Menu</th>
-                                            <th class="text-white">Create</th>
-                                            <th class="text-white">Read</th>
-                                            <th class="text-white">Update</th>
-                                            <th class="text-white">Delete</th>
+                                            <th class="text-white">No<br /></th>
+                                            <th class="text-white">Menu<br /></th>
+                                            <th class="text-white text-center">
+                                                Create<br>
+                                                <input type="checkbox" class="form-check-input" id="checkAllCreate">
+                                            </th>
+                                            <th class="text-white text-center">
+                                                Read<br>
+                                                <input class="form-check-input" type="checkbox" id="checkAllRead">
+                                            </th>
+                                            <th class="text-white text-center">
+                                                Update<br>
+                                                <input class="form-check-input" type="checkbox" id="checkAllUpdate">
+                                            </th>
+                                            <th class="text-white text-center">
+                                                Delete<br>
+                                                <input class="form-check-input" type="checkbox" id="checkAllDelete">
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody class="menu_list"></tbody>

@@ -4,7 +4,9 @@ namespace App\Livewire\Login;
 
 use App\Services\ExportService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Validation\Rule;
@@ -14,14 +16,22 @@ class LoginController extends Component
 {
     use WithPagination;
 
+    public function mount()
+    {
+        if (Auth::check()) {
+            return redirect()->route('main.index');
+        }
+    }
 
     public function render()
     {
+
+
         $datas = collect(); // default kosong
         $datas = DB::table('tbl_mst_kategori')->get();
         return view('livewire.auth.index', [
             'datas' => $datas,
-            'title' => 'Kategori',
+            'title' => 'Login',
         ])->extends('components.layouts.frontend.app');
     }
 
@@ -32,6 +42,7 @@ class LoginController extends Component
             'password' => 'required|string',
         ]);
 
+
         $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'noreg';
 
         $credentials = [
@@ -41,7 +52,7 @@ class LoginController extends Component
 
         if (auth()->attempt($credentials, true)) { // true = remember me 30 hari
             $request->session()->regenerate();
-            return redirect()->intended('/track');
+            return redirect()->intended('/');
         }
 
         return back()->withErrors([

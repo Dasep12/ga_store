@@ -3,6 +3,7 @@
 namespace App\Livewire\Department;
 
 use App\Services\ExportService;
+use App\Services\MenuAccessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -63,8 +64,23 @@ class DepartmentController extends Component
                 ->paginate($this->perPage);
         }
 
+        $menuAccess = MenuAccessService::getAccess('MN-0002AA');
+        $canCreate = $menuAccess->is_create;
+        $canRead = $menuAccess->is_read;
+        $canDelete = $menuAccess->is_delete;
+        $canUpdate = $menuAccess->is_update;
+        if ($canRead != 1) {
+            return view('livewire.404', [
+                'title' => 'Department',
+            ])->extends('components.layouts.admin.app');
+        }
+
         return view('livewire.admin.department.index', [
             'datas' => $datas,
+            'canCreate' => $canCreate,
+            'canRead' => $canRead,
+            'canDelete' => $canDelete,
+            'canUpdate' => $canUpdate,
             'title' => 'Department',
         ])->extends('components.layouts.admin.app');
     }

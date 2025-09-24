@@ -13,6 +13,7 @@
         </li>
     </ul> -->
 
+    @if(Auth::check())
     <ul class="nav nav-underline  navbar-expand p-2 ps-breadcrumb " style="border-top-left-radius: 10px !important;border-top-right-radius: 10px !important;" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link {{ $filterType == 'request' ? 'active' : '' }}"
@@ -136,10 +137,10 @@
                                 </a>
                             </td>
                             <td>
-                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
+                                <a class="mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
                             </td>
                             <td>
-                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
+                                <a class="mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
                             </td>
                             <td>
                                 {{ $data->qty }}
@@ -151,7 +152,7 @@
                                 {{ $data->creator }}
                             </td>
                             <td>
-                                <span class=""><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
+                                <span class="bg-warning p-2 rounded-2 text-white"><span class="">{{ ucwords($data->status) }} <i class="fa fa-clock"></i></span> </span>
                             </td>
                         </tr>
                         @empty
@@ -172,10 +173,10 @@
                                 </a>
                             </td>
                             <td>
-                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
+                                <a class="mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
                             </td>
                             <td>
-                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
+                                <a class="mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
                             </td>
                             <td>
                                 {{ $data->qty }}
@@ -187,7 +188,7 @@
                                 {{ $data->approved_by }}
                             </td>
                             <td>
-                                <span class=""><span class="">{{ $data->status }} <i class="fa fa-edit"></i></span> </span>
+                                <span class="bg-info p-2 rounded-2 text-white"><span class="">{{ ucwords($data->status) }} <i class="fa fa-edit"></i></span> </span>
                             </td>
                         </tr>
                         @empty
@@ -244,10 +245,10 @@
                                 </a>
                             </td>
                             <td>
-                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
+                                <a class="mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
                             </td>
                             <td>
-                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
+                                <a class="mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
                             </td>
                             <td>
                                 {{ $data->qty }}
@@ -262,7 +263,7 @@
                                 {{ $data->remark_reject }}
                             </td>
                             <td>
-                                <span class=""><span class="">{{ $data->status }} <i class="fa fa-close"></i></span> </span>
+                                <span class="bg-danger text-white p-2 rounded-2"><span class="">{{ ucwords($data->status) }} <i class="fa fa-close"></i></span> </span>
                             </td>
                         </tr>
                         @empty
@@ -283,10 +284,10 @@
                                 </a>
                             </td>
                             <td>
-                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
+                                <a class="mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
                             </td>
                             <td>
-                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
+                                <a class="mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
                             </td>
 
                             <td>
@@ -305,7 +306,7 @@
                                 {{ $data->finish_by }}
                             </td>
                             <td>
-                                <span class=""><span class="">{{ $data->status }} <i class="fa fa-check"></i></span> </span>
+                                <span class="bg-success text-white p-2 rounded-2"><span class="">{{ ucwords($data->status) }} <i class="fa fa-check"></i></span> </span>
                             </td>
                         </tr>
                         @empty
@@ -377,5 +378,10 @@
             @endif
         </div>
     </div>
+    @else
+    <div class="d-flex justify-content-center mt-5 mb-5">
+        <h1>you must login</h1>
+    </div>
+    @endif
 
 </div>

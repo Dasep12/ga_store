@@ -4,6 +4,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Menu extends Model
 {
@@ -18,6 +19,8 @@ class Menu extends Model
         return $this->hasMany(Menu::class, 'parent_menu', 'menu_id')
             ->where('is_actived', 1)
             ->where('is_deleted', 0)
+            ->where('role_id',Auth::user()->role_id)
+            ->where('user_id',Auth::user()->user_id)
             ->orderBy('sort', 'asc');
     }
 }

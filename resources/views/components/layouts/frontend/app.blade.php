@@ -162,7 +162,7 @@
     </style>
 
 
-    <title>Batteries</title>
+    <title>GA STORE</title>
     <meta name="description" content="MartFury is a clean &amp; modern Laravel Ecommerce System for multipurpose online stores. With design clean and trendy, MartFury will make your online store look more impressive and attractive to viewers.">
     <link rel="canonical" href="http://127.0.0.1:8000/product-categories/batteries">
     <meta name="robots" content="index, follow">
@@ -487,6 +487,11 @@
                 max-width: fit-content;
             }
         }
+
+        .nav-underline .nav-link.active,
+        .nav-underline .show>.nav-link {
+            font-weight: 500 !important;
+        }
     </style>
 </head>
 
@@ -509,8 +514,7 @@
                     </a>
                 </div>
                 <div class="header__center">
-                    <form class="ps-form--quick-search" action="http://127.0.0.1:8000/products" data-ajax-url="http://127.0.0.1:8000/ajax/search-products" method="get">
-
+                    <form class="ps-form--quick-search" action="" data-ajax-url="" method="get">
                         <input class="form-control input-search-product" name="q" type="text" placeholder="I'm shopping for..." autocomplete="off">
                         <div class="spinner-icon">
                             <i class="fa fa-spin fa-spinner"></i>
@@ -533,7 +537,7 @@
                                 <a href="javascript:void(0)">{{ ucwords(Auth::user()->nama) }}</a>
                                 <a href="{{ route('logout') }}">Logout</a>
                                 @else
-                                <a href="http://127.0.0.1:8000/login">Login</a><a href="http://127.0.0.1:8000/register">Register</a>
+                                <a href="{{ route('loginpage')}}">Login</a><a href="{{ route('registerpage') }}">Register</a>
                                 @endif
                             </div>
                         </div>
@@ -1378,10 +1382,12 @@
             </form>
         </div>
     </div>
+
     <div class="modal fade" id="product-quickview" tabindex="-1" role="dialog" aria-labelledby="product-quickview" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content"><span class="modal-close" data-bs-dismiss="modal"><i class="icon-cross2"></i></span>
                 <article class="ps-product--detail ps-product--fullwidth ps-product--quickview">
+
                 </article>
             </div>
         </div>

@@ -376,12 +376,19 @@
 @push('scripts')
 <script>
     function crudJson(action, id = null) {
+        var canUpdate = "{{ $canUpdate }}";
+        var canDelete = "{{ $canDelete }}";
+        var canCreate = "{{ $canCreate }}";
         $('#formSubmit')[0].reset();
         $('.error-text').html('');
         $('#crudAction').val(action);
         $('form.form-loading :input').removeAttr('readonly');
         $(".remark_reject_div").html('');
         if (action === 'create') {
+            if (canCreate != 1) {
+                Swal.fire('Notification', 'Tidak Hak Akses Tambah', 'info');
+                return false;
+            }
             $('#modalCrud').modal('show');
             $('#modalTitle').text('Add {{ $title }}');
             $('#id').val('');
@@ -389,6 +396,10 @@
             $('#btnSave').html('<i class="fa fa-save"></i> Simpan');
             $("#btnSave").removeClass("btn-danger").addClass("bg-custom-navbar");
         } else if (action === 'process') {
+            if (canUpdate != 1) {
+                Swal.fire('Notification', 'Tidak Hak Akses Edit', 'info');
+                return false;
+            }
             $.ajax({
                 url: `/pengadaan/${id}`,
                 method: 'GET',
@@ -425,6 +436,10 @@
                 }
             });
         } else if (action === 'reject') {
+            if (canUpdate != 1) {
+                Swal.fire('Notification', 'Tidak Hak Akses Reject', 'info');
+                return false;
+            }
             $(".remark_reject_div").html(`<label for="remark_reject" class="form-label">Remark</label>
                             <textarea required class="form-control form-control-sm" id="remark_reject" name="remark_reject" placeholder="Reason Reject"></textarea>
                             <span class="text-danger fs-9 error-text" id="error-remark_reject"></span>`);
@@ -467,6 +482,10 @@
                 }
             });
         } else if (action === 'import') {
+            if (canCreate != 1) {
+                Swal.fire('Notification', 'Tidak Hak Akses Import', 'info');
+                return false;
+            }
             $('#modalImport').modal('show');
             $('#modalTitle').text('Import {{ $title }}');
             $('#formImport')[0].reset();

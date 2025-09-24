@@ -96,9 +96,19 @@ class ShippingController extends Component
 
     public function checkOut()
     {
+
+        if (!Auth::check()) {
+            $this->dispatch('checkout-success', [
+                'success' => false,
+                'message' => 'Anda harus login dulu untuk request barang',
+            ]);
+            return;
+        }
+
         $cart = session()->get('cart', []);
         if (empty($cart)) {
             $this->dispatch('checkout-success', [
+                'success' => false,
                 'message' => 'Daftar barang kosong, silakan tambahkan barang ke keranjang.',
             ]);
             return;
@@ -131,15 +141,15 @@ class ShippingController extends Component
                 $data = [
                     'order_id' => $order_id,
                     'product_id' => $item['id_barang'],
-                    'department_id' => 1,
+                    'department_id' => Auth::user()->department_id,
                     'qty' => $item['qty'],
                     'qty_actual' => $item['qty'],
-                    'user_id' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
                     'status' => 'request',
-                    'created_at' => now(),
                     'created_by' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
-                    'updated_at' => now(),
                     'updated_by' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
+                    'user_id' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'created_at' => date('Y-m-d H:i:s'),
                 ];
                 DB::table('tbl_trn_order')->insert($data);
                 array_push($items, [

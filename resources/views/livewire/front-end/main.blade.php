@@ -63,7 +63,7 @@
                                         </div>
                                         <div class="col-12 col-md-3 col-xl-6 d-none d-md-block">
                                             <div class="products-found pt-3">
-                                                <strong>3</strong><span class="ms-1">Products found</span>
+                                                <strong>{{ $datas->total() }}</strong><span class="ms-1">Products found</span>
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-6 px-2 px-sm-3">
@@ -120,7 +120,7 @@
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="js-quick-view-button" href="#" data-url="" title="Quick View"><i class="icon-eye"></i>
+                                                            <a class="js-quick-view-button" href="#" data-url=" {{ route('main.detail', ['id' => $data->id]) }}" title=" Quick View"><i class="icon-eye"></i>
                                                             </a>
                                                         </li>
                                                         <!-- <li>
@@ -240,7 +240,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             if (!window.cartAddedListenerRegistered) {
+
                 Livewire.on('cart-added', (data) => {
+                    $("#product-quickview").modal("hide");
                     if (!data[0].status) {
                         Swal.fire('Gagal', data[0].message, 'error');
                         return;
@@ -250,6 +252,127 @@
                 window.cartAddedListenerRegistered = true; // tandai sudah didaftarkan
             }
         });
+
+        $(document).on("click", ".js-quick-view-button", function(t) {
+            t.preventDefault();
+
+            var o = $(t.currentTarget);
+            o.addClass("button-loading");
+
+            $.ajax({
+                url: o.data("url"),
+                type: "GET",
+                success: function(t) {
+                    console.log(t[0]);
+                    var html = detailQuickView(t[0])
+
+                    $("#product-quickview .ps-product--quickview").html(html);
+
+                    setTimeout(function() {
+                        if (typeof EcommerceApp !== "undefined") {
+                            EcommerceApp.initProductGallery(true);
+                        }
+                    }, 200);
+
+                    $("#product-quickview").modal("show");
+
+                    if (typeof Theme.lazyLoadInstance !== "undefined") {
+                        Theme.lazyLoadInstance.update();
+                    }
+
+                    document.dispatchEvent(new CustomEvent("ecommerce.quick-view.initialized"));
+
+
+
+                    o.removeClass("button-loading");
+                },
+                error: function() {
+                    o.removeClass("button-loading");
+                }
+            });
+        });
+
+        function detailQuickView(data) {
+            data.images = data.images == null ? 'http://127.0.0.1:8000/storage/products/32-1-300x300.jpg' : data.images;
+            return `<div class="ps-product__header">
+                        <div class="ps-product__thumbnail" data-vertical="false">
+                            <div class="bb-quick-view-gallery-images" data-arrow="true">
+                                <div class="slick-list draggable">
+                                    <div class="slick-track">
+                                        <div class="slick-slide slick-cloned" data-slick-index="-1" id="" aria-hidden="true" style="width: 404px;" tabindex="-1">
+                                            <div>
+                                                <div class="item" style="width: 100%; display: inline-block;"><img src="/${data.images}" alt="Black Smart Watches"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ps-product__info">
+                            <h1><a href="https://martfury.botble.com/products/black-smart-watches">${data.nama_barang}</a></h1>
+                            <div class="ps-product__meta">
+                                <p>Kode Barang: <a href="javascript:void(0)">${data.kode_barang}</a></p>
+                                <div class="rating_wrap">
+                                    <div class="rating">
+                                        <div class="product_rate" style="width: 71.2%"></div>
+                                    </div>
+                                    <span class="rating_num">(${data.order_count}x di order)</span>
+                                </div>
+                            </div>
+                            <h4 class="ps-product__price "><span>${formatRupiah(data.harga)}</span> </h4>
+                            <div class="ps-product__desc">
+                                <div class="ps-list--dot">
+
+                                    <ul>
+                                        <li>Jenis : ${data.jenis_asset_name}</li>
+                                        <li> Kategori : ${data.kategori_name}</li>
+                                        <li> Model : ${data.model}</li>
+                                        <li> Type : ${data.type_barang}</li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <div class="pr_switch_wrap">
+                                <div class="product-attributes product-attribute-swatches" id="product-attributes-13" data-target="https://martfury.botble.com/product-variation/13">
+
+                                    <div class="bb-product-attribute-swatch text-swatches-wrapper attribute-swatches-wrapper" data-type="text" data-slug="size">
+                                        <h4 class="bb-product-attribute-swatch-title">Stock:</h4>
+                                        <ul class="bb-product-attribute-swatch-list text-swatch attribute-swatch">
+                                            <li data-slug="s" data-id="6" class="bb-product-attribute-swatch-item attribute-swatch-item ">
+                                                <label>
+                                                    <input name="attribute_size_188793431" data-slug="s" checked type="radio" value="6" class="product-filter-item">
+                                                    <span class="bb-product-attribute-text-display">${data.stock_type == 'INDENT' ? data.stock_type  : data.stock + ' ' + data.satuan_name}</span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                            <div class="number-items-available" style="display: none; margin-bottom: 10px;"></div>
+
+
+                            <form class="add-to-cart-form" method="POST" action="#">
+                                <input type="hidden" name="_token" value="H7eCG6hwF3Ec9f1oznWkiwMbwXaFIlaiAooScbuh" autocomplete="off">
+                                <div class="ps-product__shopping">
+                                    <button  onclick="addToCartFromQuickView('${data.id}')" class="ps-btn ps-btn--black" type="button">Add to cart</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>`;
+        }
+
+        function formatRupiah(angka) {
+            return 'Rp. ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function addToCartFromQuickView(productId) {
+            console.log(productId);
+            // window.Livewire.dispatch('addToCart', productId);
+            window.Livewire.dispatch('addToCart', [productId]);
+
+        }
     </script>
     @endPushOnce
 

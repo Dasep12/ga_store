@@ -1,10 +1,12 @@
 <?php
 
 use App\Models\Menu;
+use Illuminate\Support\Facades\Auth;
 
 $menus = Menu::where('parent_menu', '*')
     ->where('is_actived', 1)
-    ->where('role_id', 'dev')
+    ->where('role_id', Auth::user()->role_id)
+    ->where('user_id', Auth::user()->user_id)
     ->orderBy('sort', 'asc')
     ->with(['children.children.children']) // preload sampai level 4
     ->get();

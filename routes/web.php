@@ -16,6 +16,7 @@ use App\Livewire\Stock\StockController as StockPage;
 use App\Livewire\Users\UserController as UserPage;
 use App\Livewire\JenisAsset\JenisAssetsController as JenisAssetPage;
 use App\Livewire\Login\LoginController as LoginPage;
+use App\Livewire\Register\RegisterController as RegisterPage;
 use App\Livewire\Roles\RolesController as RolesPage;
 /*
 |--------------------------------------------------------------------------
@@ -31,92 +32,95 @@ use App\Livewire\Roles\RolesController as RolesPage;
 // Route::get('/', function () {
 //     return view('home');
 // });
-Route::get('/home', HomePage::class)->name('homepage');
+// Route::get('/home', HomePage::class)->name('homepage');
+
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::prefix('departments')->group(function () {
+        Route::get('/', DepartmentPage::class)->name('departments.index');
+        Route::get('/{id}', [DepartmentPage::class, 'show'])->name('departments.show');
+        Route::post('/', [DepartmentPage::class, 'crudJson'])->name('departments.crud');
+        Route::get('/download', [DepartmentPage::class, 'exportDepartments'])->name('departments.download');
+    });
+
+    Route::prefix('kategori')->group(function () {
+        Route::get('/', KategoriPage::class)->name('kategori.index');
+        Route::get('/{id}', [KategoriPage::class, 'show'])->name('kategori.show');
+        Route::post('/', [KategoriPage::class, 'crudJson'])->name('kategori.crud');
+    });
+
+    Route::prefix('units')->group(function () {
+        Route::get('/', UnitsPage::class)->name('unit.index');
+        Route::get('/{id}', [UnitsPage::class, 'show'])->name('unit.show');
+        Route::post('/', [UnitsPage::class, 'crudJson'])->name('unit.crud');
+    });
+    Route::prefix('jenis-asset')->group(function () {
+        Route::get('/', JenisAssetPage::class)->name('jenis-assets.index');
+        Route::get('/{id}', [JenisAssetPage::class, 'show'])->name('jenis_assets.show');
+        Route::post('/', [JenisAssetPage::class, 'crudJson'])->name('jenis_assets.crud');
+    });
+
+
+    Route::prefix('product')->group(function () {
+        Route::get('/', ProductPage::class)->name('barang.index');
+        Route::get('/{id}', [ProductPage::class, 'show'])->name('barang.show');
+        Route::post('/', [ProductPage::class, 'crudJson'])->name('barang.crud');
+        Route::post('/importExcel', [ProductPage::class, 'ImportExcel'])->name('barang.import');
+        Route::get('/import/progress/{id}', [ProductPage::class, 'progress'])->name('barang.import.progress');
+    });
+
+    Route::prefix('pengadaan')->group(function () {
+        Route::get('/', PengadaanPage::class)->name('pengadaan.index');
+        Route::get('/{id}', [PengadaanPage::class, 'show'])->name('pengadaan.show');
+        Route::post('/', [PengadaanPage::class, 'crudJson'])->name('pengadaan.crud');
+        Route::post('/importExcel', [ProductPage::class, 'ImportExcel'])->name('pengadaan.import');
+    });
+
+    Route::prefix('inputstock')->group(function () {
+        Route::get('/', InputStockPage::class)->name('inputstock.index');
+        Route::get('/{id}', [InputStockPage::class, 'show'])->name('inputstock.show');
+        Route::post('/crudJson', [InputStockPage::class, 'crudJson'])->name('inputstock.crud');
+        Route::post('/importExcel', [InputStockPage::class, 'ImportExcel'])->name('inputstock.import');
+        Route::get('/import/progress/{id}', [InputStockPage::class, 'progress'])->name('inputstock.import.progress');
+    });
+
+
+    Route::prefix('users')->group(function () {
+        Route::get('/', UserPage::class)->name('users.index');
+        Route::get('/checked', UserPage::class)->name('users.index');
+        Route::get('/{id}', [UserPage::class, 'show'])->name('users.show');
+        Route::get('/menu/{id}', [UserPage::class, 'showMenu'])->name('menu-users.show');
+        Route::post('/crudJson', [UserPage::class, 'crudJson'])->name('users.crud');
+    });
+
+
+    Route::prefix('roles')->group(function () {
+        Route::get('/', RolesPage::class)->name('roles.index');
+        Route::get('/{id}', [RolesPage::class, 'show'])->name('roles.show');
+        Route::post('/crudJson', [RolesPage::class, 'crudJson'])->name('roles.crud');
+    });
+
+    Route::prefix('stock')->group(function () {
+        Route::get('/', StockPage::class)->name('stock.index');
+        Route::get('/{id}', [StockPage::class, 'show'])->name('stock.show');
+    });
+});
+
+
+
+// Route::get('/home', HomePage::class)->name('homepage');
+Route::get('/login', LoginPage::class)->name('loginpage');
+Route::get('/register', RegisterPage::class)->name('registerpage');
+Route::post('/validatelogin', [LoginPage::class, 'login'])->name('validatelogin');
+Route::get('/logout', [LoginPage::class, 'logout'])->name('logout');
 Route::get('/approval', [ShippingPage::class, 'approveOrder'])->name('approval.approve');
 Route::get('/rejected', [ShippingPage::class, 'rejectOrder'])->name('approval.reject');
 
-Route::prefix('departments')->group(function () {
-    Route::get('/', DepartmentPage::class)->name('departments.index');
-    Route::get('/{id}', [DepartmentPage::class, 'show'])->name('departments.show');
-    Route::post('/', [DepartmentPage::class, 'crudJson'])->name('departments.crud');
-    Route::get('/download', [DepartmentPage::class, 'exportDepartments'])->name('departments.download');
-});
-
-Route::prefix('kategori')->group(function () {
-    Route::get('/', KategoriPage::class)->name('kategori.index');
-    Route::get('/{id}', [KategoriPage::class, 'show'])->name('kategori.show');
-    Route::post('/', [KategoriPage::class, 'crudJson'])->name('kategori.crud');
-});
-
-Route::prefix('units')->group(function () {
-    Route::get('/', UnitsPage::class)->name('unit.index');
-    Route::get('/{id}', [UnitsPage::class, 'show'])->name('unit.show');
-    Route::post('/', [UnitsPage::class, 'crudJson'])->name('unit.crud');
-});
-Route::prefix('jenis-asset')->group(function () {
-    Route::get('/', JenisAssetPage::class)->name('jenis-assets.index');
-    Route::get('/{id}', [JenisAssetPage::class, 'show'])->name('jenis_assets.show');
-    Route::post('/', [JenisAssetPage::class, 'crudJson'])->name('jenis_assets.crud');
-});
 
 
-Route::prefix('product')->group(function () {
-    Route::get('/', ProductPage::class)->name('barang.index');
-    Route::get('/{id}', [ProductPage::class, 'show'])->name('barang.show');
-    Route::post('/', [ProductPage::class, 'crudJson'])->name('barang.crud');
-    Route::post('/importExcel', [ProductPage::class, 'ImportExcel'])->name('barang.import');
-    Route::get('/import/progress/{id}', [ProductPage::class, 'progress'])->name('barang.import.progress');
-});
-
-Route::prefix('pengadaan')->group(function () {
-    Route::get('/', PengadaanPage::class)->name('pengadaan.index');
-    Route::get('/{id}', [PengadaanPage::class, 'show'])->name('pengadaan.show');
-    Route::post('/', [PengadaanPage::class, 'crudJson'])->name('pengadaan.crud');
-    Route::post('/importExcel', [ProductPage::class, 'ImportExcel'])->name('pengadaan.import');
-});
-
-Route::prefix('inputstock')->group(function () {
-    Route::get('/', InputStockPage::class)->name('inputstock.index');
-    Route::get('/{id}', [InputStockPage::class, 'show'])->name('inputstock.show');
-    Route::post('/crudJson', [InputStockPage::class, 'crudJson'])->name('inputstock.crud');
-    Route::post('/importExcel', [InputStockPage::class, 'ImportExcel'])->name('inputstock.import');
-    Route::get('/import/progress/{id}', [InputStockPage::class, 'progress'])->name('inputstock.import.progress');
-});
-
-
-
-
-Route::prefix('users')->group(function () {
-    Route::get('/', UserPage::class)->name('users.index');
-    Route::get('/checked', UserPage::class)->name('users.index');
-    Route::get('/{id}', [UserPage::class, 'show'])->name('users.show');
-    Route::get('/menu/{id}', [UserPage::class, 'showMenu'])->name('menu-users.show');
-    Route::post('/crudJson', [UserPage::class, 'crudJson'])->name('users.crud');
-});
-
-
-Route::prefix('roles')->group(function () {
-    Route::get('/', RolesPage::class)->name('roles.index');
-    Route::get('/{id}', [RolesPage::class, 'show'])->name('roles.show');
-    Route::post('/crudJson', [RolesPage::class, 'crudJson'])->name('roles.crud');
-});
-
-Route::prefix('stock')->group(function () {
-    Route::get('/', StockPage::class)->name('stock.index');
-    Route::get('/{id}', [StockPage::class, 'show'])->name('stock.show');
-});
-
-
-Route::get('/home', HomePage::class)->name('homepage');
-Route::get('/login', LoginPage::class)->name('loginpage');
-Route::post('/validatelogin', [LoginPage::class, 'login'])->name('validatelogin');
-Route::get('/logout', [LoginPage::class, 'logout'])->name('logout');
-
-
-
-Route::prefix('/')->group(function () {
-    Route::get('/', MainPage::class)->name('main.index');
-    Route::get('/shipping', ShippingPage::class)->name('main.shipping');
-    Route::get('/track', TrackPage::class)->name('main.track');
-    Route::get('/checkout', CheckoutPage::class)->name('main.checkout');
-});
+Route::get('/', MainPage::class)->name('main.index');
+Route::get('/detail/{id}', [MainPage::class, 'detail'])->name('main.detail');
+Route::get('/shipping', ShippingPage::class)->name('main.shipping');
+Route::get('/track', TrackPage::class)->name('main.track');
+Route::get('/checkout', CheckoutPage::class)->name('main.checkout');

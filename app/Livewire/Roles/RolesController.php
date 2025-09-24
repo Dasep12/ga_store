@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\StocksImport;
+use App\Services\MenuAccessService;
 use Exception;
 
 class RolesController extends Component
@@ -80,10 +81,25 @@ class RolesController extends Component
                 ->orderBy('created_at', 'desc')
                 ->paginate($this->perPage);
         }
+        $menuAccess = MenuAccessService::getAccess('MN-0002AA');
+        $canCreate = $menuAccess->is_create;
+        $canRead = $menuAccess->is_read;
+        $canDelete = $menuAccess->is_delete;
+        $canUpdate = $menuAccess->is_update;
+        if ($canRead != 1) {
+            return view('livewire.404', [
+                'title' => 'Roles',
+            ])->extends('components.layouts.admin.app');
+        }
+
         return view('livewire.admin.roles.index', [
             'datas' => $datas,
+            'canCreate' => $canCreate,
+            'canRead' => $canRead,
+            'canDelete' => $canDelete,
+            'canUpdate' => $canUpdate,
             'menu' => DB::table('tbl_sys_menu')->where('is_actived', 1)->orderBy('sort', 'ASC')->get(),
-            'title' => 'User Management',
+            'title' => 'Roles',
         ])->extends('components.layouts.admin.app');
     }
 

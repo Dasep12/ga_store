@@ -268,6 +268,28 @@
         $('#error-name').text('');
         $('#error-code').text('');
         $('#btnSave').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Simpan');
+        let menuAccess = {};
+        // Loop semua checkbox CRUD
+        $('.menu-checkbox').each(function() {
+            let menuId = $(this).data('menu');
+            let crud = $(this).data('crud');
+            if (!menuAccess[menuId]) {
+                menuAccess[menuId] = {
+                    menu_id: menuId,
+                    role_id: $("#role_id").val(),
+                    user_id: $("#id").val(),
+                    is_create: 0,
+                    is_delete: 0,
+                    is_update: 0,
+                    is_read: 0,
+                };
+            }
+            menuAccess[menuId][crud] = $(this).is(':checked') ? 1 : 0;
+        });
+
+        // Ubah ke array
+        let menuAccessArr = Object.values(menuAccess);
+        formData.append('menuAccess', JSON.stringify(menuAccessArr));
 
         $.ajax({
             url: "{{ route('users.crud') }}",
@@ -318,11 +340,14 @@
         $.ajax({
             url: `/users/menu/${roleId}/`,
             method: 'GET',
+            data: {
+                user_id: $("#id").val(),
+                role_id: roleId,
+            },
             success: function(data) {
                 $(".table .menu_list").empty();
                 let no = 1;
                 data.forEach(item => {
-                    checked($("#user_id").val(), $("#role_id").val(), item.menu_id);
                     if (item.level == "menu" || item.level == 'root') {
                         item.menu = item.menu;
                     } else if (item.level == "submenu") {
@@ -331,6 +356,10 @@
                         item.menu = '<li style="margin-left: 55px !important;">' + item.menu + '</li>';
                     }
 
+                    var canCreate = item.is_create == 1 ? 'checked' : '';
+                    var canDelete = item.is_delete == 1 ? 'checked' : '';
+                    var canUpdate = item.is_update == 1 ? 'checked' : '';
+                    var canRead = item.is_read == 1 ? 'checked' : '';
                     if (item.icon != null && item.icon != '') {
                         item.menu = ` <span class="nav-link-icon"><span style="height:15px !important" data-feather="${item.icon}"></span></span>` + item.menu;
                         feather.replace();
@@ -338,10 +367,10 @@
                     let row = `<tr>
                         <td>${no++}</td>
                         <td>${item.menu}</td>
-                        <td class="text-center"><input type="checkbox" class="form-check-input menu-checkbox" id="${item.menu_id}"></td>
-                        <td class="text-center"><input type="checkbox" class="form-check-input menu-checkbox" id="${item.menu_id}"></td>
-                        <td class="text-center"><input type="checkbox" class="form-check-input menu-checkbox" id="${item.menu_id}"></td>
-                        <td class="text-center"><input type="checkbox" class="form-check-input menu-checkbox" id="${item.menu_id}"></td>
+                       <td class="text-center"><input ${canCreate} type="checkbox" class="form-check-input menu-checkbox" data-menu="${item.menu_id}" data-crud="is_create"></td>
+                        <td class="text-center"><input ${canRead}  type="checkbox" class="form-check-input menu-checkbox" data-menu="${item.menu_id}" data-crud="is_read"></td>
+                        <td class="text-center"><input ${canUpdate} type="checkbox" class="form-check-input menu-checkbox" data-menu="${item.menu_id}" data-crud="is_update"></td>
+                        <td class="text-center"><input ${canDelete} type="checkbox" class="form-check-input menu-checkbox" data-menu="${item.menu_id}" data-crud="is_delete"></td>
                     </tr>`;
                     $(".table .menu_list").append(row);
                 });
@@ -352,19 +381,20 @@
         });
     }
 
-    function checked(user, role, menu) {
-        // $.ajax({
-        //     url: `/users/menu/`,
-        //     method: 'GET',
-        //     data: {
-        //         user_id: user,
-        //         role_id: role,
-        //         menu_id: menu,
-        //     },
-        //     success: function(data) {
-        //         console.log(data);
-        //     }
-        // })
-    }
+    $(document).on("change", "#checkAllCreate", function() {
+        $(".menu-checkbox[data-crud='is_create']").prop("checked", this.checked);
+    });
+
+    $(document).on("change", "#checkAllRead", function() {
+        $(".menu-checkbox[data-crud='is_read']").prop("checked", this.checked);
+    });
+
+    $(document).on("change", "#checkAllUpdate", function() {
+        $(".menu-checkbox[data-crud='is_update']").prop("checked", this.checked);
+    });
+
+    $(document).on("change", "#checkAllDelete", function() {
+        $(".menu-checkbox[data-crud='is_delete']").prop("checked", this.checked);
+    });
 </script>
 @endpush
