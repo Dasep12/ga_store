@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\InputStock;
+namespace App\Livewire\AdjustStock;
 
 use App\Services\ExportService;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ use App\Services\MenuAccessService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
-class InputStockController extends Component
+class AdjustStockController extends Component
 {
     use WithPagination;
 
@@ -71,24 +71,19 @@ class InputStockController extends Component
 
         // jika pakai lazy load
         if ($this->isReady) {
-            $datas = DB::table('vw_trn_beli')
+            $datas = DB::table('vw_trn_adjust')
                 ->select(
-                    'vw_trn_beli.*'
+                    'vw_trn_adjust.*'
                 )->where(function ($q) {
                     $q->where('nama_barang', 'like', '%' . $this->search . '%')
                         ->orWhere('kode_barang', 'like', '%' . $this->search . '%')
-                        ->orWhere('type_barang', 'like', '%' . $this->search . '%')
-                        ->orWhere('merek', 'like', '%' . $this->search . '%')
                     ;
-                })
-                ->when($this->filterType !== 'ALL', function ($q) {
-                    $q->where('type_barang', $this->filterType);
                 })
                 ->orderBy('created_at', 'desc')
                 ->paginate($this->perPage);
         }
 
-        $menuAccess = MenuAccessService::getAccess('MN-0003BA');
+        $menuAccess = MenuAccessService::getAccess('MN-0003BC');
         $canCreate = $menuAccess->is_create;
         $canRead = $menuAccess->is_read;
         $canDelete = $menuAccess->is_delete;
@@ -99,7 +94,7 @@ class InputStockController extends Component
             ])->extends('components.layouts.admin.app');
         }
 
-        return view('livewire.admin.input-stock.index', [
+        return view('livewire.admin.adjust-stock.index', [
             'datas' => $datas,
             'categories' => DB::table('tbl_mst_kategori')->get(),
             'units' => DB::table('tbl_mst_satuan')->get(),
@@ -119,16 +114,6 @@ class InputStockController extends Component
         return response()->json($data);
     }
 
-    public function generateBeliId()
-    {
-        $last = DB::table('tbl_trn_beli')
-            ->where('transaction_id', 'like', 'BELI_%')
-            ->selectRaw('MAX(CAST(SUBSTRING(transaction_id, 7) AS UNSIGNED)) as last_number')
-            ->first();
-
-        $nextNumber = $last && $last->last_number ? $last->last_number + 1 : 1;
-        return 'BELI_' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
-    }
 
     public function crudJson(Request $request)
     {
@@ -139,28 +124,27 @@ class InputStockController extends Component
                     'product_id' => 'required|string|max:255',
                     'kode_barang' => 'required|string|max:255',
                     'qty'         => 'required|string|max:255',
-                    'tanggal_beli' => 'required|string|max:255',
+                    'tanggal' => 'required|string|max:255',
                 ]);
 
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 422);
                 }
                 $message = "Data berhasil ditambahkan";
-                DB::table('tbl_trn_beli')->insert([
-                    'transaction_id' => self::generateBeliId(),
-                    'no_po' => $request->no_po,
-                    'tanggal_beli' => $request->tanggal_beli,
+                DB::table('tbl_trn_adjust')->insert([
                     'product_id' => $request->product_id,
+                    'kode_barang' => $request->kode_barang,
                     'qty' => $request->qty,
-                    'harga_satuan' => $request->harga_satuan,
-                    'supplier' => $request->supplier,
-                    'harga_total' => $request->harga_total,
-                    'status' => 'done',
+                    'type' => $request->type,
                     'remark' => $request->remark,
                     'created_by' => Auth::user()->user_id ?? 'system',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+
+                $qty =  (float)$request->qty;
+                $type = $request->type;
+
                 $existing = DB::table('tbl_trn_stock')
                     ->where('product_id', $request->product_id)
                     ->first();
@@ -169,11 +153,12 @@ class InputStockController extends Component
                     ->value('stock') ?? 0;
                 $stokAkhir = 0;
                 if ($existing) {
-                    $stokAkhir = $existing->stock + $request->qty;
+                    $stockBaru = $existing->stock + ($type === '+' ? $qty : -$qty);
+                    $stokAkhir =  $stockBaru;
                     DB::table('tbl_trn_stock')
                         ->where('product_id', $request->product_id)
                         ->update([
-                            'stock' => $existing->stock + $request->qty,
+                            'stock' => $stockBaru,
                             'updated_at' => now(),
                         ]);
                 } else {
@@ -187,22 +172,23 @@ class InputStockController extends Component
                         'updated_at' => now(),
                     ]);
                 }
+
                 DB::table('tbl_log_transaksi')->insert([
                     'product_id' => $request->product_id,
-                    'kode_barang' => $existing->kode_barang,
+                    'kode_barang' => $request->kode_barang,
                     'qty' => $request->qty,
                     'created_by' => Auth::user()->user_id ?? 'system',
                     'created_at' => now(),
                     'updated_at' => now(),
                     'stock_awal' => $stockAwal,
                     'stock_akhir' => $stokAkhir,
-                    'type' => '+',
-                    'name_process' => 'new stock',
+                    'type' => $type,
+                    'name_process' => 'adjust',
                 ]);
                 break;
             case 'delete':
                 $message = "Data berhasil dihapus";
-                DB::table('tbl_trn_beli')->where('transaction_id', $request->transaction_id)->delete();
+                DB::table('tbl_trn_adjust')->where('id', $request->id)->delete();
                 DB::table('tbl_trn_stock')->updateOrInsert(
                     ['product_id' => $request->product_id], // kondisi
                     [

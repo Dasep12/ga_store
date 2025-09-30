@@ -118,21 +118,7 @@ class ShippingController extends Component
 
         try {
             $emailService = app(EmailService::class);
-            // Cek dan kunci stok semua item dulu
-            // foreach ($cart as $item) {
-            //     $stock = DB::table('tbl_trn_stock')
-            //         ->where('product_id', $item['id_barang'])
-            //         ->lockForUpdate()
-            //         ->value('stock');
 
-            //     if ($stock === null || $stock < $item['qty']) {
-            //         DB::rollBack();
-            //         $this->dispatch('checkout-success', [
-            //             'message' => 'Stok barang ' . $item['nama_barang'] . ' tidak mencukupi!',
-            //         ]);
-            //         return;
-            //     }
-            // }
 
             // Generate order_id sekali untuk semua item
             $order_id = $this->generateOrderId();
@@ -156,10 +142,6 @@ class ShippingController extends Component
                     'nama' => $item['nama_barang'],
                     'qty' => $item['qty'],
                 ]);
-                // // Potong stok
-                // DB::table('tbl_trn_stock')
-                //     ->where('product_id', $item['id_barang'])
-                //     ->decrement('stock', $item['qty']);
             }
 
 

@@ -165,10 +165,24 @@ class PengadaanController extends Component
                         DB::table('tbl_trn_stock')
                             ->where('product_id', $request->barang_id)
                             ->update([
-                                'stock' => DB::raw('stock - ' . (int) $request->qty),
+                                'stock' => DB::raw('stock - ' . $request->qty),
                                 'updated_at' => now(),
                                 'updated_by' => Auth::user()->nama
                             ]);
+
+                        $stokAkhir = $stokSekarang - $request->qty;
+                        DB::table('tbl_log_transaksi')->insert([
+                            'product_id' => $request->barang_id,
+                            'kode_barang' => $request->kode_barang,
+                            'qty' => $request->qty,
+                            'created_by' => Auth::user()->user_id ?? 'system',
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                            'stock_awal' => $stokSekarang,
+                            'stock_akhir' => $stokAkhir,
+                            'type' => '-',
+                            'name_process' => 'order',
+                        ]);
                     }
 
 

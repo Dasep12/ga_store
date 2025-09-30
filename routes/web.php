@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\AdjustStock\AdjustStockController;
 use App\Livewire\Department\DepartmentController as DepartmentPage;
 use App\Livewire\Kategori\KategoriController as KategoriPage;
 use App\Livewire\Units\UnitsController as UnitsPage;
@@ -9,7 +10,6 @@ use App\Livewire\Barang\BarangController as ProductPage;
 use App\Livewire\Frontend\MainController as MainPage;
 use App\Livewire\Frontend\ShippingController as ShippingPage;
 use App\Livewire\Frontend\TrackController as TrackPage;
-use App\Livewire\Frontend\CheckoutController as CheckoutPage;
 use App\Livewire\InputStock\InputStockController as InputStockPage;
 use App\Livewire\Pengadaan\PengadaanController as PengadaanPage;
 use App\Livewire\Stock\StockController as StockPage;
@@ -81,6 +81,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/importExcel', [ProductPage::class, 'ImportExcel'])->name('pengadaan.import');
     });
 
+    Route::prefix('adjuststock')->group(function () {
+        Route::get('/', AdjustStockController::class)->name('adjuststock.index');
+        Route::get('/{id}', [AdjustStockController::class, 'show'])->name('adjuststock.show');
+        Route::post('/crudJson', [AdjustStockController::class, 'crudJson'])->name('adjuststock.crud');
+        Route::post('/importExcel', [AdjustStockController::class, 'ImportExcel'])->name('adjuststock.import');
+        Route::get('/import/progress/{id}', [AdjustStockController::class, 'progress'])->name('adjuststock.import.progress');
+    });
+
     Route::prefix('inputstock')->group(function () {
         Route::get('/', InputStockPage::class)->name('inputstock.index');
         Route::get('/{id}', [InputStockPage::class, 'show'])->name('inputstock.show');
@@ -138,4 +146,3 @@ Route::get('/', MainPage::class)->name('main.index');
 Route::get('/detail/{id}', [MainPage::class, 'detail'])->name('main.detail');
 Route::get('/shipping', ShippingPage::class)->name('main.shipping');
 Route::get('/track', TrackPage::class)->name('main.track');
-Route::get('/checkout', CheckoutPage::class)->name('main.checkout');

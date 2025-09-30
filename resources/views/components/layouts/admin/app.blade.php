@@ -280,6 +280,19 @@
         .select2-container--default .select2-selection--single {
             border: 1px solid #d4d4d4 !important;
         }
+
+        .card-header-custom {
+            padding: 12px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #444;
+            line-height: 28px;
+            padding: 3px !important;
+            font-size: 0.8rem !important;
+            font-weight: 600;
+            margin-left: 9px !important;
+        }
     </style>
 
 
