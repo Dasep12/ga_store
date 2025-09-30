@@ -216,6 +216,14 @@ class UserController extends Component
                 $message = "Data berhasil dihapus";
                 DB::table('tbl_sys_users')->where('user_id', $request->id)->delete();
                 break;
+            case 'editpassword':
+                $message = "Data berhasil di update";
+                DB::table('tbl_sys_users')->where('user_id', $request->id)->update([
+                    'password' =>  Hash::make($request->password),
+                    'updated_at' => now(),
+                    'updated_by' => Auth::user()->user_id,
+                ]);
+                break;
         }
 
         try {

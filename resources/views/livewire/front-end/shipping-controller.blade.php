@@ -86,7 +86,7 @@
                 Swal.fire('Gagal', data[0].message, 'error');
                 return;
             }
-            Swal.fire('Berhasil', data[0].message, 'success');
+            Swal.fire('Berhasil', data[0].message + ' ,' + data[0].email, 'success');
         });
         window.CheckoutSuccessListenerRegistered = true;
     }

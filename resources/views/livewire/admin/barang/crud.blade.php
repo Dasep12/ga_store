@@ -101,6 +101,12 @@
                         </div>
 
                         <div class="col-md-3 mb-3">
+                            <label for="harga" class="form-label">Harga</label>
+                            <input type="text" class="form-control form-control-sm" id="harga" name="harga" placeholder="Harga">
+                            <span class="text-danger fs-9 error-text" id="error-harga"></span>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
                             <label for="deskripsi" class="form-label">Deskripsi</label>
                             <textarea type="text" class="form-control form-control-sm" id="deskripsi" name="deskripsi" placeholder="Deskripsi"></textarea>
                             <span class="text-danger fs-9 error-text" id="error-deskripsi"></span>

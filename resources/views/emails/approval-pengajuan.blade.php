@@ -92,7 +92,7 @@
 
         <div class="request-info">
             <p><strong>Nama Pengaju:</strong> {{ $pengaju['nama'] }}</p>
-            <p><strong>Departemen:</strong> {{ $pengaju['departemen'] }}</p>
+            <p><strong>Departement:</strong> {{ $pengaju['departement'] }}</p>
             <p><strong>Tanggal Pengajuan:</strong> {{ $pengaju['tanggal'] }}</p>
         </div>
 

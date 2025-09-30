@@ -164,10 +164,14 @@ class ShippingController extends Component
 
 
             $pengaju = [
-                'nama' => 'Dasep Depiyawan',
-                'departemen' => 'IT',
-                'tanggal' => now()->format('d/m/Y'),
+                'nama' => Auth::user()->noreg . ' - ' .  ucwords(Auth::user()->nama),
+                'departement' => DB::table('tbl_mst_department')
+                    ->where('id', Auth::user()->department_id)
+                    ->pluck('name')
+                    ->first(),
+                'tanggal' => now()->format('d/m/Y H:i:s'),
             ];
+
             $token = Hash::make($order_id . 'BTI');
             DB::table('tbl_mst_token')->insert([
                 'order_id' => $order_id,
@@ -177,18 +181,29 @@ class ShippingController extends Component
             ]);
             $approveUrl = route('approval.approve', ['order_id' => $order_id, 'token' => $token]);
             $rejectUrl  = route('approval.reject',  ['order_id' => $order_id, 'token' => $token]);
-            $emailService->sendApproval(
-                $items,
-                'dasepdepiyawan@outlook.com',
-                $approveUrl,
-                $rejectUrl,
-                $pengaju
-            );
+
+            $approvalList = DB::table('tbl_sys_users')->where([
+                'department_id' => Auth::user()->department_id,
+                'level_id' => 'A'
+            ])->get();
+            $emailList = [];
+            foreach ($approvalList as $app) {
+                $emailService->sendApproval(
+                    $items,
+                    $app->email,
+                    $approveUrl,
+                    $rejectUrl,
+                    $pengaju
+                );
+                $emailList[] = $app->email;
+            }
+
 
             session()->forget('cart');
             $this->cart = [];
             $this->dispatch('checkout-success', [
                 'message' => 'Checkout berhasil',
+                'email'   => 'Data terkirim ke ' . implode(', ', $emailList),
                 'success' => true,
             ]);
             DB::commit();

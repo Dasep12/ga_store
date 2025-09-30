@@ -187,7 +187,7 @@
             $('#modalTitle').text('Add {{ $title }}');
             $('#id').val('');
             $('#is_actived').prop('checked', true);
-            $('#special_order').prop('checked', true);
+            $('#special_order').prop('checked', false);
             $('#btnSave').html('<i class="fa fa-save"></i> Simpan');
             $("#btnSave").removeClass("btn-danger").addClass("bg-custom-navbar");
         } else if (action === 'edit') {
@@ -208,6 +208,7 @@
                     $('#kategori_id').val(data.kategori_id);
                     $('#stock_type').val(data.stock_type);
                     $('#merek').val(data.merek);
+                    $('#harga').val(data.harga);
                     $('#warna').val(data.warna);
                     $('#ukuran').val(data.ukuran);
                     $('#satuan_id').val(data.satuan_id);
@@ -243,6 +244,7 @@
                     $('#stock_type').val(data.stock_type);
                     $('#merek').val(data.merek);
                     $('#warna').val(data.warna);
+                    $('#harga').val(data.harga);
                     $('#ukuran').val(data.ukuran);
                     $('#satuan_id').val(data.satuan_id);
                     $('#model').val(data.model);
@@ -277,8 +279,6 @@
     $(document).on('submit', '#formSubmit', function(e) {
         e.preventDefault();
         let formData = new FormData(this);
-        $('#error-name').text('');
-        $('#error-code').text('');
         $('#btnSave').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Simpan');
 
         $.ajax({

@@ -78,8 +78,9 @@
                             <td align="center">
                                 <div class="position-static"><a class=" dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-cog fs-10"></span></a>
                                     <div class="dropdown-menu dropdown-menu-end py-2">
-                                        <a onclick="crudJson('edit','{{ $data->user_id }}')" class="dropdown-item text-primary btnEdit"><i class="fa fa-eye"></i> View</a>
+                                        <a onclick="crudJson('edit','{{ $data->user_id }}')" class="dropdown-item text-success btnEdit"><i class="fa fa-eye"></i> View</a>
                                         <div class="dropdown-divider"></div>
+                                        <a onclick="crudJson('editpassword','{{ $data->user_id }}')" class="dropdown-item text-primary btnPassword" href="#!"><i class="fa fa-lock"></i> Change Password</a>
                                         <a onclick="crudJson('delete','{{ $data->user_id }}')" class="dropdown-item text-danger btnDelete" href="#!"><i class="fa fa-trash"></i> Remove</a>
                                     </div>
                                 </div>
@@ -180,7 +181,9 @@
             $('#modalTitle').text('Add {{ $title }}')
             $('#btnSave').html('<i class="fa fa-save"></i> Simpan');
             $("#btnSave").removeClass("btn-danger").addClass("bg-custom-navbar");
+            $(".password-line").removeClass('d-none')
         } else if (action === 'edit') {
+            $(".password-line").addClass('d-none')
             $.ajax({
                 url: `/users/${id}`,
                 method: 'GET',
@@ -207,25 +210,55 @@
                 }
             });
         } else if (action === 'delete') {
+            $(".password-line").addClass('d-none')
             $.ajax({
                 url: `/users/${id}`,
                 method: 'GET',
                 success: function(data) {
                     $('#modalTitle').text('Delete');
                     $.each(data, result => {
-                        $("#id").val(data[result].id);
+                        $("#id").val(data[result].user_id);
                         $('#department_id').val(data[result].department_id).trigger("change");
                         $('#role_id').val(data[result].role_id).trigger("change");
                         $('#level_id').val(data[result].level_id).trigger("change");
                         $('#noreg').val(data[result].noreg);
                         $('#nama').val(data[result].nama);
                         $('#email').val(data[result].email);
+                        loadMenuAccess(data[result].role_id)
                     })
 
                     $('#btnSave').html('<i class="fa fa-trash"></i> Update');
                     $("#btnSave").removeClass("bg-custom-navbar").addClass("btn-danger");
                     $('#modalCrud').modal('show');
                     $('form.form-loading :input').attr('readonly', 'readonly');
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                }
+            });
+        } else if (action === 'editpassword') {
+            $(".password-line").removeClass('d-none')
+            $.ajax({
+                url: `/users/${id}`,
+                method: 'GET',
+                success: function(data) {
+                    $('#modalTitle').text('Edit Password');
+                    $.each(data, result => {
+                        $("#id").val(data[result].user_id);
+                        $('#department_id').val(data[result].department_id).trigger("change");
+                        $('#role_id').val(data[result].role_id).trigger("change");
+                        $('#level_id').val(data[result].level_id).trigger("change");
+                        $('#noreg').val(data[result].noreg);
+                        $('#nama').val(data[result].nama);
+                        $('#email').val(data[result].email);
+                        loadMenuAccess(data[result].role_id)
+                    })
+
+                    $('#btnPassword').html('<i class="fa fa-trash"></i> Update Password');
+                    $("#btnPassword").removeClass("bg-custom-navbar").addClass("btn-danger");
+                    $('#modalCrud').modal('show');
+                    $('form.form-loading :input').attr('readonly', 'readonly');
+                    $("#password").removeAttr("readonly");
                 },
                 error: function(xhr) {
                     console.error(xhr.responseText);

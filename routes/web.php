@@ -17,6 +17,8 @@ use App\Livewire\Users\UserController as UserPage;
 use App\Livewire\JenisAsset\JenisAssetsController as JenisAssetPage;
 use App\Livewire\Login\LoginController as LoginPage;
 use App\Livewire\Register\RegisterController as RegisterPage;
+use App\Livewire\Reports\BeliController;
+use App\Livewire\Reports\OrderController;
 use App\Livewire\Roles\RolesController as RolesPage;
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +38,8 @@ use App\Livewire\Roles\RolesController as RolesPage;
 
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::get('/home', HomePage::class)->name('homepage');
 
     Route::prefix('departments')->group(function () {
         Route::get('/', DepartmentPage::class)->name('departments.index');
@@ -105,11 +109,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', StockPage::class)->name('stock.index');
         Route::get('/{id}', [StockPage::class, 'show'])->name('stock.show');
     });
+
+
+    Route::prefix('reportorder')->group(function () {
+        Route::get('/', OrderController::class)->name('reportorder.index');
+        Route::get('/barang', [OrderController::class, 'barang'])->name('barang.json');
+        Route::get('/department', [OrderController::class, 'department'])->name('department.json');
+    });
+    Route::prefix('reportbeli')->group(function () {
+        Route::get('/', BeliController::class)->name('reportbeli.index');
+        Route::get('/barang', [BeliController::class, 'barang'])->name('barang.json');
+    });
 });
 
 
 
-// Route::get('/home', HomePage::class)->name('homepage');
+
 Route::get('/login', LoginPage::class)->name('loginpage');
 Route::get('/register', RegisterPage::class)->name('registerpage');
 Route::post('/validatelogin', [LoginPage::class, 'login'])->name('validatelogin');

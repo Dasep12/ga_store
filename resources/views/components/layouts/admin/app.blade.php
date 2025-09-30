@@ -44,7 +44,9 @@
     <link href="/assets/assets/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="/assets/vendors/flatpickr/flatpickr.min.css" rel="stylesheet">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
     <script>
         var phoenixIsRTL = window.config.config.phoenixIsRTL;
@@ -108,16 +110,175 @@
             font-size: .9rem !important;
         }
 
-        .select2-container--default .select2-selection--single {
+        /* .select2-container--default .select2-selection--single {
             height: calc(1.8125rem + 2px) !important;
-            /* sama dengan form-control-sm */
             padding: 0rem 0.5rem !important;
             font-size: 0.8rem !important;
             font-weight: 600 !important;
-            /* small */
             line-height: 1.5 !important;
             border: 1px solid #ced4da !important;
             border-radius: 0.3rem !important;
+        }*/
+        /* --- Select2 Custom Styles --- */
+
+        /* Main container and input */
+        /* Container for the multiple selection box */
+        .select2-container--default .select2-selection--multiple {
+            background-color: #fff;
+            border: 1px solid #d1d5db;
+            /* Light gray border */
+            border-radius: 0.375rem;
+            min-height: 36px;
+            padding: 2px 4px;
+            /* Adjusted padding for better alignment */
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            /* Vertically centers content */
+            flex-wrap: wrap;
+            /* Allows selected tags to wrap to the next line */
+        }
+
+        /* Focus state for the container */
+        .select2-container--default.select2-container--focus .select2-selection--multiple {
+            border-color: #007bff;
+            /* Blue border on focus */
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
+        }
+
+        /* Individual selected tag (the "pill") */
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #e2f3ff;
+            /* Light blue background */
+            border: 1px solid #cceeff;
+            border-radius: 8px;
+            padding: 2px 6px;
+            /* Adjusted padding for a more compact look */
+            margin: 2px;
+            /* Adjusted margin to prevent overflowing */
+            font-size: 12px;
+            line-height: 1.5;
+            /* Ensures text inside is aligned properly */
+            color: #004d99;
+            /* Dark blue text color */
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            /* Reduced gap for a tighter look */
+            transition: background-color 0.2s ease;
+        }
+
+        .select2-container--default .select2-selection__choice:hover {
+            background-color: #cceeff;
+        }
+
+        /* Remove button for a tag */
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: #004d99;
+            opacity: 0.7;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            margin-right: -2px;
+            /* Adjusted negative margin for better alignment */
+            font-weight: bold;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+            opacity: 1;
+            color: #003366;
+        }
+
+        /* Search input field within the selection box */
+        .select2-container--default .select2-selection--multiple .select2-search--inline {
+            margin: 0;
+            /* Remove default margin */
+            flex: 1;
+            /* Allows the search input to grow and take remaining space */
+            min-width: 150px;
+            /* Ensures the search field has enough space */
+            list-style: none;
+            /* Removes bullet point */
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-search--inline .select2-search__field {
+            border: none;
+            outline: none;
+            box-shadow: none;
+            font-size: 14px;
+            height: 100%;
+            /* Ensures the input field fills the available height */
+            padding: 4px 0;
+            /* Adjusted padding for vertical alignment */
+            width: 100% !important;
+            /* Forces the input to take full width */
+        }
+
+        /* Dropdown menu */
+        .select2-container--default .select2-dropdown {
+            border-color: #d1d5db;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dropdown search input */
+        .select2-container--default .select2-dropdown .select2-search__field {
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 1rem;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s ease;
+        }
+
+        .select2-container--default .select2-dropdown .select2-search__field:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Dropdown results */
+        .select2-container--default .select2-results__option {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 4px 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+            background-color: #007bff !important;
+            color: white !important;
+            border-radius: 8px;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                max-width: 100%;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .select2-container--default .select2-selection--multiple {
+                border-radius: 8px;
+                min-height: 44px;
+                padding: 4px;
+            }
+
+            .select2-container--default .select2-selection__choice {
+                font-size: 13px;
+                padding: 3px 10px;
+                margin: 3px;
+            }
+        }
+
+        .select2-container .select2-selection--single {
+            height: 35px !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #d4d4d4 !important;
         }
     </style>
 
@@ -125,7 +286,7 @@
     @livewireStyles
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 
 </head>
 
@@ -480,6 +641,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/assets/vendors/dayjs/dayjs.min.js"></script>
     <script src="/assets/vendors/flatpickr/flatpickr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script>
         // Untuk AJAX global (jQuery)
         $(document).ajaxError(function(event, jqxhr) {

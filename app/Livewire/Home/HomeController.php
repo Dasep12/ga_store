@@ -9,8 +9,8 @@ class HomeController extends Component
     protected string $layout = 'layouts.app';
     public function render()
     {
-        return view('livewire.front-end.home', [
+        return view('livewire.admin.home.index', [
             'title' => 'GA Store | Home'
-        ])->extends('components.layouts.frontend.app');
+        ])->extends('components.layouts.admin.app');
     }
 }

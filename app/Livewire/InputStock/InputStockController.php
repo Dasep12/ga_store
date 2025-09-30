@@ -175,6 +175,7 @@ class InputStockController extends Component
                 } else {
                     DB::table('tbl_trn_stock')->insert([
                         'product_id' => $request->product_id,
+                        'kode_barang' => $request->kode_barang,
                         'stock' => $request->qty,
                         'created_by' => Auth::user()->user_id ?? 'system',
                         'created_at' => now(),

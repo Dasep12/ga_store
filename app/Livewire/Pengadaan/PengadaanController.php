@@ -141,11 +141,9 @@ class PengadaanController extends Component
                     $message = 'Request Barang terproses';
                     break;
                 case 'done':
-
                     if (strtolower($request->stock_type) === 'ready') {
                         // Ambil stok produk
                         $stokSekarang = DB::table('tbl_trn_stock')
-                            ->where('product_id', $request->barang_id)
                             ->where('product_id', $request->barang_id)
                             ->value('stock');
                         // Validasi stok kosong
@@ -166,7 +164,11 @@ class PengadaanController extends Component
                         // Proses pengadaan, misalnya update status atau lainnya
                         DB::table('tbl_trn_stock')
                             ->where('product_id', $request->barang_id)
-                            ->decrement('stock', $request->qty);
+                            ->update([
+                                'stock' => DB::raw('stock - ' . (int) $request->qty),
+                                'updated_at' => now(),
+                                'updated_by' => Auth::user()->nama
+                            ]);
                     }
 
 

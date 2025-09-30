@@ -13,6 +13,22 @@
         </li>
     </ul> -->
 
+    <!-- <div wire:loading wire:target="resendEmail" class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-dark bg-opacity-75"
+        style="z-index: 9999;">
+        <div class="spinner-border text-info" role="status">
+            <span class="visually-hidden">Processing...</span>
+        </div>
+        <div class="mt-2 text-white">Sending email approval...</div>
+    </div> -->
+    @if($isResending)
+    <div wire:loading wire:target="resendEmail" class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-dark bg-opacity-75" style="z-index: 9999;">
+        <div class="spinner-border text-info" role="status">
+            <span class="visually-hidden">Processing...</span>
+        </div>
+        <div class="mt-2 text-white">Sending email approval...</div>
+    </div>
+    @endif
+
     @if(Auth::check())
     <ul class="nav nav-underline  navbar-expand p-2 ps-breadcrumb " style="border-top-left-radius: 10px !important;border-top-right-radius: 10px !important;" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -59,6 +75,7 @@
                 <span class="ms-2">Loading...</span>
             </div>
             <div class="table-responsive scrollbar bg-white p-3" style="border-bottom-left-radius: 10px !important;border-bottom-right-radius: 10px !important;">
+
                 <table class="table ps-table--shopping-cart" wire:loading.remove wire:target="gotoPage, perPage,filterData, search, filterType">
                     <thead>
                         @switch($filterType)
@@ -70,6 +87,7 @@
                             <th>Qty</th>
                             <th>Request Date</th>
                             <th>Request By</th>
+                            <th>Resend</th>
                             <th>Status</th>
                         </tr>
                         @break
@@ -152,6 +170,10 @@
                                 {{ $data->creator }}
                             </td>
                             <td>
+
+                                <a wire:click="resendEmail('{{ $data->order_id }}')" href=" javascript:void(0)" class="bg-info p-2 rounded-2 text-white"><span class="">Resend Mail <i class="fas fa-paper-plane"></i></span> </a>
+                            </td>
+                            <td>
                                 <span class="bg-warning p-2 rounded-2 text-white"><span class="">{{ ucwords($data->status) }} <i class="fa fa-clock"></i></span> </span>
                             </td>
                         </tr>
@@ -193,7 +215,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="10" align="center">DATA NOT FOUND</td>
+                            <td class="text-center" colspan="7">DATA NOT FOUND</td>
                         </tr>
                         @endforelse
                         @break
@@ -209,10 +231,10 @@
                                 </a>
                             </td>
                             <td>
-                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
+                                <a class="mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
                             </td>
                             <td>
-                                <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
+                                <a class="mb-0" href="javascript:void(0)">{{ $data->nama_barang }}</a>
                             </td>
                             <td>
                                 {{ $data->qty }}
@@ -224,12 +246,12 @@
                                 {{ $data->creator }}
                             </td>
                             <td>
-                                <span class=""><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
+                                <span class="bg-primary text-white p-2 rounded-2"><span class="">{{ ucwords($data->status) }} <i class="fa fa-clock"></i></span> </span>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="10" align="center">DATA NOT FOUND</td>
+                            <td class="text-center" colspan="10" align="center">DATA NOT FOUND</td>
                         </tr>
                         @endforelse
                         @break
@@ -268,7 +290,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="10" align="center">DATA NOT FOUND</td>
+                            <td class="text-center" colspan="8" align="center">DATA NOT FOUND</td>
                         </tr>
                         @endforelse
                         @break
@@ -383,5 +405,18 @@
         <h1>you must login</h1>
     </div>
     @endif
-
+    @pushOnce('scripts')
+    <script>
+        if (!window.CheckoutSuccessListenerRegistered) {
+            Livewire.on('checkout-success', (data) => {
+                if (data[0].success === false) {
+                    Swal.fire('Gagal', data[0].message, 'error');
+                    return;
+                }
+                Swal.fire('Berhasil', data[0].message, 'success');
+            });
+            window.CheckoutSuccessListenerRegistered = true;
+        }
+    </script>
+    @endPushOnce
 </div>

@@ -406,7 +406,7 @@
                 success: function(data) {
                     $('#modalTitle').text('Process {{ $title }}');
                     $.each(data, function(i, value) {
-                        $('#id').val(value.order_id);
+                        $('#id').val(value.id);
                         $('#barang_id').val(value.barang_id);
                         $('#nama_barang').val(value.nama_barang);
                         $('#kode_barang').val(value.kode_barang);
@@ -449,7 +449,7 @@
                 success: function(data) {
                     $('#modalTitle').text('Reject Pengadaan');
                     $.each(data, function(i, value) {
-                        $('#id').val(value.order_id);
+                        $('#id').val(value.id);
                         $('#nama_barang').val(value.nama_barang);
                         $('#barang_id').val(value.barang_id);
                         $('#stock_type').val(value.stock_type);

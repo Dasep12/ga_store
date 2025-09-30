@@ -27,7 +27,7 @@
                                     <span class="text-danger fs-9 error-text" id="error-nama"></span>
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-6 mb-3 password-line">
                                     <label for="password" class="form-label">PASSWORD *</label>
                                     <input type="password" class="form-control form-control-sm" id="password" name="password" placeholder="Password">
                                     <span class="text-danger fs-9 error-text" id="error-password"></span>
