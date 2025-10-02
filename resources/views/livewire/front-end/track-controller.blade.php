@@ -179,7 +179,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="10" align="center">DATA NOT FOUND</td>
+                            <td colspan="10" class="text-center" align="center">DATA NOT FOUND</td>
                         </tr>
                         @endforelse
                         @break
@@ -333,7 +333,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="10" align="center">DATA NOT FOUND</td>
+                            <td colspan="9" class="text-center" align="center">DATA NOT FOUND</td>
                         </tr>
                         @endforelse
                         @break

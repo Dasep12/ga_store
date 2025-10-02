@@ -10,6 +10,9 @@
     </div>
     @else
     <div class="card mb-3">
+        <div class="card-header card-header-custom">
+            <h4>List Request</h4>
+        </div>
         <div class="card-body position-relative">
 
             {{-- Spinner loading dengan target spesifik --}}

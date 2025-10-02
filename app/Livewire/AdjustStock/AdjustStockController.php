@@ -2,6 +2,7 @@
 
 namespace App\Livewire\AdjustStock;
 
+use App\Imports\AdjustStocksImport;
 use App\Services\ExportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -72,11 +73,13 @@ class AdjustStockController extends Component
         // jika pakai lazy load
         if ($this->isReady) {
             $datas = DB::table('vw_trn_adjust')
+                ->leftJoin('vw_mst_product', 'vw_mst_product.id', '=', 'vw_trn_adjust.product_id')
                 ->select(
-                    'vw_trn_adjust.*'
+                    'vw_trn_adjust.*',
+                    'vw_mst_product.units'
                 )->where(function ($q) {
-                    $q->where('nama_barang', 'like', '%' . $this->search . '%')
-                        ->orWhere('kode_barang', 'like', '%' . $this->search . '%')
+                    $q->where('vw_trn_adjust.nama_barang', 'like', '%' . $this->search . '%')
+                        ->orWhere('vw_trn_adjust.kode_barang', 'like', '%' . $this->search . '%')
                     ;
                 })
                 ->orderBy('created_at', 'desc')
@@ -100,7 +103,7 @@ class AdjustStockController extends Component
             'units' => DB::table('tbl_mst_satuan')->get(),
             'jenis_assets' => DB::table('tbl_mst_jenis_asset')->get(),
             'produk'        => DB::table('tbl_mst_product')->get(),
-            'title' => 'Input Stock',
+            'title' => 'Adjust Stock',
             'canCreate' => $canCreate,
             'canRead' => $canRead,
             'canDelete' => $canDelete,
@@ -110,7 +113,7 @@ class AdjustStockController extends Component
 
     public function show($id)
     {
-        $data = DB::table('vw_trn_beli')->where('transaction_id', $id)->get();
+        $data = DB::table('vw_trn_adjust')->where('id', $id)->get();
         return response()->json($data);
     }
 
@@ -136,6 +139,7 @@ class AdjustStockController extends Component
                     'kode_barang' => $request->kode_barang,
                     'qty' => $request->qty,
                     'type' => $request->type,
+                    'tanggal' => $request->tanggal,
                     'remark' => $request->remark,
                     'created_by' => Auth::user()->user_id ?? 'system',
                     'created_at' => now(),
@@ -188,15 +192,26 @@ class AdjustStockController extends Component
                 break;
             case 'delete':
                 $message = "Data berhasil dihapus";
-                DB::table('tbl_trn_adjust')->where('id', $request->id)->delete();
-                DB::table('tbl_trn_stock')->updateOrInsert(
-                    ['product_id' => $request->product_id], // kondisi
-                    [
-                        'stock' => DB::raw("stock - {$request->qty}"), // update stock nambah
-                        'created_by' => Auth::user()->user_id ?? 'system',
-                        'updated_at' => now(),
-                    ]
-                );
+                $operator = $request->type == '+' ? '-' : '+';
+                $adjust = DB::table('tbl_trn_adjust')->where('id', $request->id)->first();
+
+                if ($adjust) {
+                    // tentukan arah pembalikan stok
+                    $operator = $adjust->type == '+' ? '-' : '+';
+
+                    // update stok kembali seperti sebelum adjustment dibuat
+                    DB::table('tbl_trn_stock')->updateOrInsert(
+                        ['product_id' => $adjust->product_id],
+                        [
+                            'stock' => DB::raw("stock {$operator} {$adjust->qty}"),
+                            'created_by' => Auth::user()->user_id ?? 'system',
+                            'updated_at' => now(),
+                        ]
+                    );
+
+                    // hapus log adjust
+                    DB::table('tbl_trn_adjust')->where('id', $adjust->id)->delete();
+                }
                 break;
         }
 
@@ -264,7 +279,7 @@ class AdjustStockController extends Component
 
         // Queue import menggunakan Laravel-Excel (yang mendukung ShouldQueue)
         // ProductsImport harus menerima $importId dan $path
-        Excel::queueImport(new StocksImport($importId, $fullPath), $fullPath);
+        Excel::queueImport(new AdjustStocksImport($importId, $fullPath), $fullPath);
 
         return response()->json([
             'success' => true,

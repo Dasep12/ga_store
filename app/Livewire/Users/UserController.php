@@ -164,12 +164,25 @@ class UserController extends Component
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 422);
                 }
+                $lastUser = DB::table('tbl_sys_users')
+                    ->orderBy('user_id', 'desc')
+                    ->first();
+
+                if ($lastUser) {
+                    // ambil angka di belakang user_id
+                    $lastNumber = (int) str_replace('user_', '', $lastUser->user_id);
+                    $newUserId  = 'user_' . ($lastNumber + 1);
+                } else {
+                    // kalau belum ada user
+                    $newUserId = 'user_1';
+                }
                 $message = "Data berhasil ditambahkan";
                 DB::table('tbl_sys_users')->insert([
                     'noreg' => $request->noreg,
                     'email' => $request->email,
                     'nama' => $request->nama,
                     'level_id' => $request->level_id,
+                    'user_id' => $newUserId,
                     'password' =>  Hash::make($request->password),
                     'department_id' => $request->department_id,
                     'role_id' => $request->role_id,
@@ -177,6 +190,13 @@ class UserController extends Component
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+
+                DB::table('tbl_sys_user_role_access')->where([
+                    'role_id' => $request->role_id,
+                    'user_id' => $newUserId
+                ])->delete();
+
+                DB::table('tbl_sys_user_role_access')->insert($menuAccessArr);
                 break;
             case 'edit':
                 $validator = Validator::make($request->all(), [
@@ -198,7 +218,6 @@ class UserController extends Component
                     'nama' => $request->nama,
                     'level_id' => $request->level_id,
                     'department_id' => $request->department_id,
-                    'password' =>  Hash::make($request->password),
                     'role_id' => $request->role_id,
                     'updated_at' => now(),
                     'updated_by' => Auth::user()->user_id,

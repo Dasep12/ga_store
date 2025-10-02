@@ -26,7 +26,6 @@ class LoginController extends Component
     public function render()
     {
 
-
         $datas = collect(); // default kosong
         $datas = DB::table('tbl_mst_kategori')->get();
         return view('livewire.auth.index', [
@@ -42,21 +41,20 @@ class LoginController extends Component
             'password' => 'required|string',
         ]);
 
-
         $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'noreg';
 
         $credentials = [
             $loginType => $request->login,
-            'password' => $request->password,
+            'password' => $request->password, // plain text aja
         ];
 
-        if (auth()->attempt($credentials, true)) { // true = remember me 30 hari
+        if (auth()->attempt($credentials, true)) { // true = remember me
             $request->session()->regenerate();
             return redirect()->intended('/');
         }
 
         return back()->withErrors([
-            'login' => 'Login gagal, periksa ' . $loginType . ' atau password.',
+            'login' => "Login gagal, periksa $loginType atau password.",
         ])->onlyInput('login');
     }
 

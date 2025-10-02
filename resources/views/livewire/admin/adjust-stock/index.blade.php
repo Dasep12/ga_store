@@ -59,6 +59,7 @@
                             <th class="text-white" scope="col">Qty</th>
                             <th class="text-white" scope="col">Unit</th>
                             <th class="text-white" scope="col">Adjust Type</th>
+                            <th class="text-white" scope="col">Remark</th>
                             <th class="text-white" scope="col">Created</th>
                             <th class="text-white text-center" style="width: 80px;" scope="col">Action</th>
                         </tr>
@@ -77,6 +78,7 @@
                             <td>{{ $data->nama_barang }}</td>
                             <td>{{ $data->kode_barang }}</td>
                             <td>{{ $data->qty }}</td>
+                            <td>{{ $data->units }}</td>
                             <td>{{ $data->type }}</td>
                             <td>{{ $data->remark }}</td>
                             <td>{{ $data->created_at }}</td>
@@ -180,6 +182,7 @@
         var canCreate = "{{ $canCreate }}";
         $('#formSubmit')[0].reset();
         $('.error-text').html('');
+        $('.error-import').html('');
         $('#crudAction').val(action);
         $('#transaction_id').val('');
         if (action === 'create') {
@@ -198,21 +201,18 @@
                 return false;
             }
             $.ajax({
-                url: `/inputstock/${id}`,
+                url: `/adjuststock/${id}`,
                 method: 'GET',
                 success: function(data) {
                     console.log(data)
                     $('#modalTitle').text('Delete');
                     $.each(data, result => {
-                        $('#transaction_id').val(data[result].transaction_id);
-                        $('#product_id').val(data[result].barang_id).trigger("change");
+                        $('#id').val(data[result].id);
+                        $('#product_id').val(data[result].product_id).trigger("change");
                         $('#kode_barang').val(data[result].kode_barang);
-                        $('#no_po').val(data[result].no_po);
-                        $('#tanggal_beli').val(data[result].tanggal_beli);
+                        $('#tanggal').val(data[result].tanggal);
                         $('#qty').val(data[result].qty);
-                        $('#harga_satuan').val(data[result].harga_satuan);
-                        $('#harga_total').val(data[result].harga_total);
-                        $('#supplier').val(data[result].supplier);
+                        $('#type').val(data[result].type);
                         $('#remark').val(data[result].remark);
                     })
 
@@ -331,7 +331,7 @@
         $('#importProgress').hide();
 
         $.ajax({
-            url: "{{ route('inputstock.import') }}",
+            url: "{{ route('adjuststock.import') }}",
             method: "POST",
             data: fd,
             processData: false,
@@ -358,7 +358,15 @@
             },
             error: function(xhr) {
                 $('#btnUpload').prop('disabled', false);
-                alert('Upload error');
+                $(".error-import").html(xhr);
+                let msg = "Upload error";
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                } else if (xhr.responseText) {
+                    msg = xhr.responseText;
+                }
+
+                $(".error-import").html(`<div class="col-md-12 alert alert-danger"><span>${msg}</span></div>`);
             }
         });
     });

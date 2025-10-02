@@ -7,6 +7,9 @@
     </div>
     @else
     <div class="card mb-3">
+        <div class="card-header card-header-custom">
+            <h4>Input Stock</h4>
+        </div>
         <div class="card-body position-relative">
 
             {{-- Spinner loading dengan target spesifik --}}
@@ -88,7 +91,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center">No products found.</td>
+                            <td colspan="9" class="text-center">No products found.</td>
                         </tr>
                         @endforelse
                     </tbody>
