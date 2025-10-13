@@ -494,6 +494,32 @@
         }
     </style>
 </head>
+<?php
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+$adminMenu = 0;
+if (Auth::check()) {
+    $users = Auth::user();
+    $role_id = $users->role_id;
+    $user_id  = $users->user_id;
+    $adminMenu = DB::table('vw_usr_menu_access')->where(
+        [
+            'role_id' => $role_id,
+            'user_id' => $user_id,
+        ]
+    )->count();
+
+    $specialOrder = DB::table('tbl_sys_users')->where(
+        [
+            'role_id' => $role_id,
+            'user_id'   => $user_id
+        ]
+    )->value('special_order');
+}
+
+?>
 
 <body id="product-category-15" class="loaded">
 
@@ -721,28 +747,15 @@
                         <li class="nav-item  {{ request()->routeIs('main.shipping') ? 'current-menu-item' : '' }}" data-nav-item="data-nav-item">
                             <a class="nav-link" href="{{ route('main.shipping') }}">Cart</a>
                         </li>
+                        @if($specialOrder)
+                        <li class="nav-item  {{ request()->routeIs('main.specialorder') ? 'current-menu-item' : '' }}" data-nav-item="data-nav-item">
+                            <a class="nav-link" href="{{ route('main.specialorder') }}">Special Order</a>
+                        </li>
+                        @endif
                         <li class="nav-item  {{ request()->routeIs('main.track') ? 'current-menu-item' : '' }}" data-nav-item="data-nav-item">
                             <a class="nav-link" href="{{ route('main.track') }}">Track order</a>
                         </li>
-                        <?php
 
-                        use Illuminate\Support\Facades\Auth;
-                        use Illuminate\Support\Facades\DB;
-
-                        $adminMenu = 0;
-                        if (Auth::check()) {
-                            $users = Auth::user();
-                            $role_id = $users->role_id;
-                            $user_id  = $users->user_id;
-                            $adminMenu = DB::table('vw_usr_menu_access')->where(
-                                [
-                                    'role_id' => $role_id,
-                                    'user_id' => $user_id,
-                                ]
-                            )->count();
-                        }
-
-                        ?>
                         @if($adminMenu > 0 )
                         <li class="nav-item" data-nav-item="data-nav-item">
                             <a class="nav-link" href="{{ route('homepage') }}">Admin Dashboard</a>

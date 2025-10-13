@@ -148,7 +148,22 @@ class UserController extends Component
         DB::beginTransaction();
         $menuAccess = $request->menuAccess;
         $menuAccessArr = json_decode($menuAccess, true);
-
+        if ($request->hasFile('sign')) {
+            $fileSignature = $request->file('sign');
+            $fileNameSignature = $request->noreg . '_sign_' . time() . '.' . $fileSignature->getClientOriginalExtension();
+            $fileSignature->move(public_path('assets/signatures'), $fileNameSignature);
+            $filePathSignature = 'assets/signatures/' . $fileNameSignature;
+        } else {
+            $filePathSignature = null;
+        }
+        if ($request->hasFile('photo')) {
+            $filePhoto = $request->file('photo');
+            $fileNamePhoto = $request->noreg . '_photo_' . time() . '.' . $filePhoto->getClientOriginalExtension();
+            $filePhoto->move(public_path('assets/images/users'), $fileNamePhoto);
+            $filePathPhoto = 'assets/images/users/' . $fileNamePhoto;
+        } else {
+            $filePathPhoto = '';
+        }
         switch ($request->crudAction) {
             case 'create':
                 $validator = Validator::make($request->all(), [
@@ -186,7 +201,10 @@ class UserController extends Component
                     'password' =>  Hash::make($request->password),
                     'department_id' => $request->department_id,
                     'role_id' => $request->role_id,
+                    'special_order' => (int)$request->special_order ?? 0,
                     'created_by' => Auth::user()->user_id,
+                    'sign' => $filePathSignature,
+                    'photo' => $filePathPhoto,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
@@ -220,8 +238,20 @@ class UserController extends Component
                     'department_id' => $request->department_id,
                     'role_id' => $request->role_id,
                     'updated_at' => now(),
+                    'special_order' => (int)$request->special_order ?? 0,
                     'updated_by' => Auth::user()->user_id,
                 ]);
+
+                if ($filePathSignature) {
+                    DB::table('tbl_sys_users')->where('user_id', $request->id)->update([
+                        'sign' => $filePathSignature,
+                    ]);
+                }
+                if ($filePathPhoto) {
+                    DB::table('tbl_sys_users')->where('user_id', $request->id)->update([
+                        'photo' => $filePathPhoto,
+                    ]);
+                }
 
                 DB::table('tbl_sys_user_role_access')->where([
                     'role_id' => $request->role_id,

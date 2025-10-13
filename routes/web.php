@@ -9,6 +9,7 @@ use App\Livewire\Home\HomeController as HomePage;
 use App\Livewire\Barang\BarangController as ProductPage;
 use App\Livewire\Frontend\MainController as MainPage;
 use App\Livewire\Frontend\ShippingController as ShippingPage;
+use App\Livewire\Frontend\SpecialOrderController;
 use App\Livewire\Frontend\TrackController as TrackPage;
 use App\Livewire\InputStock\InputStockController as InputStockPage;
 use App\Livewire\Pengadaan\PengadaanController as PengadaanPage;
@@ -144,5 +145,8 @@ Route::get('/rejected', [ShippingPage::class, 'rejectOrder'])->name('approval.re
 
 Route::get('/', MainPage::class)->name('main.index');
 Route::get('/detail/{id}', [MainPage::class, 'detail'])->name('main.detail');
+Route::get('/pdf-permintaan/{id}', [ShippingPage::class, 'PDFPermintaan'])->name('pdf-permintaan.detail');
 Route::get('/shipping', ShippingPage::class)->name('main.shipping');
 Route::get('/track', TrackPage::class)->name('main.track');
+
+Route::get('/specialorder', SpecialOrderController::class)->name('main.specialorder');

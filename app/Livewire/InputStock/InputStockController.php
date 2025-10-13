@@ -141,7 +141,6 @@ class InputStockController extends Component
                     'qty'         => 'required|string|max:255',
                     'tanggal_beli' => 'required|string|max:255',
                 ]);
-
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 422);
                 }
@@ -189,7 +188,7 @@ class InputStockController extends Component
                 }
                 DB::table('tbl_log_transaksi')->insert([
                     'product_id' => $request->product_id,
-                    'kode_barang' => $existing->kode_barang,
+                    'kode_barang' => $request->kode_barang,
                     'qty' => $request->qty,
                     'created_by' => Auth::user()->user_id ?? 'system',
                     'created_at' => now(),

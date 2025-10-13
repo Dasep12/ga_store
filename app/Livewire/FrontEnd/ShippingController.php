@@ -161,8 +161,7 @@ class ShippingController extends Component
                 'status' => 'pending',
                 'created_at' => now(),
             ]);
-            $approveUrl = route('approval.approve', ['order_id' => $order_id, 'token' => $token]);
-            $rejectUrl  = route('approval.reject',  ['order_id' => $order_id, 'token' => $token]);
+
 
             $approvalList = DB::table('tbl_sys_users')->where([
                 'department_id' => Auth::user()->department_id,
@@ -170,6 +169,8 @@ class ShippingController extends Component
             ])->get();
             $emailList = [];
             foreach ($approvalList as $app) {
+                $approveUrl = route('approval.approve', ['order_id' => $order_id, 'token' => $token, 'idx' => $app->user_id]);
+                $rejectUrl  = route('approval.reject',  ['order_id' => $order_id, 'token' => $token, 'idx' => $app->user_id]);
                 $emailService->sendApproval(
                     $items,
                     $app->email,
@@ -294,5 +295,24 @@ class ShippingController extends Component
             'message' => $message,
             'error' => $error,
         ])->extends('components.layouts.frontend.app');
+    }
+
+
+    public function PDFPermintaan($order_id)
+    {
+        $order = DB::table('vw_trn_order as o')
+            ->where('o.order_id', $order_id)
+            ->select(
+                'o.*'
+            )
+            ->get();
+
+        if ($order->isEmpty()) {
+            return redirect()->back()->with('error', 'Order not found.');
+        }
+
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadView('form.pdf-permintaan', ['order' => $order]);
+        return $pdf->stream('permintaan_' . $order_id . '.pdf');
     }
 }

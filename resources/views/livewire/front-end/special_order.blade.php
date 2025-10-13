@@ -86,6 +86,7 @@
                                 </div>
                             </div>
 
+
                             <div class="ps-tabs ps-products-listing bb-product-items-wrapper">
                                 <div class="loading">
                                     <div class="half-circle-spinner">
@@ -96,7 +97,6 @@
 
                                 <input type="hidden" name="page" data-value="1">
                                 <input type="hidden" name="q" value="">
-
                                 <div class="ps-shopping-product">
                                     <div class="row">
                                         @forelse($datas as $data)
@@ -143,6 +143,8 @@
                                                             </div>
                                                             <span class="rating_num">({{ $data->stock_type == 'INDENT' ? $data->stock_type  : $data->stock }})</span>
                                                         </div>
+
+                                                        <p class="ps-product__price ">Rp. {{ number_format($data->harga,0) }} </p>
 
                                                     </div>
                                                 </div>

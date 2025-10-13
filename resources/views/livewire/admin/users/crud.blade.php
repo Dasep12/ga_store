@@ -77,6 +77,26 @@
                                     <input type="file" class="form-control form-control-sm" id="photo" name="photo" placeholder="photo">
                                     <span class="text-danger fs-9 error-text" id="error-photo"></span>
                                 </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="sign" class="form-label">Signature</label>
+                                    <input type="file" class="form-control form-control-sm" id="sign" name="sign" placeholder="Signature" accept="image/*">
+                                    <span class="text-danger fs-9 error-text" id="error-sign"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <img src="" style="height: 100px;width:150px" id="img_photo" alt="">
+                                </div>
+                                <div class="col-md-6">
+                                    <img src="" style="height: 100px;width:150px" id="img_signature" alt="">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="special_order" name="special_order" value="1">
+                                        <label class="form-check-label">Special Order</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-6">

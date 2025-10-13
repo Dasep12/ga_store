@@ -8,6 +8,7 @@
                         <th class="sort white-space-nowrap align-middle fs-10" scope="col" style="width:7%;"></th>
                         <th class="sort white-space-nowrap align-middle">KODE</th>
                         <th class="sort white-space-nowrap align-middle" style="width: 20%;">BARANG</th>
+                        <th class="sort white-space-nowrap">UKURAN</th>
                         <th class="sort white-space-nowrap">TYPE</th>
                         <th class="sort white-space-nowrap align-middle" style="width: 10%;">QTY</th>
                         <th style=" width: 20%;" class=""> </th>
@@ -33,9 +34,8 @@
                         <td class="products">
                             <a class="fw-semibold mb-0" href="">{{ $item['nama_barang'] }}</a>
                         </td>
+                        <td class="color white-space-nowrap fs-9 text-body">{{ $item['ukuran'] }}</td>
                         <td class="color white-space-nowrap fs-9 text-body">{{ $item['type_barang'] }}</td>
-
-
                         <td class="quantity ">
                             <div class="input-group input-group-sm flex-nowrap" data-quantity="data-quantity"><button wire:click="decreamentQuantity({{ $id }})" class="btn btn-sm px-2" data-type="minus">-</button>
                                 <input

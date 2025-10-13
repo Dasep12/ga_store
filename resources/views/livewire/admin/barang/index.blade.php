@@ -57,8 +57,9 @@
                             <th class="text-white" scope="col">Kode</th>
                             <th class="text-white" scope="col">Type</th>
                             <th class="text-white" scope="col">Ukuran</th>
-                            <th class="text-white" scope="col">Special Order</th>
                             <th class="text-white" scope="col">Stock Type</th>
+                            <th class="text-white" scope="col">Special Order</th>
+                            <th class="text-white" scope="col">Show</th>
                             <th class="text-white text-center" scope="col">Status</th>
                             <th class="text-white" scope="col">Created</th>
                             <th class="text-white text-center" style="width: 80px;" scope="col">Action</th>
@@ -81,8 +82,9 @@
                             <td>{{ $data->kode_barang }}</td>
                             <td>{{ $data->type_barang }}</td>
                             <td>{{ $data->ukuran }}</td>
-                            <td align="center"><span class="badge badge-phoenix badge-phoenix-{{ $data->special_order == true ? 'success' : 'danger'}}">{{ $data->special_order == true ? 'Y' : 'N' }}</span></td>
                             <td>{{ $data->stock_type }}</td>
+                            <td align="center"><span class="badge badge-phoenix badge-phoenix-{{ $data->special_order == true ? 'success' : 'danger'}}">{{ $data->special_order == true ? 'Y' : 'N' }}</span></td>
+                            <td align="center"><span class="badge badge-phoenix badge-phoenix-{{ $data->show == true ? 'success' : 'danger'}}">{{ $data->show == true ? 'Y' : 'N' }}</span></td>
                             <td align="center"><span class="badge badge-phoenix badge-phoenix-{{ $data->is_actived == true ? 'success' : 'danger'}}">{{ $data->is_actived == true ? 'Active' : 'Inactive' }}</span></td>
                             <td>{{ $data->created_at }}</td>
                             <td align="center">
@@ -212,6 +214,8 @@
                     $('#stock_type').val(data.stock_type);
                     $('#merek').val(data.merek);
                     $('#harga').val(data.harga);
+                    $('#min_stock').val(data.min_stock);
+                    $('#max_stock').val(data.max_stock);
                     $('#warna').val(data.warna);
                     $('#ukuran').val(data.ukuran);
                     $('#satuan_id').val(data.satuan_id);
@@ -219,6 +223,7 @@
                     $('#deskripsi').val(data.deskripsi);
                     $('#is_actived').prop('checked', data.is_actived);
                     $('#special_order').prop('checked', data.special_order);
+                    $('#show').prop('checked', data.show);
                     $('#btnSave').html('<i class="fa fa-save"></i> Simpan');
                     $("#btnSave").removeClass("btn-danger").addClass("bg-custom-navbar");
                     $('#modalCrud').modal('show');
@@ -248,12 +253,15 @@
                     $('#merek').val(data.merek);
                     $('#warna').val(data.warna);
                     $('#harga').val(data.harga);
+                    $('#min_stock').val(data.min_stock);
+                    $('#max_stock').val(data.max_stock);
                     $('#ukuran').val(data.ukuran);
                     $('#satuan_id').val(data.satuan_id);
                     $('#model').val(data.model);
                     $('#deskripsi').val(data.deskripsi);
                     $('#is_actived').prop('checked', data.is_actived);
                     $('#special_order').prop('checked', data.special_order);
+                    $('#show').prop('checked', data.show);
                     $('#btnSave').html('<i class="fa fa-trash"></i> Delete');
                     $("#btnSave").removeClass("bg-custom-navbar").addClass("btn-danger");
                     $('#modalCrud').modal('show');

@@ -8,7 +8,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 
-class MainController extends Component
+class SpecialOrderController extends Component
 {
     use WithPagination;
     public $search = '';
@@ -69,6 +69,18 @@ class MainController extends Component
 
     public function mount(Request $request)
     {
+
+        $specialOrder = DB::table('tbl_sys_users')
+            ->where([
+                'role_id' => auth()->user()->role_id,
+                'user_id' => auth()->id()
+            ])
+            ->value('special_order');
+
+        if (!$specialOrder) {
+            return redirect()->route('main.index');
+        }
+
         // Ambil cart dari session saat component di-mount
         $this->cart = session()->get('cart', []);
 
@@ -95,6 +107,7 @@ class MainController extends Component
 
         if (isset($cart[$productId])) {
             $cart[$productId]['qty']++;
+            // tambahkan slot kosong untuk penerima baru
             $cart[$productId]['recipients'][] = [
                 'nama'       => null,
                 'department' => null,
@@ -107,7 +120,7 @@ class MainController extends Component
                 'kode_barang' => $product->kode_barang,
                 'ukuran'      => $product->ukuran,
                 'warna'       => $product->warna,
-                'id_barang'    => $product->id,
+                'id_barang'   => $product->id,
                 'type_barang' => $product->type_barang,
                 'kategori_id' => $product->kategori_id,
                 'images' => $product->images ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s',
@@ -160,6 +173,7 @@ class MainController extends Component
 
     public function render()
     {
+
         $datas = collect(); // default kosong
 
         if ($this->isReady) {
@@ -177,7 +191,7 @@ class MainController extends Component
                     DB::raw('(SELECT COUNT(*) FROM tbl_trn_order WHERE tbl_trn_order.product_id = tbl_mst_product.id) as order_count')
                 )
                 ->where('tbl_mst_product.show', 1)
-                ->where('tbl_mst_product.special_order', 0)
+                ->where('tbl_mst_product.special_order', 1)
                 ->where(function ($q) {
                     $q->where('nama_barang', 'like', '%' . $this->search . '%')
                         ->orWhere('tbl_mst_product.kode_barang', 'like', '%' . $this->search . '%')
@@ -196,12 +210,12 @@ class MainController extends Component
                 ->paginate($this->perPage);
         }
 
-        return view('livewire.front-end.main', [
+        return view('livewire.front-end.special_order', [
             'datas' => $datas,
             'categories' => DB::table('tbl_mst_kategori')->get(),
             'units' => DB::table('tbl_mst_satuan')->get(),
             'jenis_assets' => DB::table('tbl_mst_jenis_asset')->get(),
-            'title' => 'Barang',
+            'title' => 'Special Order',
         ])->extends('components.layouts.frontend.app');
     }
 }

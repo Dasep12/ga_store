@@ -193,6 +193,8 @@
                 success: function(data) {
                     $('#modalTitle').text('Update');
                     $.each(data, result => {
+                        $("#img_photo").attr("src", data[result].photo);
+                        $("#img_signature").attr("src", data[result].sign);
                         $("#id").val(data[result].user_id);
                         $('#department_id').val(data[result].department_id).trigger("change");
                         $('#role_id').val(data[result].role_id).trigger("change");
@@ -200,6 +202,7 @@
                         $('#noreg').val(data[result].noreg);
                         $('#nama').val(data[result].nama);
                         $('#email').val(data[result].email);
+                        $('#special_order').prop('checked', data[result].special_order);
                         loadMenuAccess(data[result].role_id)
                     })
 
@@ -227,6 +230,7 @@
                         $('#noreg').val(data[result].noreg);
                         $('#nama').val(data[result].nama);
                         $('#email').val(data[result].email);
+                        $('#special_order').prop('checked', data[result].special_order);
                         loadMenuAccess(data[result].role_id)
                     })
 
