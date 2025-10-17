@@ -165,16 +165,16 @@ class PengadaanController extends Component
                         DB::table('tbl_trn_stock')
                             ->where('product_id', $request->barang_id)
                             ->update([
-                                'stock' => DB::raw('stock - ' . $request->qty),
+                                'stock' => DB::raw('stock - ' . $request->qty_actual),
                                 'updated_at' => now(),
                                 'updated_by' => Auth::user()->nama
                             ]);
 
-                        $stokAkhir = $stokSekarang - $request->qty;
+                        $stokAkhir = $stokSekarang - $request->qty_actual;
                         DB::table('tbl_log_transaksi')->insert([
                             'product_id' => $request->barang_id,
                             'kode_barang' => $request->kode_barang,
-                            'qty' => $request->qty,
+                            'qty' => $request->qty_actual,
                             'created_by' => Auth::user()->user_id ?? 'system',
                             'created_at' => now(),
                             'updated_at' => now(),
@@ -189,6 +189,7 @@ class PengadaanController extends Component
                     DB::table('tbl_trn_order')->where('id', $request->id)->update([
                         'status' => 'done',
                         'finish_by' => Auth::user()->nama ?? 'system',
+                        'qty_actual' => $request->qty_actual,
                         'finish_date' => now(),
                     ]);
                     $message = 'Request Barang selesai diproses';

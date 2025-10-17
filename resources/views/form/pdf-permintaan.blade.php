@@ -259,8 +259,11 @@
                 <td>: {{ ucwords(strtolower($order[0]->creator)) }}</td>
             </tr>
             <tr>
+                <?php
+                $user = DB::table('tbl_sys_users')->where('user_id', $order[0]->created_by)->first();
+                ?>
                 <td>Jabatan</td>
-                <td>:</td>
+                <td>: {{ $user->jabatan_id }}</td>
             </tr>
         </table>
 
@@ -347,7 +350,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <div style="text-align: center; font-size: 8px;"><br>(Nama)</div>
+                                    <div style="text-align: center; font-size: 8px;"><br></div>
                                 </td>
                             </tr>
                             <tr>
@@ -371,14 +374,22 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <div style="text-align: center; font-size: 8px;"><br>{{ ucwords(strtolower($order[0]->approved_by)) }}</div>
+                                    <?php
+                                    $approvedSign = $order[0]->approved_sign;
+                                    $creatorSign = $order[0]->creator_sign;
+                                    ?>
+                                    <div style="text-align: center; font-size: 8px;">
+                                        <img style="height: 40px;width:70px" src="{{ public_path($approvedSign) }}" alt="">
+                                    </div>
                                 </td>
                                 <td>
-                                    <div style="text-align: center; font-size: 8px;"><br>{{ ucwords(strtolower($order[0]->creator)) }}</div>
+                                    <div style="text-align: center; font-size: 8px;">
+                                        <img style="height: 40px;width:70px" src="{{ public_path($creatorSign) }}" alt="">
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td>{{ ucwords(strtolower($order[0]->approved_by)) }}</td>
+                                <td>{{ ucwords(strtolower($order[0]->approved_name)) }}</td>
                                 <td>{{ ucwords(strtolower($order[0]->creator)) }}</td>
                             </tr>
                         </tbody>

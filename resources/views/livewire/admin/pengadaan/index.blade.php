@@ -87,6 +87,7 @@
                                     <th class="text-white">Qty</th>
                                     <th class="text-white">Approved Date</th>
                                     <th class="text-white">Approved By</th>
+                                    <th class="text-white">Doc</th>
                                     <th class="text-white">Status</th>
                                     <th class="text-white">Action</th>
                                 </tr>
@@ -99,7 +100,8 @@
                                     <th class="text-white">Qty</th>
                                     <th class="text-white">Progress Date</th>
                                     <th class="text-white">Progress By</th>
-                                    <th class="text-white">Reqeust By</th>
+                                    <th class="text-white">Request By</th>
+                                    <th class="text-white">Doc</th>
                                     <th class="text-white">Status</th>
                                     <th class="text-white">Action</th>
                                 </tr>
@@ -113,6 +115,7 @@
                                     <th class="text-white">Reject Date</th>
                                     <th class="text-white">Reject By</th>
                                     <th class="text-white">Request By</th>
+                                    <th class="text-white">Doc</th>
                                     <th class="text-white">Status</th>
                                 </tr>
                                 @break
@@ -121,10 +124,12 @@
                                     <th class="text-white">#</th>
                                     <th class="text-white">Kode</th>
                                     <th class="text-white">Barang</th>
-                                    <th class="text-white">Qty</th>
+                                    <th class="text-white">Qty Request</th>
+                                    <th class="text-white">Qty Actual</th>
                                     <th class="text-white">Finish Date</th>
                                     <th class="text-white">Finish By</th>
                                     <th class="text-white">Request By</th>
+                                    <th class="text-white">Doc</th>
                                     <th class="text-white">Status</th>
                                 </tr>
                                 @break
@@ -153,15 +158,18 @@
                                     <td>
                                         {{ $data->qty }}
                                     </td>
+
                                     <td>
                                         {{ $data->order_date }}
                                     </td>
                                     <td>
-                                        {{ $data->creator . ' - ' . $data->department }}
+                                        {{ ucwords(strtolower($data->approved_name))  }}
                                     </td>
+                                    <td> <a target="_blank" href="{{ url('pdf-permintaan/'. $data->order_id) }}"><span class="p-2 rounded-2 text-danger"><span class=""><i class="fa fa-file-pdf"></i></span> </span></a></td>
                                     <td>
                                         <span class="badge badge-phoenix fs-9 badge-phoenix-warning"><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
                                     </td>
+
                                     <td align="center">
                                         <div class="position-static"><a class=" dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-cog fs-10"></span></a>
                                             <div class="dropdown-menu dropdown-menu-end py-2">
@@ -211,6 +219,9 @@
                                     <td>
                                         <span class="badge badge-phoenix fs-9 badge-phoenix-primary"><span class="">{{ $data->status }} <i class="fa fa-clock"></i></span> </span>
                                     </td>
+                                    <td>
+                                        <a target="_blank" href="{{ url('pdf-permintaan/'. $data->order_id) }}"><span class="p-2 rounded-2 text-danger"><span class=""><i class="fa fa-file-pdf"></i></span> </span></a>
+                                    </td>
                                     <td align="center">
                                         <div class="position-static"><a class=" dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-cog fs-10"></span></a>
                                             <div class="dropdown-menu dropdown-menu-end py-2">
@@ -257,6 +268,9 @@
                                         {{ $data->creator . ' - ' . $data->department }}
                                     </td>
                                     <td>
+                                        <a target="_blank" href="{{ url('pdf-permintaan/'. $data->order_id) }}"><span class="p-2 rounded-2 text-danger"><span class=""><i class="fa fa-file-pdf"></i></span> </span></a>
+                                    </td>
+                                    <td>
                                         <span class="badge badge-phoenix fs-9 badge-phoenix-danger"><span class="">{{ $data->status }} <i class="fa fa-close"></i></span> </span>
                                     </td>
                                 </tr>
@@ -287,6 +301,9 @@
                                         {{ $data->qty }}
                                     </td>
                                     <td>
+                                        {{ $data->qty_actual }}
+                                    </td>
+                                    <td>
                                         {{ $data->finish_date }}
                                     </td>
                                     <td>
@@ -294,6 +311,9 @@
                                     </td>
                                     <td>
                                         {{ $data->creator . ' - ' . $data->department }}
+                                    </td>
+                                    <td>
+                                        <a target="_blank" href="{{ url('pdf-permintaan/'. $data->order_id) }}"><span class="p-2 rounded-2 text-danger"><span class=""><i class="fa fa-file-pdf"></i></span> </span></a>
                                     </td>
                                     <td>
                                         <span class="badge badge-phoenix fs-9 badge-phoenix-success"><span class="">{{ $data->status }} <i class="fa fa-check"></i></span> </span>

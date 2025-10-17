@@ -187,6 +187,7 @@
                 return false;
             }
             $("#kode_barang").attr("readonly", true);
+            $("#harga_total_show").attr("readonly", true);
             $('#modalCrud').modal('show');
             $('#modalTitle').text('Add {{ $title }}')
             $('#btnSave').html('<i class="fa fa-save"></i> Simpan');
@@ -209,8 +210,10 @@
                         $('#no_po').val(data[result].no_po);
                         $('#tanggal_beli').val(data[result].tanggal_beli);
                         $('#qty').val(data[result].qty);
+                        $('#harga_satuan_show').val(formatRupiah(data[result].harga_satuan));
                         $('#harga_satuan').val(data[result].harga_satuan);
                         $('#harga_total').val(data[result].harga_total);
+                        $('#harga_total_show').val(formatRupiah(data[result].harga_total));
                         $('#supplier').val(data[result].supplier);
                         $('#remark').val(data[result].remark);
                     })
@@ -265,9 +268,31 @@
                 mode: "range",
                 dateFormat: "Y-m-d",
             });
+
+            $("#harga_satuan_show").on("keyup", function() {
+                var value = parseFloat($("#harga_satuan_show").val().replace(/\D/g, ''))
+                $(this).val(formatRupiah(value));
+                $("#harga_satuan").val(value);
+                console.log('Formatted Harga Satuan:', formatRupiah(value));
+            });
+
+            $("#harga_satuan_show,#qty").on("keyup", function() {
+                var hargaSatuan = parseFloat($("#harga_satuan").val().replace(/\D/g, '')) || 0;
+                var qty = parseFloat($("#qty").val().replace(/\D/g, '')) || 0;
+                var total = hargaSatuan * qty;
+                // Format hasil ke Rupiah
+                $("#harga_total").val(total);
+                $("#harga_total_show").val(formatRupiah(total));
+                console.log('Formatted Total:', formatRupiah(total));
+            });
+
         });
 
     });
+
+    function formatRupiah(angka) {
+        return angka.toLocaleString('id-ID');
+    }
 
 
     $(document).on('submit', '#formSubmit', function(e) {
@@ -361,6 +386,8 @@
             }
         });
     });
+
+
 
     var pollTimer = null;
 

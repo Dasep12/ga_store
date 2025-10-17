@@ -142,8 +142,9 @@
                                                                 <div class="product_rate" style="width: 77.2%"></div>
                                                             </div>
                                                             <span class="rating_num">({{ $data->stock_type == 'INDENT' ? $data->stock_type  : $data->stock }})</span>
-                                                        </div>
 
+                                                            <p style="font-size:8px;text-transform:unset;font-style:italic" class="small">{{ $data->special_order == 1 ? '( * hanya bisa di order HR Department )' : ''  }} </p>
+                                                        </div>
                                                     </div>
                                                 </div>
 

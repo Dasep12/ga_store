@@ -107,7 +107,7 @@ class JenisAssetsController extends Component
                 }
                 DB::table('tbl_mst_jenis_asset')->insert([
                     'name' => $request->name,
-                    'code' => $request->kode_asset,
+                    'kode_asset' => $request->kode_asset,
                     'is_actived' => (int)$request->is_actived ?? 0,
                     'created_by' => Auth::user()->user_id ?? 'system',
                     'created_at' => now(),

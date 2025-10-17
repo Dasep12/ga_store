@@ -102,7 +102,8 @@
 
                         <div class="col-md-3 mb-2">
                             <label for="harga" class="form-label">Harga</label>
-                            <input type="text" class="form-control form-control-sm" id="harga" name="harga" placeholder="Harga">
+                            <input type="hidden" class="form-control form-control-sm" id="harga" name="harga" placeholder="Harga">
+                            <input type="text" class="form-control form-control-sm" id="harga_show" name="harga_show" placeholder="Harga">
                             <span class="text-danger fs-9 error-text" id="error-harga"></span>
                         </div>
 
@@ -124,6 +125,35 @@
                             <label for="deskripsi" class="form-label">Deskripsi</label>
                             <textarea type="text" class="form-control form-control-sm" id="deskripsi" name="deskripsi" placeholder="Deskripsi"></textarea>
                             <span class="text-danger fs-9 error-text" id="error-deskripsi"></span>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="lokasi" class="form-label">Lokasi</label>
+                            <input type="text" class="form-control form-control-sm" id="lokasi" name="lokasi" placeholder="lokasi">
+                            <span class="text-danger fs-9 error-text" id="error-lokasi"></span>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <label for="responsibility" class="form-label">Penanggung Jawab</label>
+                            <input type="text" class="form-control form-control-sm" id="responsibility" name="responsibility" placeholder="Penanggung Jawab">
+                            <span class="text-danger fs-9 error-text" id="error-responsibility"></span>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <label for="no_asset" class="form-label">No Asset</label>
+                            <input type="text" class="form-control form-control-sm" id="no_asset" name="no_asset" placeholder="No Asset">
+                            <span class="text-danger fs-9 error-text" id="error-no_asset"></span>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <label for="nomor_barang" class="form-label">No Barang</label>
+                            <input type="text" class="form-control form-control-sm" id="nomor_barang" name="nomor_barang" placeholder="No Barang">
+                            <span class="text-danger fs-9 error-text" id="error-nomor_barang"></span>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <label for="tahun" class="form-label">Tahun</label>
+                            <input type="text" class="form-control form-control-sm" id="tahun" name="tahun" placeholder="Tahun">
+                            <span class="text-danger fs-9 error-text" id="error-tahun"></span>
                         </div>
 
                         <div class="col-md-3">

@@ -41,6 +41,9 @@ use App\Livewire\Roles\RolesController as RolesPage;
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/home', HomePage::class)->name('homepage');
+    Route::get('/SumProduct', [HomePage::class, 'SumProduct'])->name('SumProduct');
+    Route::get('/listRequestDepartment', [HomePage::class, 'listRequestDepartment'])->name('listRequestDepartment');
+    Route::get('/listOrder', [HomePage::class, 'listOrder'])->name('listOrder');
 
     Route::prefix('departments')->group(function () {
         Route::get('/', DepartmentPage::class)->name('departments.index');
@@ -119,12 +122,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}', [StockPage::class, 'show'])->name('stock.show');
     });
 
-
     Route::prefix('reportorder')->group(function () {
         Route::get('/', OrderController::class)->name('reportorder.index');
         Route::get('/barang', [OrderController::class, 'barang'])->name('barang.json');
         Route::get('/department', [OrderController::class, 'department'])->name('department.json');
     });
+
     Route::prefix('reportbeli')->group(function () {
         Route::get('/', BeliController::class)->name('reportbeli.index');
         Route::get('/barang', [BeliController::class, 'barang'])->name('barang.json');

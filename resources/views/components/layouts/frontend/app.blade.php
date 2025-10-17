@@ -142,6 +142,14 @@
             src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-fkdptfpa4q.woff2) format('woff2');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
         }
+
+        /* .header .header__top {
+            background-color: #a10000 !important;
+        }
+
+        .navigation {
+            background-color: #a10000 !important;
+        } */
     </style>
 
     <style>
@@ -536,7 +544,7 @@ if (Auth::check()) {
                         <div class="menu__toggle"><i class="icon-menu"></i><span> Shop by Department</span></div>
                     </div>
                     <a class="ps-logo" href="/">
-                        <img src="{{ asset('assets/assets/img/LOGO BIT.png')}}" data-bb-lazy="false" style="max-height: 40px" alt="GA ECOMMERCE SYSTEM">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRydhUejybne1EflD-WJHBJoApmD9xma_8zEG86QHBoGB2OzRLz6rVal7gYnRkxHr89tVU&usqp=CAU" data-bb-lazy="false" style="max-height: 40px" alt="GA ECOMMERCE SYSTEM">
                     </a>
                 </div>
                 <div class="header__center">
@@ -747,11 +755,9 @@ if (Auth::check()) {
                         <li class="nav-item  {{ request()->routeIs('main.shipping') ? 'current-menu-item' : '' }}" data-nav-item="data-nav-item">
                             <a class="nav-link" href="{{ route('main.shipping') }}">Cart</a>
                         </li>
-                        @if($specialOrder)
-                        <li class="nav-item  {{ request()->routeIs('main.specialorder') ? 'current-menu-item' : '' }}" data-nav-item="data-nav-item">
+                        <!-- <li class="nav-item  {{ request()->routeIs('main.specialorder') ? 'current-menu-item' : '' }}" data-nav-item="data-nav-item">
                             <a class="nav-link" href="{{ route('main.specialorder') }}">Special Order</a>
-                        </li>
-                        @endif
+                        </li> -->
                         <li class="nav-item  {{ request()->routeIs('main.track') ? 'current-menu-item' : '' }}" data-nav-item="data-nav-item">
                             <a class="nav-link" href="{{ route('main.track') }}">Track order</a>
                         </li>

@@ -214,12 +214,18 @@
                     $('#stock_type').val(data.stock_type);
                     $('#merek').val(data.merek);
                     $('#harga').val(data.harga);
+                    $('#harga_show').val(formatRupiah(data.harga));
                     $('#min_stock').val(data.min_stock);
                     $('#max_stock').val(data.max_stock);
                     $('#warna').val(data.warna);
                     $('#ukuran').val(data.ukuran);
                     $('#satuan_id').val(data.satuan_id);
                     $('#model').val(data.model);
+                    $('#lokasi').val(data.lokasi);
+                    $('#no_asset').val(data.no_asset);
+                    $('#nomor_barang').val(data.nomor_barang);
+                    $('#tahun').val(data.tahun);
+                    $('#responsibility').val(data.responsibility);
                     $('#deskripsi').val(data.deskripsi);
                     $('#is_actived').prop('checked', data.is_actived);
                     $('#special_order').prop('checked', data.special_order);
@@ -253,12 +259,18 @@
                     $('#merek').val(data.merek);
                     $('#warna').val(data.warna);
                     $('#harga').val(data.harga);
+                    $('#harga_show').val(formatRupiah(data.harga));
                     $('#min_stock').val(data.min_stock);
                     $('#max_stock').val(data.max_stock);
                     $('#ukuran').val(data.ukuran);
                     $('#satuan_id').val(data.satuan_id);
                     $('#model').val(data.model);
                     $('#deskripsi').val(data.deskripsi);
+                    $('#lokasi').val(data.lokasi);
+                    $('#no_asset').val(data.no_asset);
+                    $('#nomor_barang').val(data.nomor_barang);
+                    $('#tahun').val(data.tahun);
+                    $('#responsibility').val(data.responsibility);
                     $('#is_actived').prop('checked', data.is_actived);
                     $('#special_order').prop('checked', data.special_order);
                     $('#show').prop('checked', data.show);
@@ -285,6 +297,23 @@
         }
     }
 
+
+
+    document.addEventListener('livewire:initialized', function() {
+
+        Livewire.hook("morphed", () => {
+            $("#harga_show").on("keyup", function() {
+                var value = parseFloat($("#harga_show").val().replace(/\D/g, ''))
+                $(this).val(formatRupiah(value));
+                $("#harga").val(value);
+                console.log('Formatted Harga Satuan:', formatRupiah(value));
+            });
+        });
+    });
+
+    function formatRupiah(angka) {
+        return angka.toLocaleString('id-ID');
+    }
 
 
     $(document).on('submit', '#formSubmit', function(e) {

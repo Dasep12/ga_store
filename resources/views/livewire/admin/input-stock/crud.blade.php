@@ -49,13 +49,15 @@
 
                         <div class="col-md-3 mb-3">
                             <label for="harga_satuan" class="form-label">Harga Satuan</label>
-                            <input type="number" class="form-control form-control-sm" id="harga_satuan" name="harga_satuan" placeholder="Harga Satuan">
+                            <input type="hidden" class="form-control form-control-sm" id="harga_satuan" name="harga_satuan" placeholder="Harga Satuan">
+                            <input type="number" class="form-control form-control-sm" id="harga_satuan_show" name="harga_satuan_show" placeholder="Harga Satuan">
                             <span class="text-danger fs-9 error-text" id="error-harga_satuan"></span>
                         </div>
 
                         <div class="col-md-3 mb-3">
-                            <label for="harga_total" class="form-label">Total Harga</label>
-                            <input type="number" class="form-control form-control-sm" id="harga_total" name="harga_total" placeholder="Harga Satuan">
+                            <label for="harga_total_show" class="form-label">Total Harga</label>
+                            <input type="hidden" class="form-control form-control-sm" id="harga_total" name="harga_total" placeholder="Harga Satuan">
+                            <input type="number" class="form-control form-control-sm" id="harga_total_show" name="harga_total_show" placeholder="Harga Satuan">
                             <span class="text-danger fs-9 error-text" id="error-harga_total"></span>
                         </div>
 

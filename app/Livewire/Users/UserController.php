@@ -214,6 +214,9 @@ class UserController extends Component
                     'user_id' => $newUserId
                 ])->delete();
 
+                foreach ($menuAccessArr as $key => $value) {
+                    $menuAccessArr[$key]['user_id'] = $newUserId;
+                }
                 DB::table('tbl_sys_user_role_access')->insert($menuAccessArr);
                 break;
             case 'edit':

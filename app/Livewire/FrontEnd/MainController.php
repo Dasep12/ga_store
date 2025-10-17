@@ -177,7 +177,7 @@ class MainController extends Component
                     DB::raw('(SELECT COUNT(*) FROM tbl_trn_order WHERE tbl_trn_order.product_id = tbl_mst_product.id) as order_count')
                 )
                 ->where('tbl_mst_product.show', 1)
-                ->where('tbl_mst_product.special_order', 0)
+                // ->where('tbl_mst_product.special_order', 0)
                 ->where(function ($q) {
                     $q->where('nama_barang', 'like', '%' . $this->search . '%')
                         ->orWhere('tbl_mst_product.kode_barang', 'like', '%' . $this->search . '%')

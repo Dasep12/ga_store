@@ -177,8 +177,15 @@
         $('.error-text').html('');
         $('#crudAction').val(action);
         $('#id').val('');
-
+        $(".img_photo_row").css("display", "block");
+        $(".img_signature_row").css("display", "block");
+        $("#img_photo").css("display", "block");
+        $("#img_signature").css("display", "block");
         if (action === 'create') {
+            $(".img_photo_row").css("display", "none");
+            $(".img_signature_row").css("display", "none");
+            $("#img_photo").css("display", "none");
+            $("#img_signature").css("display", "none");
             $("#kode_barang").attr("readonly", true);
             $('#modalCrud').modal('show');
             $('#modalTitle').text('Add {{ $title }}')
@@ -193,6 +200,12 @@
                 success: function(data) {
                     $('#modalTitle').text('Update');
                     $.each(data, result => {
+                        if (data[result].photo == '' || data[result].photo == null) {
+                            $("#img_photo").css("display", "none");
+                        }
+                        if (data[result].sign == '' || data[result].sign == null) {
+                            $("#img_signature").css("display", "none");
+                        }
                         $("#img_photo").attr("src", data[result].photo);
                         $("#img_signature").attr("src", data[result].sign);
                         $("#id").val(data[result].user_id);
@@ -357,6 +370,9 @@
                     $.each(errors, function(key, messages) {
                         $('#error-' + key).text(messages[0]);
                     });
+                } else {
+                    console.error(xhr.responseText);
+                    $(".error_message").html('<div class="alert alert-danger alert-dismissible fade show">An error occurred: ' + xhr.status + ' ' + xhr.responseText + '<button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }
 
             }

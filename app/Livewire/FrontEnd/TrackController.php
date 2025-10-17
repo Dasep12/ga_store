@@ -128,21 +128,23 @@ class TrackController extends Component
     {
         $datas = collect(); // default kosong
         if ($this->isReady) {
-            $datas = DB::table('vw_trn_order')
-                ->select(
-                    'vw_trn_order.*',
-                    DB::raw('(SELECT COUNT(*) FROM tbl_trn_order WHERE tbl_trn_order.product_id = vw_trn_order.barang_id) as order_count')
-                )->where('department_id', Auth::user()->department_id)
-                ->where(function ($q) {
-                    $q->where('nama_barang', 'like', '%' . $this->search . '%')
-                        ->orWhere('kode_barang', 'like', '%' . $this->search . '%')
-                        ->orWhere('type_barang', 'like', '%' . $this->search . '%')
-                        ->orWhere('merek', 'like', '%' . $this->search . '%')
-                        ->orWhere('warna', 'like', '%' . $this->search . '%')
-                    ;
-                })->where('status', $this->filterType)
-                ->orderBy('created_at', 'desc')
-                ->paginate($this->perPage);
+            if (Auth::check()) {
+                $datas = DB::table('vw_trn_order')
+                    ->select(
+                        'vw_trn_order.*',
+                        DB::raw('(SELECT COUNT(*) FROM tbl_trn_order WHERE tbl_trn_order.product_id = vw_trn_order.barang_id) as order_count')
+                    )->where('department_id', Auth::user()->department_id)
+                    ->where(function ($q) {
+                        $q->where('nama_barang', 'like', '%' . $this->search . '%')
+                            ->orWhere('kode_barang', 'like', '%' . $this->search . '%')
+                            ->orWhere('type_barang', 'like', '%' . $this->search . '%')
+                            ->orWhere('merek', 'like', '%' . $this->search . '%')
+                            ->orWhere('warna', 'like', '%' . $this->search . '%')
+                        ;
+                    })->where('status', $this->filterType)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate($this->perPage);
+            }
         }
         return view('livewire.front-end.track-controller', [
             'datas' => $datas,

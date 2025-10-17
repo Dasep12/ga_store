@@ -48,8 +48,11 @@
                             <th class="text-white text-center" scope="col">Pic</th>
                             <th class="text-white" scope="col">Nama Barang</th>
                             <th class="text-white" scope="col">Kode</th>
-                            <th class="text-white" scope="col">Jumlah Stock</th>
+                            <th class="text-white" scope="col">Min Stock</th>
+                            <th class="text-white" scope="col">Max Stock</th>
+                            <th class="text-white" scope="col">Actual Stock</th>
                             <th class="text-white" scope="col">Satuan</th>
+                            <th class="text-white" scope="col">Status</th>
                             <th class="text-white" scope="col">Last Update</th>
                         </tr>
                     </thead>
@@ -66,8 +69,11 @@
                             </td>
                             <td>{{ $data->nama_barang }}</td>
                             <td>{{ $data->kode_barang }}</td>
+                            <td>{{ $data->min_stock }}</td>
+                            <td>{{ $data->max_stock }}</td>
                             <td>{{ $data->stock }}</td>
                             <td>{{ $data->satuan }}</td>
+                            <td><span class="badge badge-phoenix badge-phoenix-{{ $data->stock < $data->min_stock ? 'danger' : 'success' }}">{{ $data->stock < $data->min_stock ? 'minus' : 'safe' }}</span></td>
                             <td>{{ $data->updated_at }}</td>
                         </tr>
                         @empty

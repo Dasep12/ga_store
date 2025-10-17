@@ -84,10 +84,10 @@
                                     <span class="text-danger fs-9 error-text" id="error-sign"></span>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 img_photo_row">
                                     <img src="" style="height: 100px;width:150px" id="img_photo" alt="">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6  img_signature_row">
                                     <img src="" style="height: 100px;width:150px" id="img_signature" alt="">
                                 </div>
 
@@ -128,6 +128,10 @@
                                 </table>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row error_message p-2">
+
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -99,6 +99,7 @@
                             <th>Qty</th>
                             <th>Approve Date</th>
                             <th>Approve By</th>
+                            <th>Doc</th>
                             <th>Status</th>
                         </tr>
                         @break
@@ -208,6 +209,9 @@
                             </td>
                             <td>
                                 {{ $data->approved_by }}
+                            </td>
+                            <td>
+                                <a target="_blank" href="{{ url('pdf-permintaan/'. $data->order_id) }}"><span class="p-2 rounded-2 text-danger"><span class=""><i class="fa fa-file-pdf"></i></span> </span></a>
                             </td>
                             <td>
                                 <span class="bg-info p-2 rounded-2 text-white"><span class="">{{ ucwords($data->status) }} <i class="fa fa-edit"></i></span> </span>

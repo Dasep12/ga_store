@@ -114,12 +114,25 @@ class ShippingController extends Component
             return;
         }
 
+
+
+
         DB::beginTransaction();
 
         try {
             $emailService = app(EmailService::class);
 
-
+            $userTypesSpecialOrder = Auth::user()->special_order;
+            foreach ($cart as $items) {
+                $productSpecialOrder = DB::table('tbl_mst_product')->where('id', $items['id_barang'])->value('special_order');
+                if ($userTypesSpecialOrder !== $productSpecialOrder) {
+                    $this->dispatch('checkout-success', [
+                        'success' => false,
+                        'message' => $items['nama_barang'] . '(' . $items['kode_barang'] . ')' . ' hanya bisa di order oleh user / department tertentu ',
+                    ]);
+                    return;
+                }
+            }
             // Generate order_id sekali untuk semua item
             $order_id = $this->generateOrderId();
             $items = [];
@@ -230,8 +243,8 @@ class ShippingController extends Component
                         'status' => 'approved',
                         'updated_at' => now(),
                         'approved_date' => now(),
-                        'approved_by' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
-                        'updated_by' => Auth::user()->user_id, // Ganti dengan ID user yang sesuai
+                        'approved_by' => $req->idx, // Ganti dengan ID user yang sesuai
+                        'updated_by' => $req->idx, // Ganti dengan ID user yang sesuai
                     ]);
                 $message = 'Request dengan ID ' . $req->order_id . ' telah disetujui.';
                 $error = false;
