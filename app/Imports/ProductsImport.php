@@ -64,7 +64,6 @@ class ProductsImport implements ToCollection, WithChunkReading, WithHeadingRow, 
                     'min_stock'     => $row['min_stock'] ?? 0,
                     'tahun'         => $row['tahun'] ?? '',
                     'deskripsi'     => $row['deskripsi'] ?? null,
-                    'images'        => $row['images'] ?? null, // isi nama file/path jika ada
                     'is_actived'    => isset($row['is_actived']) ? (int)$row['is_actived'] : 1,
                     'created_by'    => Auth::user()->user_id ?? 'system',
                     'updated_by'    => Auth::user()->user_id ?? 'system',

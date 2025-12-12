@@ -266,6 +266,7 @@ class InputStockController extends Component
         $worksheetInfo = $reader->listWorksheetInfo($fullPath);
         // ambil sheet pertama info
         $totalRows = $worksheetInfo[0]['totalRows'] ?? 0;
+        DB::beginTransaction();
 
         // Buat ID import unik
         $importId = (string) Str::uuid();
@@ -279,11 +280,20 @@ class InputStockController extends Component
         // ProductsImport harus menerima $importId dan $path
         Excel::queueImport(new StocksImport($importId, $fullPath), $fullPath);
 
-        return response()->json([
-            'success' => true,
-            'import_id' => $importId,
-            'message' => 'File diunggah. Import sedang diproses.'
-        ]);
+        try {
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'import_id' => $importId,
+                'message' => 'File diunggah. Import sedang diproses.'
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memproses impor: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function progress($id)

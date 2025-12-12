@@ -63,8 +63,8 @@ class StocksImport implements ToCollection, WithChunkReading, WithHeadingRow, Sh
                     ]);
             } else {
                 DB::table('tbl_trn_stock')->insert([
-                    'product_id' => $row['product_id'],
-                    'stock' => $row['qty'],
+                    'product_id' => $id,
+                    'stock' => $row['qty'] ?? 0,
                     'created_by' => Auth::user()->user_id ?? 'system',
                     'created_at' => now(),
                     'updated_at' => now(),

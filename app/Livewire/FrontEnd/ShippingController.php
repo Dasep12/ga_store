@@ -82,6 +82,15 @@ class ShippingController extends Component
         $this->cart = $cart;
     }
 
+    public function updateRemark($id, $remark)
+    {
+        if (isset($this->cart[$id])) {
+            $this->cart[$id]['remark'] = $remark;
+            session()->put('cart', $this->cart);
+            $this->dispatch('cartUpdated');
+        }
+    }
+
 
     public function generateOrderId()
     {
@@ -123,12 +132,17 @@ class ShippingController extends Component
             $emailService = app(EmailService::class);
 
             $userTypesSpecialOrder = Auth::user()->special_order;
+
             foreach ($cart as $items) {
-                $productSpecialOrder = DB::table('tbl_mst_product')->where('id', $items['id_barang'])->value('special_order');
-                if ($userTypesSpecialOrder !== $productSpecialOrder) {
+                $productSpecialOrder = DB::table('tbl_mst_product')
+                    ->where('id', $items['id_barang'])
+                    ->value('special_order');
+
+                // Jika produk special_order tapi user tidak special_order -> tolak
+                if ($productSpecialOrder && !$userTypesSpecialOrder) {
                     $this->dispatch('checkout-success', [
                         'success' => false,
-                        'message' => $items['nama_barang'] . '(' . $items['kode_barang'] . ')' . ' hanya bisa di order oleh user / department tertentu ',
+                        'message' => $items['nama_barang'] . ' (' . $items['kode_barang'] . ') hanya bisa diorder oleh user / department tertentu.',
                     ]);
                     return;
                 }
@@ -140,6 +154,7 @@ class ShippingController extends Component
                 $data = [
                     'order_id' => $order_id,
                     'product_id' => $item['id_barang'],
+                    'remark' => $item['remark'],
                     'department_id' => Auth::user()->department_id,
                     'qty' => $item['qty'],
                     'qty_actual' => $item['qty'],
@@ -154,8 +169,11 @@ class ShippingController extends Component
                 array_push($items, [
                     'nama' => $item['nama_barang'],
                     'qty' => $item['qty'],
+                    'remark' => $item['remark'],
+                    'images' => url($item['images']),
                 ]);
             }
+
 
 
             $pengaju = [

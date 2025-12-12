@@ -103,6 +103,8 @@
                 <tr>
                     <th>Nama Barang</th>
                     <th>Qty</th>
+                    <th>Remark</th>
+                    <th>Images</th>
                 </tr>
             </thead>
             <tbody>
@@ -110,8 +112,11 @@
                 <tr>
                     <td>{{ $item['nama'] }}</td>
                     <td>{{ $item['qty'] }}</td>
+                    <td>{{ $item['remark'] }}</td>
+                    <td><img style="height: 80px;width:150px" src="{{ $item['images'] }}"></td>
                 </tr>
                 @endforeach
+
             </tbody>
         </table>
 

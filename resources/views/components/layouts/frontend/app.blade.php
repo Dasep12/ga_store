@@ -1,4 +1,9 @@
 <html lang="en">
+<?php
+$categories = DB::table('tbl_mst_kategori')->get();
+$units = DB::table('tbl_mst_satuan')->get();
+$jenis_assets = DB::table('tbl_mst_jenis_asset')->get();
+?>
 
 <head>
     <meta charset="utf-8">
@@ -152,25 +157,8 @@
         } */
     </style>
 
-    <style>
-        :root {
-            --color-1st: #fcb800;
-            --primary-color: #fcb800;
-            --color-2nd: #222222;
-            --secondary-color: #222222;
-            --primary-font: 'Work Sans', sans-serif;
-            --button-text-color: #000;
-            --header-text-color: #000;
-            --header-button-background-color: #000;
-            --header-button-text-color: #fff;
-            --header-text-hover-color: #fff;
-            --header-text-accent-color: #222222;
-            --header-diliver-border-color: rgba(0, 0, 0, 0.15);
-        }
-    </style>
 
-
-    <title>GA STORE</title>
+    <title>GA-KU</title>
     <meta name="description" content="MartFury is a clean &amp; modern Laravel Ecommerce System for multipurpose online stores. With design clean and trendy, MartFury will make your online store look more impressive and attractive to viewers.">
     <link rel="canonical" href="http://127.0.0.1:8000/product-categories/batteries">
     <meta name="robots" content="index, follow">
@@ -193,7 +181,7 @@
             font-style: normal;
             font-weight: 300;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-c6dptfpa4cd3.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-c6dptfpa4cd3.woff2')}}") format('woff2');
             unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
         }
 
@@ -202,7 +190,7 @@
             font-style: normal;
             font-weight: 300;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-cqdptfpa4cd3.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-cqdptfpa4cd3.woff2')}}") format('woff2');
             unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
         }
 
@@ -211,7 +199,7 @@
             font-style: normal;
             font-weight: 300;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-fkdptfpa4q.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-fkdptfpa4q.woff2')}}") format('woff2');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
         }
 
@@ -220,7 +208,7 @@
             font-style: normal;
             font-weight: 400;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-c6dptfpa4cd3.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-c6dptfpa4cd3.woff2')}}") format('woff2');
             unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
         }
 
@@ -229,7 +217,7 @@
             font-style: normal;
             font-weight: 400;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-cqdptfpa4cd3.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-cqdptfpa4cd3.woff2')}}") format('woff2');
             unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
         }
 
@@ -238,7 +226,7 @@
             font-style: normal;
             font-weight: 400;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-fkdptfpa4q.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-fkdptfpa4q.woff2')}}") format('woff2');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
         }
 
@@ -247,7 +235,7 @@
             font-style: normal;
             font-weight: 500;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-c6dptfpa4cd3.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-c6dptfpa4cd3.woff2')}}") format('woff2');
             unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
         }
 
@@ -256,7 +244,7 @@
             font-style: normal;
             font-weight: 500;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-cqdptfpa4cd3.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-cqdptfpa4cd3.woff2')}}") format('woff2');
             unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
         }
 
@@ -265,7 +253,7 @@
             font-style: normal;
             font-weight: 500;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-fkdptfpa4q.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-fkdptfpa4q.woff2')}}") format('woff2');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
         }
 
@@ -274,7 +262,7 @@
             font-style: normal;
             font-weight: 600;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-c6dptfpa4cd3.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-c6dptfpa4cd3.woff2')}}") format('woff2');
             unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
         }
 
@@ -283,7 +271,7 @@
             font-style: normal;
             font-weight: 600;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-cqdptfpa4cd3.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-cqdptfpa4cd3.woff2')}}") format('woff2');
             unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
         }
 
@@ -292,7 +280,7 @@
             font-style: normal;
             font-weight: 600;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-fkdptfpa4q.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-fkdptfpa4q.woff2')}}") format('woff2');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
         }
 
@@ -301,7 +289,7 @@
             font-style: normal;
             font-weight: 700;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-c6dptfpa4cd3.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-c6dptfpa4cd3.woff2')}}") format('woff2');
             unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
         }
 
@@ -310,7 +298,7 @@
             font-style: normal;
             font-weight: 700;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-cqdptfpa4cd3.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-cqdptfpa4cd3.woff2')}}") format('woff2');
             unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
         }
 
@@ -319,7 +307,7 @@
             font-style: normal;
             font-weight: 700;
             font-display: swap;
-            src: url(http://127.0.0.1:8000/storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-fkdptfpa4q.woff2) format('woff2');
+            src: url("{{ asset('storage/fonts/19887e3972/sworksansv24qgysz-wnahgadqq43rh-fkdptfpa4q.woff2')}}") format('woff2');
             unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
         }
     </style>
@@ -500,6 +488,27 @@
         .nav-underline .show>.nav-link {
             font-weight: 500 !important;
         }
+
+        /* .header .header__top {
+            background-color: #fcb800 !important;
+        } */
+
+        :root {
+            --color-1st: #A80707;
+            --primary-color: #A80707;
+            /* --color-1st: #fcb800;
+            --primary-color: #fcb800; */
+            --color-2nd: #222222;
+            --secondary-color: #222222;
+            --primary-font: 'Work Sans', sans-serif;
+            --button-text-color: #000;
+            --header-text-color: #000;
+            --header-button-background-color: #000;
+            --header-button-text-color: #fff;
+            --header-text-hover-color: #fff;
+            --header-text-accent-color: #222222;
+            --header-diliver-border-color: rgba(0, 0, 0, 0.15);
+        }
     </style>
 </head>
 <?php
@@ -544,7 +553,7 @@ if (Auth::check()) {
                         <div class="menu__toggle"><i class="icon-menu"></i><span> Shop by Department</span></div>
                     </div>
                     <a class="ps-logo" href="/">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRydhUejybne1EflD-WJHBJoApmD9xma_8zEG86QHBoGB2OzRLz6rVal7gYnRkxHr89tVU&usqp=CAU" data-bb-lazy="false" style="max-height: 40px" alt="GA ECOMMERCE SYSTEM">
+                        <img src="{{ asset('assets/assets/img/logo-color-bonecom@2x.png') }}" data-bb-lazy="false" style="max-height: 50px" alt="BONECOM TRICOM">
                     </a>
                 </div>
                 <div class="header__center">
@@ -791,14 +800,13 @@ if (Auth::check()) {
     <header class="header header--mobile" data-sticky="true">
         <div class="navigation--mobile">
             <div class="navigation__left">
-                <a class="ps-logo" href="http://127.0.0.1:8000">
-                    <img src="http://127.0.0.1:8000/storage/general/logo.png" data-bb-lazy="false" style="max-height: 40px" alt="MartFury - Laravel Ecommerce system">
+                <a class="ps-logo" href="/">
+                    <img src="{{ asset('assets/assets/images/img/logo_ga-ku1.png') }}" data-bb-lazy="false" style="max-height: 40px" alt="GA Store System">
                 </a>
             </div>
             <div class="navigation__right">
                 <div class="header__actions">
-
-                    <div class="ps-cart--mini">
+                    <!-- <div class="ps-cart--mini">
                         <a class="header__extra btn-shopping-cart" href="http://127.0.0.1:8000/cart">
                             <i class="icon-bag2"></i><span><i>0</i></span>
                         </a>
@@ -810,16 +818,32 @@ if (Auth::check()) {
                             </div>
 
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="ps-block--user-header">
-                        <div class="ps-block__left"><a href="http://127.0.0.1:8000/customer/overview"><i class="icon-user"></i></a></div>
+                        <!-- <div class="ps-block__left"><a href=""><i class="icon-user"></i></a></div> -->
+                        <div class="ps-block__left">
+                            <!-- <i class="icon-user"></i> -->
+                            @if (Auth::check())
+                            <a href="javascript:void(0)">{{ ucwords(Auth::user()->nama) }}</a>
+                            <a href="{{ route('logout') }}">Logout</a>
+                            @else
+
+                            @endif
+                        </div>
+                        <div class="ps-block__right">
+
+                        </div>
                     </div>
+
+                    @livewire('frontend.cart-badge')
+
+
                 </div>
             </div>
         </div>
         <div class="ps-search--mobile">
-            <form class="ps-form--search-mobile" action="http://127.0.0.1:8000/products" data-ajax-url="http://127.0.0.1:8000/ajax/search-products" method="get">
+            <form class="ps-form--search-mobile" action="/" data-ajax-url="/" method="get">
                 <div class="form-group--nest position-relative">
                     <input class="form-control input-search-product" name="q" value="" type="text" autocomplete="off" placeholder="Search something...">
                     <div class="spinner-icon">
@@ -853,163 +877,6 @@ if (Auth::check()) {
         </div>
         <div class="ps-panel__content">
             <ul class="menu--mobile">
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/hot-promotions">
-                        <i class="icon-star"></i>
-                        <span class="ms-1">Hot Promotions</span>
-                    </a>
-                </li>
-
-                <li class="menu-item-has-children has-mega-menu">
-                    <a href="http://127.0.0.1:8000/product-categories/electronics">
-                        <i class="icon-laundry"></i>
-                        <span class="ms-1">Electronics</span>
-                    </a>
-                    <span class="sub-toggle"></span>
-
-                    <div class="mega-menu">
-                        <div class="mega-menu-wrapper" style="position: relative; height: 20px;">
-                            <div class="mega-menu__column" style="position: absolute; left: 15px; top: 10px;">
-                                <a href="http://127.0.0.1:8000/product-categories/consumer-electronic">
-                                    <h4>Consumer Electronic<span class="sub-toggle"></span></h4>
-                                </a>
-                                <ul class="mega-menu__list">
-                                    <li><a href="http://127.0.0.1:8000/product-categories/home-audio-theaters">Home Audio &amp; Theaters</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/tv-videos">TV &amp; Videos</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/camera-photos-videos">Camera, Photos &amp; Videos</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/cellphones-accessories">Cellphones &amp; Accessories</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/headphones">Headphones</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/videos-games">Videos games</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/wireless-speakers">Wireless Speakers</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/office-electronic">Office Electronic</a></li>
-                                </ul>
-                            </div>
-                            <div class="mega-menu__column" style="position: absolute; left: 15px; top: 10px;">
-                                <a href="http://127.0.0.1:8000/product-categories/accessories-parts">
-                                    <h4>Accessories &amp; Parts<span class="sub-toggle"></span></h4>
-                                </a>
-                                <ul class="mega-menu__list">
-                                    <li><a href="http://127.0.0.1:8000/product-categories/digital-cables">Digital Cables</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/audio-video-cables">Audio &amp; Video Cables</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/batteries">Batteries</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/clothing">
-                        <i class="icon-shirt"></i>
-                        <span class="ms-1">Clothing</span>
-                    </a>
-                </li>
-
-                <li class="menu-item-has-children has-mega-menu">
-                    <a href="http://127.0.0.1:8000/product-categories/computers">
-                        <i class="icon-desktop"></i>
-                        <span class="ms-1">Computers</span>
-                    </a>
-                    <span class="sub-toggle"></span>
-
-                    <div class="mega-menu">
-                        <div class="mega-menu-wrapper" style="position: relative; height: 20px;">
-                            <div class="mega-menu__column" style="position: absolute; left: 15px; top: 10px;">
-                                <a href="http://127.0.0.1:8000/product-categories/computer-technologies">
-                                    <h4>Computer &amp; Technologies<span class="sub-toggle"></span></h4>
-                                </a>
-                                <ul class="mega-menu__list">
-                                    <li><a href="http://127.0.0.1:8000/product-categories/computer-tablets">Computer &amp; Tablets</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/laptop">Laptop</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/monitors">Monitors</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/computer-components">Computer Components</a></li>
-                                </ul>
-                            </div>
-                            <div class="mega-menu__column" style="position: absolute; left: 15px; top: 10px;">
-                                <a href="http://127.0.0.1:8000/product-categories/networking">
-                                    <h4>Networking<span class="sub-toggle"></span></h4>
-                                </a>
-                                <ul class="mega-menu__list">
-                                    <li><a href="http://127.0.0.1:8000/product-categories/drive-storages">Drive &amp; Storages</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/gaming-laptop">Gaming Laptop</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/security-protection">Security &amp; Protection</a></li>
-                                    <li><a href="http://127.0.0.1:8000/product-categories/accessories">Accessories</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/home-kitchen">
-                        <i class="icon-lampshade"></i>
-                        <span class="ms-1">Home &amp; Kitchen</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/health-beauty">
-                        <i class="icon-heart-pulse"></i>
-                        <span class="ms-1">Health &amp; Beauty</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/jewelry-watch">
-                        <i class="icon-diamond2"></i>
-                        <span class="ms-1">Jewelry &amp; Watch</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/technology-toys">
-                        <i class="icon-desktop"></i>
-                        <span class="ms-1">Technology Toys</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/phones">
-                        <i class="icon-smartphone"></i>
-                        <span class="ms-1">Phones</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/babies-moms">
-                        <i class="icon-baby-bottle"></i>
-                        <span class="ms-1">Babies &amp; Moms</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/sport-outdoor">
-                        <i class="icon-baseball"></i>
-                        <span class="ms-1">Sport &amp; Outdoor</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/books-office">
-                        <i class="icon-book2"></i>
-                        <span class="ms-1">Books &amp; Office</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/cars-motorcycles">
-                        <i class="icon-car-siren"></i>
-                        <span class="ms-1">Cars &amp; Motorcycles</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="http://127.0.0.1:8000/product-categories/home-improvements">
-                        <i class="icon-wrench"></i>
-                        <span class="ms-1">Home Improvements</span>
-                    </a>
-                </li>
-
             </ul>
         </div>
     </div>
@@ -1017,9 +884,14 @@ if (Auth::check()) {
     <div class="navigation--list" style="--bottom-bar-menu-text-font-size: 14px;">
         <div class="navigation__content">
             <a class="navigation__item ps-toggle--sidebar" href="#menu-mobile"><i class="icon-menu"></i><span> Menu</span></a>
-            <a class="navigation__item ps-toggle--sidebar" href="#navigation-mobile"><i class="icon-list4"></i><span> Categories</span></a>
-            <a class="navigation__item ps-toggle--sidebar" href="#search-sidebar"><i class="icon-magnifier"></i><span> Search</span></a>
-            <a class="navigation__item ps-toggle--sidebar" href="#cart-mobile"><i class="icon-bag2"></i><span> Cart</span></a>
+
+            @if(!Auth::check())
+            <a class="navigation__item " href="{{ route('registerpage') }}"><i class="icon-users"></i><span> Register</span></a>
+            <a class="navigation__item " href="{{ route('loginpage') }}"><i class="icon-user"></i><span> Login</span></a>
+            @endif
+            <!-- <a class="navigation__item ps-toggle--sidebar" href="#navigation-mobile"><i class="icon-list4"></i><span> Filter</span></a> -->
+            <!-- <a class="navigation__item ps-toggle--sidebar" href="#search-sidebar"><i class="icon-magnifier"></i><span> Search</span></a> -->
+            <!-- <a class="navigation__item ps-toggle--sidebar" href="#cart-mobile"><i class="icon-bag2"></i><span> Cart</span></a> -->
         </div>
     </div>
 
@@ -1044,107 +916,24 @@ if (Auth::check()) {
         </div>
         <div class="ps-panel__content">
             <ul class="menu--mobile">
-                <li>
-                    <a href="http://127.0.0.1:8000/">
-                        Home
-                    </a>
+                <li class="nav-item  {{ request()->routeIs('main.index') ? 'current-menu-item' : '' }}" data-nav-item="data-nav-item">
+                    <a class="nav-link" href="{{ url('/') }}">Home</a>
                 </li>
-                <li class=" menu-item-has-children   ">
-                    <a href="#">
-                        Pages
-                    </a>
-                    <span class="sub-toggle"></span>
-                    <ul class="sub-menu">
-                        <li>
-                            <a href="http://127.0.0.1:8000/about-us">
-                                About us
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://127.0.0.1:8000/terms-of-use">
-                                Terms Of Use
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://127.0.0.1:8000/terms-conditions">
-                                Terms &amp; Conditions
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://127.0.0.1:8000/refund-policy">
-                                Refund Policy
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://127.0.0.1:8000/coming-soon">
-                                Coming soon
-                            </a>
-                        </li>
-                    </ul>
-
+                <li class="nav-item  {{ request()->routeIs('main.shipping') ? 'current-menu-item' : '' }}" data-nav-item="data-nav-item">
+                    <a class="nav-link" href="{{ route('main.shipping') }}">Cart</a>
                 </li>
-                <li class=" menu-item-has-children   ">
-                    <a href="http://127.0.0.1:8000/products">
-                        Products
-                    </a>
-                    <span class="sub-toggle"></span>
-                    <ul class="sub-menu">
-                        <li>
-                            <a href="http://127.0.0.1:8000/products">
-                                All products
-                            </a>
-                        </li>
-                        <li class="   current-menu-item ">
-                            <a href="http://127.0.0.1:8000/product-categories/batteries">
-                                Products Of Category
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://127.0.0.1:8000/products/headphone-ultra-bass">
-                                Product Single
-                            </a>
-                        </li>
-                    </ul>
-
-                </li>
-                <li>
-                    <a href="http://127.0.0.1:8000/stores">
-                        Stores
-                    </a>
-                </li>
-                <li>
-                    <a href="http://127.0.0.1:8000/blog">
-                        Blog
-                    </a>
-                </li>
-                <li>
-                    <a href="http://127.0.0.1:8000/faqs">
-                        FAQs
-                    </a>
-                </li>
-                <li>
-                    <a href="http://127.0.0.1:8000/contact">
-                        Contact
-                    </a>
-                </li>
-            </ul>
-
-
-            <ul class="menu--mobile menu--mobile-extra">
-                <li><a href="http://127.0.0.1:8000/orders/tracking"><i class="icon-check-square"></i> <span>Track your order</span></a></li>
-                <li><a href="http://127.0.0.1:8000/compare"><i class="icon-chart-bars"></i> <span>Compare</span></a></li>
-                <li><a href="http://127.0.0.1:8000/wishlist"><i class="icon-heart"></i> <span>Wishlist</span></a></li>
-                <li class="menu-item-has-children">
-                    <a href="#"><span>USD</span></a>
-                    <span class="sub-toggle"></span>
-                    <ul class="sub-menu">
-                        <li><a href="http://127.0.0.1:8000/currency/switch/EUR"><span>EUR</span></a></li>
-                        <li><a href="http://127.0.0.1:8000/currency/switch/VND"><span>VND</span></a></li>
-                        <li><a href="http://127.0.0.1:8000/currency/switch/NGN"><span>NGN</span></a></li>
-                    </ul>
+                <!-- <li class="nav-item  {{ request()->routeIs('main.specialorder') ? 'current-menu-item' : '' }}" data-nav-item="data-nav-item">
+                            <a class="nav-link" href="{{ route('main.specialorder') }}">Special Order</a>
+                        </li> -->
+                <li class="nav-item  {{ request()->routeIs('main.track') ? 'current-menu-item' : '' }}" data-nav-item="data-nav-item">
+                    <a class="nav-link" href="{{ route('main.track') }}">Track order</a>
                 </li>
 
-
+                @if($adminMenu > 0 )
+                <li class="nav-item" data-nav-item="data-nav-item">
+                    <a class="nav-link" href="{{ route('homepage') }}">Admin Dashboard</a>
+                </li>
+                @endif
             </ul>
         </div>
     </div>

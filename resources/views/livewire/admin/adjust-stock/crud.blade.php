@@ -29,6 +29,11 @@
                             <span class="text-danger fs-9 error-text" id="error-kode_barang"></span>
                         </div>
 
+                        <div class="col-md-3 mb-3">
+                            <label for="qty-actual" class="form-label">Stock Actual *</label>
+                            <input type="number" class="form-control form-control-sm" id="qty-actual" name="qty-actual" placeholder="Qty Actual">
+                            <span class="text-danger fs-9 error-text" id="error-qty-actual"></span>
+                        </div>
 
                         <div class="col-md-3 mb-3">
                             <label for="tanggal" class="form-label">Tanggal Adjust</label>

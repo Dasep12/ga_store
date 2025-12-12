@@ -224,6 +224,16 @@ class AdjustStockController extends Component
         }
     }
 
+    public function StockCard($productId)
+    {
+        $data = DB::table('vw_stock')
+            ->where('product_id', $productId)
+            ->select('stock')
+            ->first();
+
+        return response()->json($data);
+    }
+
     public function exportExcel()
     {
         $exportService = new ExportService();

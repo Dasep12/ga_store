@@ -207,7 +207,8 @@
             line-height: 10px;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/fontawesome.min.css" integrity="sha512-lauN4D/0AgFUGvmMR+knQnbOADyD/XuQ8VF18I8Ll0+TLvsujshyxvU+uzogmQbSq6qJd5jnUdYtK8ShxXMlSg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
 </head>
 
 <body>
@@ -223,7 +224,7 @@
                 </td>
 
                 <td class="title-cell">
-                    FORM PERMINTAAN BARANG
+                    FORM PERMINTAAN BARANG <i class="fa fa-user"></i>
                 </td>
 
                 <td class="revision-cell">
@@ -260,7 +261,14 @@
             </tr>
             <tr>
                 <?php
+
+                use Illuminate\Support\Facades\DB;
+
                 $user = DB::table('tbl_sys_users')->where('user_id', $order[0]->created_by)->first();
+                $reguler = DB::table('tbl_mst_kategori')->where('jenis', 'R')->get();
+                $nonreguler = DB::table('tbl_mst_kategori')->where('jenis', 'NR')->get();
+                $specialorder = DB::table('tbl_mst_kategori')->where('jenis', 'SO')->get();
+                // ambil semua kategori_id dari array
                 ?>
                 <td>Jabatan</td>
                 <td>: {{ $user->jabatan_id }}</td>
@@ -279,16 +287,28 @@
             <tbody>
                 <tr>
                     <td style="padding: 0;">
-                        <p style="margin: 0; padding: 5px;">ATK <span class="checkbox"><i class="fa fa-users"></i></span></p>
-                        <p style="margin: 0; padding: 5px;">Susu Steril <span class="checkbox"></span></p>
-                        <p style="margin: 0; padding: 5px;">Susu UHT <span class="checkbox"></span></p>
-                        <p style="margin: 0; padding: 5px;">Obat-obatan <span class="checkbox"></span></p>
+                        @foreach($reguler as $reg)
+                        <p style="margin: 2; padding: 2px 0; line-height: 1.5px;">
+                            <span style="display: inline-block; width: 100px;">{{ $reg->name }}</span>
+                            <input type="checkbox" {{ collect($order)->contains('kategori_id', $reg->id) ? 'checked' : '' }} style="width: 14px; height: 14px; vertical-align: middle;  margin-left: 4px;" />
+                        </p>
+                        @endforeach
                     </td>
                     <td style="padding: 0;">
-                        <p style="margin: 0; padding: 5px;">Barang tidak habis pakai <span class="checkbox"></span></p>
+                        @foreach($nonreguler as $reg)
+                        <p style="margin: 2; padding: 2px 0; line-height: 1.5px;">
+                            <span style="display: inline-block; width: 100px;">{{ $reg->name }}</span>
+                            <input type="checkbox" {{ collect($order)->contains('kategori_id', $reg->id) ? 'checked' : '' }} style="width: 14px; height: 14px; vertical-align: middle; margin-left: 4px;" />
+                        </p>
+                        @endforeach
                     </td>
                     <td style="padding: 0;">
-                        <p style="margin: 0; padding: 5px;">APD ( Seragam, topi, ID-Card & Sepatu) <span class="checkbox"></span></p>
+                        @foreach($specialorder as $reg)
+                        <p style="margin: 2; padding: 2px 0; line-height: 1.5px;">
+                            <span style="display: inline-block; width: 100px;">{{ $reg->name }}</span>
+                            <input type="checkbox" {{ collect($order)->contains('kategori_id', $reg->id) ? 'checked' : '' }} style="width: 14px; height: 14px; vertical-align: middle; margin-left: 4px;" />
+                        </p>
+                        @endforeach
                     </td>
                 </tr>
             </tbody>
@@ -301,7 +321,7 @@
                     <th style="width: 5%;">No</th>
                     <th style="width: 10%;">Kode Barang</th>
                     <th style="width: 15%;">Nama Barang</th>
-                    <th style="width: 30%;">Nama Barang Spesifikasi / Merk</th>
+                    <th style="width: 30%;">Merk / Warna / Ukuran</th>
                     <th style="width: 5%;">Qty</th>
                     <th style="width: 8%;">Satuan</th>
                     <th style="width: 10%;">Jenis</th>
@@ -309,17 +329,18 @@
                 </tr>
             </thead>
             <tbody>
-                <?php $no = 1; ?>
+                <?php $no = 1;
+                ?>
                 @foreach ($order as $index => $item)
                 <tr>
                     <td>{{ $no++}}</td>
                     <td>{{ $item->kode_barang }}</td>
                     <td>{{ $item->nama_barang }}</td>
-                    <td>{{ $item->merek  }}</td>
+                    <td>{{ implode('/', array_filter([$item->merek, $item->warna, $item->ukuran])) }}</td>
                     <td>{{ $item->qty }}</td>
                     <td>{{ $item->satuan_name }}</td>
                     <td>{{ $item->type_barang }}</td>
-                    <td></td>
+                    <td>{{ $item->remark }}</td>
                 </tr>
                 @endforeach
                 <tr>

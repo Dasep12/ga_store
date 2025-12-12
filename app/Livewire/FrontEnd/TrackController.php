@@ -78,6 +78,8 @@ class TrackController extends Component
                 array_push($items, [
                     'nama' => $item->nama_barang,
                     'qty'  => $item->qty,
+                    'remark'  => $item->remark,
+                    'images'  => $item->images,
                 ]);
             }
 
@@ -123,6 +125,78 @@ class TrackController extends Component
         }
     }
 
+
+    public function tesMail($id)
+    {
+        DB::beginTransaction();
+        $order_id = $id;
+        $this->isResending = true;
+        try {
+            $emailService = app(EmailService::class);
+            $pengaju = [
+                'nama' => Auth::user()->noreg . ' - ' .  ucwords(Auth::user()->nama),
+                'departement' => DB::table('tbl_mst_department')
+                    ->where('id', Auth::user()->department_id)
+                    ->pluck('name')
+                    ->first(),
+                'tanggal' => now()->format('d/m/Y H:i:s'),
+            ];
+            $items = [];
+            $cart = DB::table('vw_trn_order')->where('order_id', $order_id)->get();
+            foreach ($cart as $item) {
+                array_push($items, [
+                    'nama' => $item->nama_barang,
+                    'qty'  => $item->qty,
+                    'remark'  => $item->remark,
+                    'images'  => $item->images,
+                ]);
+            }
+
+            $token = Hash::make($order_id . 'BTI');
+            DB::table('tbl_mst_token')->insert([
+                'order_id' => $order_id,
+                'token' => $token,
+                'status' => 'pending',
+                'created_at' => now(),
+            ]);
+            $approveUrl = route('approval.approve', ['order_id' => $order_id, 'token' => $token]);
+            $rejectUrl  = route('approval.reject',  ['order_id' => $order_id, 'token' => $token]);
+
+            $approvalList = DB::table('tbl_sys_users')->where([
+                'department_id' => Auth::user()->department_id,
+                // 'level_id' => 'A',
+                'noreg' => '2410220'
+            ])->get();
+            // dd($approvalList);
+            $emailList = [];
+            foreach ($approvalList as $app) {
+                $emailService->sendApproval(
+                    $items,
+                    $app->email,
+                    $approveUrl,
+                    $rejectUrl,
+                    $pengaju
+                );
+                $emailList[] = $app->email;
+            }
+
+            DB::commit();
+            $this->dispatch('checkout-success', [
+                'message' => 'Email approval berhasil dikirim ke: ' . implode(', ', $emailList),
+                'success' => true,
+            ]);
+            $this->isResending = false;
+            dd('Email sent to: ' . implode(', ', $emailList));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->isResending = false;
+            $this->dispatch('checkout-success', [
+                'message' => 'Terjadi kesalahan saat resend email: ' . $e->getMessage(),
+                'success' => false,
+            ]);
+            dd('Error sending email: ' . $e->getMessage());
+        }
+    }
 
     public function render()
     {

@@ -113,8 +113,8 @@ class BarangController extends Component
 
     public function show($id)
     {
-        $Kategori = DB::table('tbl_mst_product')->find($id);
-        return response()->json($Kategori);
+        $data = DB::table('tbl_mst_product')->find($id);
+        return response()->json($data);
     }
 
     public function crudJson(Request $request)
@@ -158,7 +158,7 @@ class BarangController extends Component
                     'satuan_id' => $request->satuan_id,
                     'ukuran' => $request->ukuran,
                     'model' => $request->model,
-                    'harga' => $request->harga,
+                    'harga' => $request->harga ?: 0,
                     'max_stock' => $request->max_stock,
                     'min_stock' => $request->min_stock,
                     'deskripsi' => $request->deskripsi,
@@ -200,7 +200,7 @@ class BarangController extends Component
                     'satuan_id' => $request->satuan_id,
                     'ukuran' => $request->ukuran,
                     'model' => $request->model,
-                    'harga' => $request->harga,
+                    'harga' => $request->harga ?: 0,
                     'max_stock' => $request->max_stock,
                     'min_stock' => $request->min_stock,
                     'deskripsi' => $request->deskripsi,
@@ -219,7 +219,7 @@ class BarangController extends Component
                 // Upload file jika ada
                 if ($request->hasFile('images')) {
                     $file = $request->file('images');
-                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
                     $file->move(public_path('assets/images'), $filename);
                     $updateData['images'] = 'assets/images/' . $filename;
                 }
@@ -244,7 +244,7 @@ class BarangController extends Component
 
         $query = DB::table('tbl_mst_product as a')
             ->leftJoin('tbl_mst_kategori as b', 'a.kategori_id', '=', 'b.id')
-            ->leftJoin('tbl_mst_satuan as c', 'a.satuan', '=', 'c.id')
+            ->leftJoin('tbl_mst_satuan as c', 'a.satuan_id', '=', 'c.id')
             ->leftJoin('tbl_mst_jenis_asset as d', 'a.jenis_asset', '=', 'd.kode_asset')
             ->select(
                 'a.kode_barang',
@@ -257,6 +257,11 @@ class BarangController extends Component
                 'a.merek',
                 'a.ukuran',
                 'a.model',
+                'a.lokasi',
+                'a.responsibility',
+                'a.no_asset',
+                'a.nomor_barang',
+                'a.tahun',
                 'a.harga',
                 'a.deskripsi',
                 'a.created_at',
@@ -266,8 +271,8 @@ class BarangController extends Component
 
         return $exportService->export('query', $fileName, [
             'query' => $query,
-            'columns' => ['kode_barang', 'nama_barang', 'type_barang', 'kategori_name', 'satuan_name', 'jenis_asset_name', 'warna', 'merek', 'ukuran', 'model', 'harga', 'deskripsi', 'created_at', 'is_actived', 'created_by'],
-            'headings' => ['Kode Barang', 'Nama', 'Type', 'Kategori', 'Satuan', 'Jenis', 'Warna', 'Merek', 'Ukuran', 'Model', 'Harga', 'Deskripsi', 'Tanggal Dibuat', 'Status', 'Dibuat Oleh'],
+            'columns' => ['kode_barang', 'nama_barang', 'type_barang', 'kategori_name', 'satuan_name', 'jenis_asset_name', 'warna', 'merek', 'ukuran', 'model', 'lokasi', 'responsibility', 'no_asset', 'nomor_barang', 'tahun', 'harga', 'deskripsi', 'created_at', 'is_actived', 'created_by'],
+            'headings' => ['Kode Barang', 'Nama', 'Type', 'Kategori', 'Satuan', 'Jenis', 'Warna', 'Merek', 'Ukuran', 'Model', 'Lokasi', 'Penanggung Jawab', 'NO Asset', 'Nomor Barang', 'Tahun', 'Harga', 'Deskripsi', 'Tanggal Dibuat', 'Status', 'Dibuat Oleh'],
         ]);
     }
 

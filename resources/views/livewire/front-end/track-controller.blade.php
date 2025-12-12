@@ -208,7 +208,7 @@
                                 {{ $data->approved_date }}
                             </td>
                             <td>
-                                {{ $data->approved_by }}
+                                {{ $data->approved_name }}
                             </td>
                             <td>
                                 <a target="_blank" href="{{ url('pdf-permintaan/'. $data->order_id) }}"><span class="p-2 rounded-2 text-danger"><span class=""><i class="fa fa-file-pdf"></i></span> </span></a>
@@ -283,7 +283,7 @@
                                 {{ $data->rejected_date }}
                             </td>
                             <td>
-                                {{ $data->rejected_by }}
+                                {{ $data->rejected_name }}
                             </td>
                             <td>
                                 {{ $data->remark_reject }}

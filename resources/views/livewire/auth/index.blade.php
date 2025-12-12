@@ -75,7 +75,7 @@
                                             <div class="col-6">
                                                 <div class="ps-checkbox"><input class="form-control" type="checkbox" name="remember" id="remember-me"><label for="remember-me" class="control-label">Remember me</label></div>
                                             </div>
-                                            <div class="col-6 text-end"><a href="https://martfury.botble.com/password/reset" class="text-decoration-underline">Forgot password?</a></div>
+                                            <div class="col-6 text-end"><a href="" class="text-decoration-underline">Forgot password?</a></div>
                                         </div>
                                         <div class="d-grid mb-5"><button class="ps-btn ps-btn--fullwidth" type="submit">Login<svg class="icon svg-icon-ti-ti-arrow-narrow-right" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M5 12l14 0"></path>

@@ -180,7 +180,8 @@ class UserController extends Component
                     return response()->json(['errors' => $validator->errors()], 422);
                 }
                 $lastUser = DB::table('tbl_sys_users')
-                    ->orderBy('user_id', 'desc')
+                    ->select('user_id')
+                    ->orderByRaw('CAST(SUBSTRING(user_id, 6) AS UNSIGNED) DESC')
                     ->first();
 
                 if ($lastUser) {

@@ -185,6 +185,7 @@
         $('.error-import').html('');
         $('#crudAction').val(action);
         $('#transaction_id').val('');
+        $('#qty-actual').attr("readonly", true);
         if (action === 'create') {
             if (canCreate != 1) {
                 Swal.fire('Notification', 'Tidak Hak Akses Tambah', 'info');
@@ -245,6 +246,18 @@
         var barang_id = $(this).val()
         var kodeBarang = $(this).find('option:selected').data('kode_barang');
         $("#kode_barang").val(kodeBarang);
+
+        $.ajax({
+            url: `/adjuststock/stock/${barang_id}`,
+            method: 'GET',
+            success: function(data) {
+                console.log(data)
+                $('#qty-actual').val(data.stock);
+            },
+            error: function(xhr) {
+                console.error(xhr.responseText);
+            }
+        });
     });
 
 

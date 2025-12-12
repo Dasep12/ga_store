@@ -18,7 +18,7 @@
                         ?>
                         <div class="ps-product--cart-mobile">
                             <div class="ps-product__thumbnail">
-                                <a href=""><img src="{{ $imagePath }}" data-bb-lazy="true" loading="lazy" data-src="{{ $imagePath }}" alt="Macbook Pro 2015 (Digital)" data-ll-status="loaded" class="entered loaded"></a>
+                                <a href=""><img src="{{ $imagePath }}" data-bb-lazy="true" loading="lazy" data-src="{{ $imagePath }}" alt="{{ $item['nama_barang'] }}" data-ll-status="loaded" class="entered loaded"></a>
                             </div>
                             <div class="ps-product__content">
                                 <a wire:click="removeItem({{ $id }})" class="ps-product__remove remove-cart-item" href="#" data-url="">

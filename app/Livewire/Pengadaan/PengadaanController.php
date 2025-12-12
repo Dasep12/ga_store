@@ -116,6 +116,17 @@ class PengadaanController extends Component
         return response()->json($data);
     }
 
+    public function show_detail(Request $request)
+    {
+        $data = DB::table('vw_trn_order')->where(
+            [
+                'order_id' => $request->order_id,
+                'kode_barang' => $request->kode_barang
+            ]
+        )->get();
+        return response()->json($data);
+    }
+
     public function crudJson(Request $request)
     {
         try {
@@ -211,6 +222,72 @@ class PengadaanController extends Component
             return response()->json(['success' => true, 'message' => $message]);
         } catch (\Exception $e) {
             DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        }
+    }
+
+    public function MultiApprove(Request $req)
+    {
+        try {
+            DB::beginTransaction();
+            $ids = $req->ids; // array of IDs to approve
+            $request = DB::table('vw_trn_order')->where('id', $ids)->first();
+            if (strtolower($request->stock_type) === 'ready') {
+                // Ambil stok produk
+                $stokSekarang = DB::table('tbl_trn_stock')
+                    ->where('product_id', $request->barang_id)
+                    ->value('stock');
+                // Validasi stok kosong
+                if (is_null($stokSekarang) || $stokSekarang <= 0) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Stok kosong. Tidak bisa memproses order.',
+                    ]);
+                }
+
+                if ($stokSekarang < $request->qty_actual) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Stok tidak mencukupi. Stok tersedia: {$stokSekarang}, Qty diminta: {$request->qty_actual}",
+                    ]);
+                }
+
+                // Proses pengadaan, misalnya update status atau lainnya
+                DB::table('tbl_trn_stock')
+                    ->where('product_id', $request->barang_id)
+                    ->update([
+                        'stock' => DB::raw('stock - ' . $request->qty_actual),
+                        'updated_at' => now(),
+                        'updated_by' => Auth::user()->nama
+                    ]);
+
+                $stokAkhir = $stokSekarang - $request->qty_actual;
+                DB::table('tbl_log_transaksi')->insert([
+                    'product_id' => $request->barang_id,
+                    'kode_barang' => $request->kode_barang,
+                    'qty' => $request->qty_actual,
+                    'created_by' => Auth::user()->user_id ?? 'system',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'stock_awal' => $stokSekarang,
+                    'stock_akhir' => $stokAkhir,
+                    'type' => '-',
+                    'name_process' => 'order',
+                ]);
+            }
+
+
+            DB::table('tbl_trn_order')->where('id', $request->id)->update([
+                'status' => 'done',
+                'finish_by' => Auth::user()->nama ?? 'system',
+                'qty_actual' => $request->qty_actual,
+                'finish_date' => now(),
+            ]);
+
+            DB::commit();
+            return response()->json(['success' => true, 'message' => 'Data berhasil disetujui.']);
+        } catch (\Exception $e) {
+            // DB::rollBack();
             return response()->json(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
         }
     }

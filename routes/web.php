@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use App\Livewire\AdjustStock\AdjustStockController;
 use App\Livewire\Department\DepartmentController as DepartmentPage;
 use App\Livewire\Kategori\KategoriController as KategoriPage;
@@ -40,7 +41,10 @@ use App\Livewire\Roles\RolesController as RolesPage;
 
 Route::middleware(['auth'])->group(function () {
 
+
+
     Route::get('/home', HomePage::class)->name('homepage');
+    Route::get('/notification', [NotificationController::class, 'getNotifications'])->name('notifications.get');
     Route::get('/SumProduct', [HomePage::class, 'SumProduct'])->name('SumProduct');
     Route::get('/listRequestDepartment', [HomePage::class, 'listRequestDepartment'])->name('listRequestDepartment');
     Route::get('/listOrder', [HomePage::class, 'listOrder'])->name('listOrder');
@@ -81,13 +85,16 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('pengadaan')->group(function () {
         Route::get('/', PengadaanPage::class)->name('pengadaan.index');
         Route::get('/{id}', [PengadaanPage::class, 'show'])->name('pengadaan.show');
+        Route::post('/show_detail', [PengadaanPage::class, 'show_detail'])->name('pengadaande.show_detail');
         Route::post('/', [PengadaanPage::class, 'crudJson'])->name('pengadaan.crud');
+        Route::post('/MultiApprove', [PengadaanPage::class, 'MultiApprove'])->name('pengadaan.MultiApprove');
         Route::post('/importExcel', [ProductPage::class, 'ImportExcel'])->name('pengadaan.import');
     });
 
     Route::prefix('adjuststock')->group(function () {
         Route::get('/', AdjustStockController::class)->name('adjuststock.index');
         Route::get('/{id}', [AdjustStockController::class, 'show'])->name('adjuststock.show');
+        Route::get('stock/{id}', [AdjustStockController::class, 'StockCard'])->name('StockCard.show');
         Route::post('/crudJson', [AdjustStockController::class, 'crudJson'])->name('adjuststock.crud');
         Route::post('/importExcel', [AdjustStockController::class, 'ImportExcel'])->name('adjuststock.import');
         Route::get('/import/progress/{id}', [AdjustStockController::class, 'progress'])->name('adjuststock.import.progress');
@@ -132,6 +139,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', BeliController::class)->name('reportbeli.index');
         Route::get('/barang', [BeliController::class, 'barang'])->name('barang.json');
     });
+
+    Route::get('/', MainPage::class)->name('main.index');
+    Route::get('/detail/{id}', [MainPage::class, 'detail'])->name('main.detail');
+    Route::get('/tesMail/{id}', [TrackPage::class, 'tesMail'])->name('tesMail.detail');
+    Route::get('/pdf-permintaan/{id}', [ShippingPage::class, 'PDFPermintaan'])->name('pdf-permintaan.detail');
+    Route::get('/shipping', ShippingPage::class)->name('main.shipping');
+    Route::get('/track', TrackPage::class)->name('main.track');
 });
 
 
@@ -146,10 +160,6 @@ Route::get('/rejected', [ShippingPage::class, 'rejectOrder'])->name('approval.re
 
 
 
-Route::get('/', MainPage::class)->name('main.index');
-Route::get('/detail/{id}', [MainPage::class, 'detail'])->name('main.detail');
-Route::get('/pdf-permintaan/{id}', [ShippingPage::class, 'PDFPermintaan'])->name('pdf-permintaan.detail');
-Route::get('/shipping', ShippingPage::class)->name('main.shipping');
-Route::get('/track', TrackPage::class)->name('main.track');
+
 
 Route::get('/specialorder', SpecialOrderController::class)->name('main.specialorder');

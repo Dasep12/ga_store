@@ -10,7 +10,7 @@
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
-    <title>GA STORE | @yield('title', config('app.name'))</title>
+    <title>GA-KU | @yield('title', config('app.name'))</title>
 
 
     <!-- ===============================================-->
@@ -250,6 +250,8 @@
             color: white !important;
             border-radius: 8px;
         }
+
+
 
         /* Responsive adjustments for smaller screens */
         @media (max-width: 768px) {
@@ -670,6 +672,28 @@
             if (e.detail.status === 401) {
                 window.location.href = '/loginpage';
             }
+        });
+
+        $(document).ready(function() {
+            loadNotifications();
+
+            function loadNotifications() {
+                $.ajax({
+                    url: '{{ route("notifications.get") }}',
+                    type: 'GET',
+                    success: function(response) {
+                        $('#notifContainer').html(response.html);
+                        $(".count-info").html(response.count);
+                    },
+                    error: function(xhr) {
+                        $('#notifContainer').html('<p class="text-danger">Gagal memuat notifikasi.</p>');
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+
+            // kalau mau auto refresh tiap 30 detik
+            setInterval(loadNotifications, 30000);
         });
     </script>
     @livewireScripts

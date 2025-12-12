@@ -76,11 +76,15 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade  active show" id="tab-home" role="tabpanel" aria-labelledby="home-tab">
                     <div class="table-responsive scrollbar bg-white p-2">
+                        <button type="button" onclick="crudJson('multiapprove','','')" class="btn btn-sm btn-primary mb-2 d-none approve-selected"><i class="fa fa-check"></i> Approve</button>
                         <table class="table table-sm table-hover table-bordered fs-8 table-responsive scrollbar" wire:loading.remove wire:target="gotoPage, perPage,filterData, search, filterType">
                             <thead class="bg-custom-navbar">
                                 @switch($filterStatus)
                                 @case('approved')
                                 <tr>
+                                    <th class="text-white">
+                                        <input type="checkbox" id="selectAllCheckboxes" />
+                                    </th>
                                     <th class="text-white">#</th>
                                     <th class="text-white">Kode</th>
                                     <th class="text-white">Barang</th>
@@ -144,11 +148,15 @@
                                 $imagePath = $data->images ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s';
                                 ?>
                                 <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                                    <td>
+                                        <input type="checkbox" class="rowCheckbox" value="{{ $data->id }}" />
+                                    </td>
                                     <td class="align-middle white-space-nowrap ps-0 py-0">
                                         <a class="border border-translucent rounded-2 d-inline-block" href="">
                                             <img src="{{ asset($imagePath)}}" alt="" width="53">
                                         </a>
                                     </td>
+
                                     <td>
                                         <a class="fw-semibold mb-0" href="javascript:void(0)">{{ $data->kode_barang }}</a>
                                     </td>
@@ -173,9 +181,9 @@
                                     <td align="center">
                                         <div class="position-static"><a class=" dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-cog fs-10"></span></a>
                                             <div class="dropdown-menu dropdown-menu-end py-2">
-                                                <a href="javascropt:void(0)" onclick="crudJson('process','{{ $data->order_id }}')" class="dropdown-item text-primary btnEdit"><i class="fa fa-eye"></i> Process</a>
+                                                <button type="button" onclick="crudJson('process','{{ $data->order_id }}','{{$data->kode_barang}}')" class="dropdown-item text-primary btnEdit"><i class="fa fa-eye"></i> Process</button>
                                                 <div class="dropdown-divider"></div>
-                                                <a onclick="crudJson('reject','{{ $data->order_id }}')" class="dropdown-item text-danger btnDelete" href="javascropt:void(0)"><i class="fa fa-trash"></i> Reject</a>
+                                                <a onclick="crudJson('reject','{{ $data->order_id }}','{{ $data->kode_barang}}' )" class="dropdown-item text-danger btnDelete" href="javascropt:void(0)"><i class="fa fa-trash"></i> Reject</a>
                                             </div>
                                         </div>
                                     </td>
@@ -398,7 +406,7 @@
 
 @push('scripts')
 <script>
-    function crudJson(action, id = null) {
+    function crudJson(action, id, kode_barang) {
         var canUpdate = "{{ $canUpdate }}";
         var canDelete = "{{ $canDelete }}";
         var canCreate = "{{ $canCreate }}";
@@ -424,9 +432,15 @@
                 return false;
             }
             $.ajax({
-                url: `/pengadaan/${id}`,
-                method: 'GET',
+                url: `/pengadaan/show_detail`,
+                method: 'POST',
+                data: {
+                    order_id: id,
+                    _token: '{{ csrf_token() }}',
+                    kode_barang: kode_barang
+                },
                 success: function(data) {
+                    console.log(data);
                     $('#modalTitle').text('Process {{ $title }}');
                     $.each(data, function(i, value) {
                         $('#id').val(value.id);
@@ -439,6 +453,7 @@
                         $('#creator').val(value.creator);
                         $('#department').val(value.department);
                         $('#merek').val(value.merek);
+                        $('#remark').val(value.remark);
                         $('#warna').val(value.warna);
                         $('#ukuran').val(value.ukuran);
                         $('#satuan').val(value.satuan);
@@ -515,6 +530,25 @@
             $('#uploadProgress').hide();
             $('#importProgress').hide();
             $('#btnUpload').prop('disabled', false);
+        } else if (action === 'multiapprove') {
+            if (canUpdate != 1) {
+                Swal.fire('Notification', 'Tidak Hak Akses Approve', 'info');
+                return false;
+            }
+            let selectedIds = [];
+            $('.rowCheckbox:checked').each(function() {
+                selectedIds.push($(this).val());
+            });
+
+            console.log('Selected IDs for multi-approve:', selectedIds);
+            if (selectedIds.length === 0) {
+                Swal.fire('Notification', 'Pilih data terlebih dahulu', 'info');
+                return false;
+            }
+
+            $("#modalCrudMultiApprove").modal('show');
+            $('#idsToApprove').val(selectedIds.join(','));
+            $('#approveCount').text(selectedIds.length);
         }
     }
 
@@ -565,6 +599,18 @@
         $('#formSubmit').submit();
     });
 
+    $(document).on("click", "#selectAllCheckboxes", function() {
+        var isChecked = $(this).is(':checked');
+        $('.rowCheckbox').prop('checked', isChecked);
+        $("button.approve-selected").toggleClass("d-none", !isChecked);
+    });
+
+    $(document).on("change", ".rowCheckbox", function() {
+        var allChecked = $('.rowCheckbox').length === $('.rowCheckbox:checked').length;
+        $('#selectAllCheckboxes').prop('checked', allChecked);
+        var anyChecked = $('.rowCheckbox:checked').length > 0;
+        $("button.approve-selected").toggleClass("d-none", !anyChecked);
+    });
 
     $(document).on("click", "#btnUpload", function() {
         $('#formImport').submit();
@@ -631,5 +677,65 @@
             });
         }, 1000); // poll tiap 1 detik
     }
+
+    $(document).on("click", "#btnSubmitApproveMulti", function() {
+
+        let ids = $('#idsToApprove').val().split(',');
+        let total = ids.length;
+        let current = 0;
+        console.log($('#idsToApprove').val());
+        $('#btnSubmitApproveMulti').prop('disabled', true)
+            .html('<span class="spinner-border spinner-border-sm"></span> Processing...');
+
+        function updateProgress() {
+            let percent = Math.round((current / total) * 100);
+            $("#progressBar")
+                .css("width", percent + "%")
+                .attr("aria-valuenow", percent)
+                .text(percent + "%");
+        }
+
+
+        function approveLoop() {
+
+            if (current >= total) {
+                $('#btnSubmitApproveMulti').prop('disabled', false)
+                    .html('<i class="fa fa-check"></i> Selesai');
+                $("#modalCrudMultiApprove").modal('hide');
+                Swal.fire("Berhasil!", "Semua data telah di-approve.", "success");
+                return;
+            }
+
+            let id = ids[current]; // ID yang sedang diproses
+
+            $.ajax({
+                url: "/pengadaan/MultiApprove",
+                method: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    action: 'approve',
+                    ids: id
+                },
+                success: function(res) {
+                    console.log(res);
+                    current++;
+                    $("#approvedDone").text(current);
+                    updateProgress(); // update progress bar
+                    approveLoop(); // lanjut ID berikutnya
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error approving ID " + id + ": " + error);
+                    console.error(xhr.responseText);
+
+                    Swal.fire("Error", "Gagal memproses ID: " + id, "error");
+                    $('#btnSubmitApproveMulti').prop('disabled', false)
+                        .html('<i class="fa fa-check"></i> Confirm');
+                }
+            });
+        }
+
+        updateProgress();
+        approveLoop();
+    });
 </script>
 @endpush

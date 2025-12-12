@@ -176,10 +176,10 @@
                                         <label class="fs-9">
                                             Row
                                             <select wire:model.live="perPage" class="form-select-sm form-select d-inline-block w-auto">
-                                                <option value="5">5</option>
-                                                <option value="10">10</option>
-                                                <option value="25">25</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
                                                 <option value="50">50</option>
+                                                <option value="100">100</option>
                                             </select>
                                             per pages
                                         </label><br>
@@ -258,7 +258,6 @@
                 url: o.data("url"),
                 type: "GET",
                 success: function(t) {
-                    console.log(t[0]);
                     var html = detailQuickView(t[0])
 
                     $("#product-quickview .ps-product--quickview").html(html);
@@ -288,15 +287,15 @@
         });
 
         function detailQuickView(data) {
-            data.images = data.images == null ? 'http://127.0.0.1:8000/storage/products/32-1-300x300.jpg' : data.images;
+            data.images = data.images == null ? '/storage/products/32-1-300x300.jpg' : data.images;
             return `<div class="ps-product__header">
                         <div class="ps-product__thumbnail" data-vertical="false">
                             <div class="bb-quick-view-gallery-images" data-arrow="true">
-                                <div class="slick-list draggable">
-                                    <div class="slick-track">
-                                        <div class="slick-slide slick-cloned" data-slick-index="-1" id="" aria-hidden="true" style="width: 404px;" tabindex="-1">
+                                <div class="">
+                                    <div class="">
+                                        <div class=""  style="width: 404px;" tabindex="-1">
                                             <div>
-                                                <div class="item" style="width: 100%; display: inline-block;"><img src="/${data.images}" alt="Black Smart Watches"></div>
+                                                <div class="item" style="width: 100%; display: inline-block;"><img src="${data.images}" alt="${data.nama_barang}"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -304,7 +303,7 @@
                             </div>
                         </div>
                         <div class="ps-product__info">
-                            <h1><a href="https://martfury.botble.com/products/black-smart-watches">${data.nama_barang}</a></h1>
+                            <h1><a href="javascript:void(0)">${data.nama_barang}</a></h1>
                             <div class="ps-product__meta">
                                 <p>Kode Barang: <a href="javascript:void(0)">${data.kode_barang}</a></p>
                                 <div class="rating_wrap">
@@ -314,14 +313,18 @@
                                     <span class="rating_num">(${data.order_count}x di order)</span>
                                 </div>
                             </div>
-                            <h4 class="ps-product__price "><span>${formatRupiah(data.harga)}</span> </h4>
+                            <h4 class="ps-product__price "><span>
+                            ${ //formatRupiah(data.harga)
+                             '-'
+                            }
+                            </span> </h4>
                             <div class="ps-product__desc">
                                 <div class="ps-list--dot">
 
                                     <ul>
                                         <li>Jenis : ${data.jenis_asset_name}</li>
                                         <li> Kategori : ${data.kategori_name}</li>
-                                        <li> Model : ${data.model}</li>
+                                        <li> Model : ${data.model?? '-'}</li>
                                         <li> Type : ${data.type_barang}</li>
                                     </ul>
 

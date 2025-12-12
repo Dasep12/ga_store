@@ -12,7 +12,7 @@ class MainController extends Component
 {
     use WithPagination;
     public $search = '';
-    public $perPage = 10; // Default items per page
+    public $perPage = 20; // Default items per page
     public $isReady = false; // penanda lazy load
     public $cart = [];
     protected $paginationTheme = 'bootstrap';
@@ -83,15 +83,22 @@ class MainController extends Component
     {
         $cart = $this->cart;
 
+        $cekType = DB::table('vw_mst_product')->where('id', $productId)->first();
+        // Cek stok barang sebelum menambahkan ke keranjang
         $cekStock = DB::table('tbl_trn_stock')->where('product_id', $productId)->first();
-        if ($cekStock && $cekStock->stock < 1) {
-            // Kirim event ke browser
-            $this->dispatch('cart-added', [
-                'status' => false,
-                'message' => 'Stok barang habis, tidak dapat menambahkan ke keranjang',
-            ]);
-            return;
+
+        if ($cekType && $cekType->stock_type == 'READY') {
+            if ($cekStock && $cekStock->stock < 1) {
+                // Kirim event ke browser
+                $this->dispatch('cart-added', [
+                    'status' => false,
+                    'message' => 'Stok barang habis, tidak dapat menambahkan ke keranjang',
+                ]);
+                return;
+            }
         }
+
+
 
         if (isset($cart[$productId])) {
             $cart[$productId]['qty']++;
@@ -112,6 +119,7 @@ class MainController extends Component
                 'kategori_id' => $product->kategori_id,
                 'images' => $product->images ?: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTcFI6hTmgUtdxQTZktMt5KgEbySf4mtRgfQ&s',
                 'qty' => 1,
+                'remark' => '',
                 'recipients'  => [
                     [
                         'nama'       => null,

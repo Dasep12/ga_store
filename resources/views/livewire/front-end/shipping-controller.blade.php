@@ -11,6 +11,7 @@
                         <th class="sort white-space-nowrap">UKURAN</th>
                         <th class="sort white-space-nowrap">TYPE</th>
                         <th class="sort white-space-nowrap align-middle" style="width: 10%;">QTY</th>
+                        <th>REMARK</th>
                         <th style=" width: 20%;" class=""> </th>
                     </tr>
                 </thead>
@@ -43,6 +44,9 @@
                                     class="form-control text-center input-spin-none bg-transparent border-0 px-0" type="number" min="1" value="{{ $item['qty'] }}" aria-label="Amount (to the nearest dollar)">
                                 <button class="btn btn-sm px-2" wire:click="increamentQuantity({{ $id }})" data-type="plus">+</button>
                             </div>
+                        </td>
+                        <td>
+                            <textarea wire:keyup="updateRemark({{ $id }}, $event.target.value)" placeholder="*remark wajib di isi" class="form-control" type="text" name="" id="">{{ $item['remark'] }}</textarea>
                         </td>
                         <td class="align-middle white-space-nowrap text-end pe-0 ps-3">
                             <button wire:click="removeItem({{ $id }})" class="btn btn-sm text-body-tertiary text-opacity-85 text-body-tertiary-hover me-2"><span class="fas fa-trash text-danger"></span></button>

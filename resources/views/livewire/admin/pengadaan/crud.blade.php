@@ -86,6 +86,12 @@
                             <span class="text-danger fs-9 error-text" id="error-qty_actual"></span>
                         </div>
 
+                        <div class="col-md-3 mb-3">
+                            <label for="remark" class="form-label">Remark</label>
+                            <textarea type="text" class="form-control form-control-sm" id="remark" name="remark" placeholder="Qty"></textarea>
+                            <span class="text-danger fs-9 error-text" id="error-remark"></span>
+                        </div>
+
                         <div class="col-md-3 mb-3 remark_reject_div">
 
                         </div>
@@ -100,6 +106,34 @@
                     <button id="btnFinish" type="submit" class="btnSave btnReject btn btn-sm btn-success bg-custom-navbar text-white"
                         onclick="document.getElementById('crudAction').value='done'">
                         <i class="fa fa-check"></i> Finish
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalCrudMultiApprove" tabindex="-1">
+    <div class="modal-dialog modal-xs">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Add {{ $title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formSubmitApprove" enctype="multipart/form-data" class="form-loading" name="formSubmitApprove" method="post">
+                @csrf
+                <div class="modal-body">
+                    <input type="text" name="idsToApprove" hidden id="idsToApprove">
+                    <h3> <span id="approvedDone"> 0 </span>/ <span id="approveCount"></span></h3>
+                    <div class="progress mb-3" style="height:20px">
+                        <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">10%</div>
+                    </div>
+                </div>
+
+                <div class="modal-footer d-flex justify-content-between">
+                    <button id="btnSubmitApproveMulti" type="button" class="btnSubmitApproveMulti btn btn-sm btn-success bg-custom-navbar text-white">
+                        <i class="fa fa-check"></i> Approve Selected
                     </button>
                 </div>
             </form>

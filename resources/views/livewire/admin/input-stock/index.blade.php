@@ -278,6 +278,7 @@
 
             $("#harga_satuan_show,#qty").on("keyup", function() {
                 var hargaSatuan = parseFloat($("#harga_satuan").val().replace(/\D/g, '')) || 0;
+                console.log('Harga Satuan:', hargaSatuan);
                 var qty = parseFloat($("#qty").val().replace(/\D/g, '')) || 0;
                 var total = hargaSatuan * qty;
                 // Format hasil ke Rupiah
@@ -382,7 +383,27 @@
             },
             error: function(xhr) {
                 $('#btnUpload').prop('disabled', false);
-                alert('Upload error');
+                $('#uploadProgress').hide();
+                $('#importProgress').hide();
+
+                let message = "Terjadi kesalahan saat upload.";
+
+                // Coba parsing JSON jika server mengirim error response JSON
+                try {
+                    let response = JSON.parse(xhr.responseText);
+                    if (response.message) {
+                        message = response.message;
+                    } else if (response.error) {
+                        message = response.error;
+                    }
+                } catch (e) {
+                    // Kalau bukan JSON, ambil sebagian dari responseText
+                    if (xhr.responseText) {
+                        message = $(xhr.responseText).text().trim().substring(0, 200);
+                    }
+                }
+
+                $(".error-info").html(`<div class="alert alert-danger alert-dismissible fade show" role="alert"> <strong>Error!</strong> ${message}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
             }
         });
     });

@@ -23,6 +23,7 @@
                         </div>
                         <div id="importStatus"></div>
                     </div>
+                    <div class="mt-2 error-info"></div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <a href="{{ asset('template/FORMAT IMPORT STOCK.xlsx') }}" class="small"><i class="fa fa-download"></i> unduh template</a>
